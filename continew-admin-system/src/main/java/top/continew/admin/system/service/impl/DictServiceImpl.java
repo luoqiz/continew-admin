@@ -16,6 +16,7 @@
 
 package top.continew.admin.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.continew.admin.system.mapper.DictMapper;
@@ -63,12 +64,12 @@ public class DictServiceImpl extends BaseServiceImpl<DictMapper, DictDO, DictRes
     @Override
     protected void beforeDelete(List<Long> ids) {
         List<DictDO> list = baseMapper.lambdaQuery()
-            .select(DictDO::getName, DictDO::getIsSystem)
-            .in(DictDO::getId, ids)
-            .list();
+                .select(DictDO::getName, DictDO::getIsSystem)
+                .in(DictDO::getId, ids)
+                .list();
         Optional<DictDO> isSystemData = list.stream().filter(DictDO::getIsSystem).findFirst();
         CheckUtils.throwIf(isSystemData::isPresent, "所选字典 [{}] 是系统内置字典，不允许删除", isSystemData.orElseGet(DictDO::new)
-            .getName());
+                .getName());
         dictItemService.deleteByDictIds(ids);
     }
 
@@ -76,6 +77,13 @@ public class DictServiceImpl extends BaseServiceImpl<DictMapper, DictDO, DictRes
     public List<LabelValueResp> listEnumDict() {
         List<String> enumDictNameList = dictItemService.listEnumDictNames();
         return enumDictNameList.stream().map(name -> new LabelValueResp(name, name)).toList();
+    }
+
+    @Override
+    public DictDO getByCode(String code) {
+        LambdaQueryWrapper<DictDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DictDO::getCode, code);
+        return getOne(queryWrapper);
     }
 
     /**

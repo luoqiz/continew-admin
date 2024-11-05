@@ -40,4 +40,12 @@ public interface DictService extends BaseService<DictResp, DictResp, DictQuery, 
      * @return 枚举字典列表
      */
     List<LabelValueResp> listEnumDict();
+
+    /**
+     * 根据code查询
+     *
+     * @param code 编码
+     * @return 字典
+     */
+    DictDO getByCode(String code);
 }

@@ -76,7 +76,9 @@ VALUES
 (10000, '关于项目', 0, 1, '/project', 'Project', 'Layout', NULL, 'apps', b'0', b'0', b'0', NULL, 999, 1, 1, NOW(), NULL, NULL),
 (10001, '接口文档', 10000, 2, 'https://api.continew.top/doc.html', NULL, NULL, NULL, 'code-square', b'1', b'0', b'0', NULL, 1, 1, 1, NOW(), NULL, NULL),
 (10002, 'Gitee', 10000, 2, 'https://gitee.com/continew/continew-admin', NULL, NULL, NULL, 'gitee', b'1', b'0', b'0', NULL, 2, 1, 1, NOW(), NULL, NULL),
-(10003, 'GitHub', 10000, 2, 'https://github.com/charles7c/continew-admin', NULL, NULL, NULL, 'github', b'1', b'0', b'0', NULL, 3, 1, 1, NOW(), NULL, NULL);
+(10003, 'GitHub', 10000, 2, 'https://github.com/charles7c/continew-admin', NULL, NULL, NULL, 'github', b'1', b'0', b'0', NULL, 3, 1, 1, NOW(), NULL, NULL),
+(638805316720394271, '多语言配置', 1000, 2, '/system/language', 'SystemLanguage', 'system/language/index', NULL, 'book', b'0', b'0', b'0', NULL, 999, 1, 1, NOW(), NULL, NULL);
+;
 
 -- 初始化默认部门
 INSERT INTO `sys_dept`
@@ -136,7 +138,8 @@ INSERT INTO `sys_dict`
 (`id`, `name`, `code`, `description`, `is_system`, `create_user`, `create_time`, `update_user`, `update_time`)
 VALUES
 (1, '公告类型', 'notice_type', NULL, b'1', 1, NOW(), NULL, NULL),
-(2, '消息类型', 'message_type', NULL, b'1', 1, NOW(), NULL, NULL);
+(2, '消息类型', 'message_type', NULL, b'1', 1, NOW(), NULL, NULL),
+(3, '语言类型', 'language_type', '前端多语言设置', b'0', 1, NOW(), NULL, NULL);
 
 INSERT INTO `sys_dict_item`
 (`id`, `label`, `value`, `color`, `sort`, `description`, `status`, `dict_id`, `create_user`, `create_time`, `update_user`, `update_time`)
@@ -144,7 +147,9 @@ VALUES
 (1, '通知', '1', 'blue', 1, NULL, 1, 1, 1, NOW(), NULL, NULL),
 (2, '活动', '2', 'orangered', 2, NULL, 1, 1, 1, NOW(), NULL, NULL),
 (3, '安全消息', '1', 'blue', 1, NULL, 1, 2, 1, NOW(), NULL, NULL),
-(4, '活动消息', '2', 'orangered', 2, NULL, 1, 2, 1, NOW(), NULL, NULL);
+(4, '活动消息', '2', 'orangered', 2, NULL, 1, 2, 1, NOW(), NULL, NULL),
+(638797869570064407, '简体中文', 'zh', 'blue', 999, NULL, 1, 3, 1, NOW(), NULL, NULL),
+(638797947202437146, 'English', 'en', 'blue', 999, NULL, 1, 3, 1, NOW(), NULL, NULL);
 
 -- 初始化默认用户和角色关联数据
 INSERT INTO `sys_user_role`
@@ -202,3 +207,9 @@ VALUES
 
 -- changeset Charles7c:3.4-1
 UPDATE `sys_option` SET `default_value` = NULL WHERE `code` = 'SITE_BEIAN';
+
+INSERT INTO `sys_language`
+    (`id`, `module_id`, `module_name`, `content`, `dict_item`, `status`, `create_user`, `create_time`, `update_user`, `update_time`)
+VALUES
+    (638825372854517764, 'base', '基础配置', '', 'zh', 1, 1, NOW(), NULL, NULL),
+    (638825543151648778, 'base', '基础配置', '', 'en', 1, 1, NOW(), NULL, NULL);

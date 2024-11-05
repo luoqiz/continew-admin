@@ -169,7 +169,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
      * @param storage 存储信息
      */
     private void decodeSecretKey(StorageReq req, StorageDO storage) {
-        if (!StorageTypeEnum.S3.equals(req.getType())) {
+        if (StorageTypeEnum.LOCAL.equals(req.getType())) {
             return;
         }
         // 修改时，如果 SecretKey 不修改，需要手动修正

@@ -324,3 +324,19 @@ CREATE TABLE IF NOT EXISTS `gen_field_config` (
 ALTER TABLE `sys_option`
     MODIFY COLUMN `value` longtext DEFAULT NULL COMMENT '值',
     MODIFY COLUMN `default_value` longtext DEFAULT NULL COMMENT '默认值';
+
+CREATE TABLE IF NOT EXISTS `sys_language` (
+    `id`            bigint(20)   NOT NULL                    COMMENT 'ID',
+    `module_id`     varchar(50)  NOT NULL                    COMMENT '模块标识',
+    `module_name`   varchar(50)  NOT NULL                    COMMENT '模块名称',
+    `content`   	TEXT         NULL                      	 COMMENT '内容',
+    `dict_item`     varchar(30)  NOT NULL 					 COMMENT '所属语言类型',
+    `status`        tinyint(1)   UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态（1：启用；2：禁用）',
+    `create_user`   bigint(20)   NOT NULL                    COMMENT '创建人',
+    `create_time`   datetime     NOT NULL                    COMMENT '创建时间',
+    `update_user`   bigint(20)   DEFAULT NULL                COMMENT '修改人',
+    `update_time`   datetime     DEFAULT NULL                COMMENT '修改时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    INDEX `idx_create_user`(`create_user`) USING BTREE,
+    INDEX `idx_update_user`(`update_user`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='语言表';
