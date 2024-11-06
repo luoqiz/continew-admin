@@ -57,6 +57,12 @@ public class RouteResp implements Serializable {
     private String title;
 
     /**
+     * 标题
+     */
+    @Schema(description = "多语言key", example = "多语言key")
+    private String locale;
+
+    /**
      * 类型
      */
     @Schema(description = "类型", example = "2")

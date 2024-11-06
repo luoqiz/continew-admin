@@ -5,6 +5,7 @@
 CREATE TABLE IF NOT EXISTS `sys_menu` (
     `id`          bigint(20)   NOT NULL AUTO_INCREMENT     COMMENT 'ID',
     `title`       varchar(30)  NOT NULL                    COMMENT '标题',
+    `locale`      varchar(255) DEFAULT NULL                COMMENT '多语言配置key',
     `parent_id`   bigint(20)   NOT NULL DEFAULT 0          COMMENT '上级菜单ID',
     `type`        tinyint(1)   UNSIGNED NOT NULL DEFAULT 1 COMMENT '类型（1：目录；2：菜单；3：按钮）',
     `path`        varchar(255) DEFAULT NULL                COMMENT '路由地址',

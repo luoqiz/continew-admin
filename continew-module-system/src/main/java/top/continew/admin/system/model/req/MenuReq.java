@@ -62,7 +62,12 @@ public class MenuReq extends BaseReq {
     @NotBlank(message = "标题不能为空")
     @Length(max = 30, message = "标题长度不能超过 {max} 个字符")
     private String title;
-
+    /**
+     * 标题
+     */
+    @Schema(description = "多语言key", example = "多语言key")
+    @Length(max = 255, message = "多语言key长度不能超过 {max} 个字符")
+    private String locale;
     /**
      * 排序
      */

@@ -44,7 +44,11 @@ public class MenuResp extends BaseResp {
      */
     @Schema(description = "标题", example = "用户管理")
     private String title;
-
+    /**
+     * 标题
+     */
+    @Schema(description = "多语言key", example = "多语言key")
+    private String locale;
     /**
      * 上级菜单 ID
      */

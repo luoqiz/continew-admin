@@ -41,7 +41,10 @@ public class MenuDO extends BaseDO {
      * 标题
      */
     private String title;
-
+    /**
+     * 多语言key
+     */
+    private String locale;
     /**
      * 上级菜单 ID
      */
