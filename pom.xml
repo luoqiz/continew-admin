@@ -24,11 +24,11 @@
     <url>https://github.com/continew-org/continew-admin</url>
 
     <modules>
-        <module>continew-admin-webapi</module>
-        <module>continew-admin-plugins</module>
-        <module>continew-admin-system</module>
-        <module>continew-admin-common</module>
-        <module>continew-admin-extension</module>
+        <module>continew-webapi</module>
+        <module>continew-module-system</module>
+        <module>continew-plugin</module>
+        <module>continew-common</module>
+        <module>continew-extension</module>
     </modules>
 
     <properties>
@@ -42,35 +42,42 @@
             <!-- API 模块（存放 Controller 层代码，打包部署的模块） -->
             <dependency>
                 <groupId>top.continew</groupId>
-                <artifactId>continew-admin-webapi</artifactId>
+                <artifactId>continew-webapi</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 系统管理模块（存放系统管理模块相关功能，例如：部门管理、角色管理、用户管理等） -->
             <dependency>
                 <groupId>top.continew</groupId>
-                <artifactId>continew-admin-system</artifactId>
+                <artifactId>continew-module-system</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 公共模块（存放公共工具类，公共配置等） -->
             <dependency>
                 <groupId>top.continew</groupId>
-                <artifactId>continew-admin-common</artifactId>
+                <artifactId>continew-common</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 任务调度插件（后续会改造为独立插件） -->
             <dependency>
                 <groupId>top.continew</groupId>
-                <artifactId>continew-admin-job</artifactId>
+                <artifactId>continew-plugin-schedule</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- 能力开放插件（后续会改造为独立插件） -->
+            <dependency>
+                <groupId>top.continew</groupId>
+                <artifactId>continew-plugin-open</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 代码生成器插件（后续会改造为独立插件） -->
             <dependency>
                 <groupId>top.continew</groupId>
-                <artifactId>continew-admin-generator</artifactId>
+                <artifactId>continew-plugin-generator</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>

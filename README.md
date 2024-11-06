@@ -279,7 +279,7 @@ git clone https://github.com/continew-org/continew-admin.git
 
 ```
 continew-admin
-├─ continew-admin-webapi（API 及打包部署模块）
+├─ continew-webapi（API 及打包部署模块）
 │  ├─ src
 │  │  ├─ main
 │  │  │  ├─ java/top/continew/admin
@@ -305,7 +305,7 @@ continew-admin
 │  │  │     └─ logback-spring.xml（日志配置文件）
 │  │  └─ test（测试相关代码目录）
 │  └─ pom.xml（包含打包相关配置）
-├─ continew-admin-system（系统管理模块，存放系统管理相关业务功能，例如：部门管理、角色管理、用户管理等）
+├─ continew-module-system（系统管理模块，存放系统管理相关业务功能，例如：部门管理、角色管理、用户管理等）
 │  ├─ src
 │  │  ├─ main
 │  │  │  ├─ java/top/continew/admin
@@ -329,10 +329,10 @@ continew-admin
 │  │  │     └─ mapper（系统管理相关 Mapper XML 文件目录）
 │  │  └─ test（测试相关代码目录）
 │  └─ pom.xml
-├─ continew-admin-plugins（插件模块，存放代码生成、任务调度等扩展模块，后续会进行插件化改造）
-│  ├─ continew-admin-job（任务调度插件模块）
+├─ continew-plugin（插件模块，存放代码生成、任务调度等扩展模块，后续会进行插件化改造）
+│  ├─ continew-plugin-schedule（任务调度插件模块）
 │  │  ├─ src
-│  │  │  ├─ main/java/top/continew/admin/job
+│  │  │  ├─ main/java/top/continew/admin/schedule
 │  │  │  │  ├─ api（任务调度中心相关 API）
 │  │  │  │  ├─ config（任务调度相关配置）
 │  │  │  │  ├─ constant（任务调度相关常量）
@@ -344,7 +344,7 @@ continew-admin
 │  │  │  │  └─ service（代码生成器相关业务接口及实现类）
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
-│  ├─ continew-admin-generator（代码生成器插件模块）
+│  ├─ continew-plugin-generator（代码生成器插件模块）
 │  │  ├─ src
 │  │  │  ├─ main
 │  │  │  │  ├─ java/top/continew/admin/generator
@@ -364,7 +364,7 @@ continew-admin
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
 │  └─ pom.xml
-├─ continew-admin-common（公共模块，存放公共工具类，公共配置等）
+├─ continew-common（公共模块，存放公共工具类，公共配置等）
 │  ├─ src
 │  │  ├─ main/java/top/continew/admin/common
 │  │  │  ├─ config（公共配置）
@@ -377,12 +377,12 @@ continew-admin
 │  │  │  └─ util（公共工具类）
 │  │  └─ test（测试相关代码目录）
 │  └─ pom.xml
-├─ continew-admin-extension（扩展模块）
-│  ├─ continew-admin-job-server（任务调度服务模块，实际开发时如果是公司统一提供环境，可直接删除本模块）
+├─ continew-extension（扩展模块）
+│  ├─ continew-extension-schedule-server（任务调度服务端模块，实际开发时如果是公司统一提供环境，可直接删除本模块）
 │  │  ├─ src
 │  │  │  ├─ main
-│  │  │  │  ├─ java/top/continew/admin/extension/job
-│  │  │  │  │  └─ JobServerApplication.java（任务调度服务启动程序）
+│  │  │  │  ├─ java/top/continew/admin/extension/schedule
+│  │  │  │  │  └─ ScheduleServerApplication.java（任务调度服务端启动程序）
 │  │  │  │  └─ resources
 │  │  │  │     ├─ config（核心配置目录）
 │  │  │  │     │  ├─ application-dev.yml（开发环境配置文件）
