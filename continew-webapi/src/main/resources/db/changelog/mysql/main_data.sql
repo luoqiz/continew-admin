@@ -158,8 +158,8 @@ VALUES
 (2, '活动', '2', 'orangered', 2, NULL, 1, 1, 1, NOW(), NULL, NULL),
 (3, '安全消息', '1', 'blue', 1, NULL, 1, 2, 1, NOW(), NULL, NULL),
 (4, '活动消息', '2', 'orangered', 2, NULL, 1, 2, 1, NOW(), NULL, NULL),
-(638797869570064407, '简体中文', 'zh', 'blue', 999, NULL, 1, 3, 1, NOW(), NULL, NULL),
-(638797947202437146, 'English', 'en', 'blue', 999, NULL, 1, 3, 1, NOW(), NULL, NULL);
+(638797869570064407, '简体中文', 'zh', 'blue', 999, NULL, 1, 638805316720394272, 1, NOW(), NULL, NULL),
+(638797947202437146, 'English', 'en', 'blue', 999, NULL, 1, 638805316720394272, 1, NOW(), NULL, NULL);
 
 -- 初始化默认用户和角色关联数据
 INSERT INTO `sys_user_role`
@@ -192,5 +192,8 @@ VALUES
 INSERT INTO `sys_language`
 (`id`, `module_id`, `module_name`, `content`, `dict_item`, `status`, `create_user`, `create_time`, `update_user`, `update_time`)
 VALUES
-    (638825372854517764, 'base', '基础配置', '', 'zh', 1, 1, NOW(), NULL, NULL),
-    (638825543151648778, 'base', '基础配置', '', 'en', 1, 1, NOW(), NULL, NULL);
+    (638825372854517764, 'base', '基础配置', 'menu:\n  dashboard:\n    workplace: 数据展台\nlogin:\n  email: 邮箱登录', 'zh', 1, 1, NOW(), NULL, NULL),
+    (638825543151648778, 'base', 'BaseConfig', 'menu:\n  dashboard:\n    workplace: DataBooth\nlogin:\n  email: email login', 'en', 1, 1,  NOW(), NULL, NULL)
+;
+
+
