@@ -26,7 +26,7 @@
           @change="search"
         />
 	  <#elseif fieldConfig.formType == "RADIO"><#-- 单选框 -->
-		<a-radio-group v-model="queryForm.${fieldConfig.fieldName}" :options="${fieldConfig.dictCode}" @change="search"/>
+		<a-radio-group v-model="queryForm.${fieldConfig.fieldName}" :options="${fieldConfig.dictCode!''}" @change="search"/>
 	  <#elseif fieldConfig.formType == "DATE"><#-- 日期框 -->
         <#if fieldConfig.queryType == "BETWEEN">
         <DateRangePicker v-model="queryForm.${fieldConfig.fieldName}" format="YYYY-MM-DD" @change="search" />
