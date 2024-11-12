@@ -1,0 +1,41 @@
+CREATE TABLE `whse_addr`  (
+      `id` 				bigint(20) 		NOT NULL 								COMMENT 'id编号',
+      `whse_no` 		varchar(100) 	NOT NULL 								COMMENT '仓库编号',
+      `name` 			varchar(100) 	NOT NULL 								COMMENT '仓库名称',
+      `addr` 			varchar(48) 	NULL 				             		COMMENT '仓库地址',
+      `whse_type`		tinyint(1)  	NOT NULL            DEFAULT 3      		COMMENT '仓库类型 (1国仓  2地仓  3店仓)',
+      `status` 			tinyint(0) 		NOT NULL 		    DEFAULT 1 			COMMENT '状态 (1使用  2停用)',
+      `memo` 			varchar(2000)   NULL				DEFAULT ''			COMMENT '备注信息',
+      `dept_id` 		bigint(20) 		NULL				            		COMMENT '所属部门',
+      `create_user`    	bigint(20)   	NOT NULL                                COMMENT '创建人',
+      `create_time`    	datetime     	NOT NULL                                COMMENT '创建时间',
+      `update_user`    	bigint(20)   					                        COMMENT '修改人',
+      `update_time`    	datetime     					                        COMMENT '修改时间',
+      PRIMARY KEY (`id`),
+      INDEX `whse_no`(`whse_no`)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='仓库地址表';
+
+CREATE TABLE `wms_goods_sku`  (
+      `id` 							bigint(20) 		NOT NULL 										COMMENT '编号',
+      `barcode` 				varchar(120)  NOT NULL				 				 		COMMENT '条形码',
+      `spu_id` 					bigint(0) 		NULL 										 		COMMENT '商品编号',
+      `name` 						varchar(24) 	NOT NULL 								 		COMMENT '规格名称',
+      `unit` 						varchar(48) 	NOT NULL 		 								COMMENT '单位',
+      `amount` 					int 					NOT NULL		DEFAULT 1 		 	COMMENT '数量',
+      `unpacking` 			bool					NOT NULL 		DEFAULT b'0' 		COMMENT '拆箱',
+      `pack_unit`				varchar(24)		NOT NULL 		DEFAULT 1		 		COMMENT '拆箱单位',
+      `pack_amount`			int(0)				NOT NULL 		DEFAULT 1		 		COMMENT '拆箱数量',
+      `sell_point` 			varchar(48) 	NULL 				DEFAULT ''	 		COMMENT '卖点',
+      `specs` 					json 					NULL 												COMMENT '规格列表',
+      `price` 					decimal(10,2) NULL 										 		COMMENT '售价',
+      `img` 						varchar(120)  NULL 										 		COMMENT '首图',
+      `pics` 						varchar(255)  NULL 										 		COMMENT '图片列表',
+      `status` 					tinyint(0) 		NOT NULL 		DEFAULT 1 			COMMENT '状态 1上架  2下架',
+      `memo` 						varchar(3000) NULL				DEFAULT ''			COMMENT '备注信息',
+      `create_user`    	bigint(20)   	NOT NULL                    COMMENT '创建人',
+      `create_time`    	datetime     	NOT NULL                    COMMENT '创建时间',
+      `update_user`    	bigint(20)   	      				              COMMENT '修改人',
+      `update_time`    	datetime     				        	            COMMENT '修改时间',
+      PRIMARY KEY (`id`),
+      INDEX `wms_goods_sku_barcode`(`barcode`)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8mb4 COMMENT = '物料规格表';

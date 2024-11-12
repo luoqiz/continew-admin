@@ -1,30 +1,25 @@
 package top.continew.admin.system.service.impl;
 
 import cn.hutool.json.JSON;
-import cn.hutool.setting.yaml.YamlUtil;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
-import top.continew.admin.common.util.YamlUtils;
+import top.continew.admin.common.util.PropsUtils;
+import top.continew.admin.system.mapper.LanguageMapper;
 import top.continew.admin.system.model.entity.DictDO;
 import top.continew.admin.system.model.entity.DictItemDO;
-import top.continew.admin.system.model.resp.DictResp;
-import top.continew.admin.system.service.DictItemService;
-import top.continew.admin.system.service.DictService;
-import top.continew.starter.extension.crud.model.resp.LabelValueResp;
-import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
-import top.continew.admin.system.mapper.LanguageMapper;
 import top.continew.admin.system.model.entity.LanguageDO;
 import top.continew.admin.system.model.query.LanguageQuery;
 import top.continew.admin.system.model.req.LanguageReq;
 import top.continew.admin.system.model.resp.LanguageDetailResp;
 import top.continew.admin.system.model.resp.LanguageResp;
+import top.continew.admin.system.service.DictItemService;
+import top.continew.admin.system.service.DictService;
 import top.continew.admin.system.service.LanguageService;
+import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +40,7 @@ public class LanguageServiceImpl extends BaseServiceImpl<LanguageMapper, Languag
     @Resource
     private DictItemService dictItemService;
 
-    private String  language_dict_key = "language_type";
+    private String language_dict_key = "language_type";
 
     @Transactional
     @Override
@@ -74,6 +69,7 @@ public class LanguageServiceImpl extends BaseServiceImpl<LanguageMapper, Languag
         for (int i = 0; i < res.size(); i++) {
             str_array[i] = res.get(i).getContent();
         }
-        return YamlUtils.toJsonObject(str_array);
+        String jsonStr = PropsUtils.props2json(str_array);
+        return new JSONObject(jsonStr);
     }
 }

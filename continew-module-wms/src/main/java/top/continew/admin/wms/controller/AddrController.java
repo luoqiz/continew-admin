@@ -18,6 +18,7 @@ import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.starter.extension.crud.util.ValidateGroup;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 仓库地址管理 API
@@ -108,5 +109,16 @@ public class AddrController extends BaseController<AddrService, AddrResp, AddrDe
         this.checkPermission(Api.LIST);
         query.setWhseType(1);
         return this.baseService.page(query, pageQuery);
+    }
+
+    @Operation(
+            summary = "根据当前用户获取所有仓库",
+            description = "根据当前用户获取所有仓库"
+    )
+    @ResponseBody
+    @GetMapping("/all")
+    public List<AddrResp> all(AddrQuery query, @Validated PageQuery pageQuery) {
+        this.checkPermission(Api.LIST);
+        return this.baseService.list(query, pageQuery);
     }
 }
