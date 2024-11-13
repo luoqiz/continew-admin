@@ -7,6 +7,7 @@ import lombok.Data;
 import top.continew.starter.extension.crud.model.resp.BaseDetailResp;
 
 import java.io.Serial;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -49,14 +50,14 @@ public class WhseStockInDetailDetailResp extends BaseDetailResp {
      */
     @Schema(description = "生产日期")
     @ExcelProperty(value = "生产日期")
-    private LocalDateTime prodTime;
+    private LocalDate prodTime;
 
     /**
      * 过期日期
      */
     @Schema(description = "过期日期")
     @ExcelProperty(value = "过期日期")
-    private LocalDateTime expiryTime;
+    private LocalDate expiryTime;
 
     /**
      * 计划入库数量
@@ -78,4 +79,11 @@ public class WhseStockInDetailDetailResp extends BaseDetailResp {
     @Schema(description = "备注信息")
     @ExcelProperty(value = "备注信息")
     private String memo;
+
+    /**
+     * 状态 (1待核检 2核检通过)
+     */
+    @Schema(description = "核检状态")
+    @ExcelProperty(value = "核检状态")
+    private Integer status;
 }

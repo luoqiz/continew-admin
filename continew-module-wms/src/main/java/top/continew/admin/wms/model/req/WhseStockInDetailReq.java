@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import top.continew.starter.extension.crud.model.req.BaseReq;
 
 import java.io.Serial;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -52,14 +53,14 @@ public class WhseStockInDetailReq extends BaseReq {
      */
     @Schema(description = "生产日期")
     @NotNull(message = "生产日期不能为空")
-    private LocalDateTime prodTime;
+    private LocalDate prodTime;
 
     /**
      * 过期日期
      */
     @Schema(description = "过期日期")
     @NotNull(message = "过期日期不能为空")
-    private LocalDateTime expiryTime;
+    private LocalDate expiryTime;
 
     /**
      * 计划入库数量
@@ -67,4 +68,22 @@ public class WhseStockInDetailReq extends BaseReq {
     @Schema(description = "计划入库数量")
     @NotNull(message = "计划入库数量不能为空")
     private Integer planNum;
+
+    /**
+     * 实际入库数量
+     */
+    @Schema(description = "实际入库数量")
+    private Integer realNum;
+
+    /**
+     * 备注信息
+     */
+    @Schema(description = "备注信息")
+    private String memo;
+
+    /**
+     * 状态 (1待核检 2核检通过)
+     */
+    @Schema(description = "核检状态")
+    private Integer status;
 }

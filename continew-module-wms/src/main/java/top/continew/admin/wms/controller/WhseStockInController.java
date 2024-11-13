@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.continew.admin.wms.model.query.WhseStockInQuery;
 import top.continew.admin.wms.model.req.WhseStockInReq;
 import top.continew.admin.wms.model.resp.WhseStockInInfoResp;
@@ -43,5 +40,22 @@ public class WhseStockInController extends BaseController<WhseStockInService, Wh
     public WhseStockInInfoResp detail(@PathVariable("id") Long id) {
         this.checkPermission(Api.LIST);
         return baseService.detailById(id);
+    }
+
+    @Operation(
+            summary = "修改入库状态",
+            description = "修改入库状态"
+    )
+    @Parameter(
+            name = "id",
+            description = "ID",
+            example = "1",
+            in = ParameterIn.PATH
+    )
+    @ResponseBody
+    @PutMapping("/status/{id}/{status}")
+    public void updateStatus(@PathVariable("id") Long id,@PathVariable("status") int status) {
+        this.checkPermission(Api.LIST);
+        baseService.updateStatus(id,status);
     }
 }

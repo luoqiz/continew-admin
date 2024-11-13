@@ -55,13 +55,11 @@ public class WhseStockInInfoResp extends BaseDetailResp {
     @ConditionOnPropertyNotNull
     @Assemble(
             container = WmsConstants.addrContainer,
-            props = {@Mapping(
-                    ref = "whseName"
-            )}
+            prop = "name:whseName"
     )
     @Schema(description = "仓库id编号")
     @ExcelProperty(value = "仓库id编号")
-    private String whseId;
+    private Long whseId;
 
     @Schema(description = "仓库名称")
     @ExcelProperty(value = "仓库名称")

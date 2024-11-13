@@ -41,7 +41,5 @@ public class WhseStockInReq extends BaseReq {
      * 仓库id编号
      */
     @Schema(description = "仓库id编号")
-    @NotBlank(message = "仓库id编号不能为空")
-    @Length(max = 100, message = "仓库id编号长度不能超过 {max} 个字符")
     private Long whseId;
 }

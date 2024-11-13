@@ -12,4 +12,6 @@ import top.continew.admin.wms.model.resp.GoodsSkuResp;
  * @author luoqiz
  * @since 2024/11/07 11:10
  */
-public interface GoodsSkuService extends BaseService<GoodsSkuResp, GoodsSkuDetailResp, GoodsSkuQuery, GoodsSkuReq> {}
+public interface GoodsSkuService extends BaseService<GoodsSkuResp, GoodsSkuDetailResp, GoodsSkuQuery, GoodsSkuReq> {
+    GoodsSkuDetailResp getBySkuNo(String skuNo);
+}

@@ -5,6 +5,7 @@ import lombok.Data;
 import top.continew.starter.extension.crud.model.entity.BaseDO;
 
 import java.io.Serial;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -38,12 +39,12 @@ public class WhseStockInDetailDO extends BaseDO {
     /**
      * 生产日期
      */
-    private LocalDateTime prodTime;
+    private LocalDate prodTime;
 
     /**
      * 过期日期
      */
-    private LocalDateTime expiryTime;
+    private LocalDate expiryTime;
 
     /**
      * 计划入库数量
@@ -59,4 +60,9 @@ public class WhseStockInDetailDO extends BaseDO {
      * 备注信息
      */
     private String memo;
+
+    /**
+     * 状态 (1待核检 2核检通过)
+     */
+    private Integer status;
 }

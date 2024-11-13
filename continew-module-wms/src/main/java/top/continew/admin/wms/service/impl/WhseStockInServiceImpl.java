@@ -1,10 +1,12 @@
 package top.continew.admin.wms.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.wms.enums.WhseStockInStatusEnum;
 import top.continew.admin.wms.mapper.WhseStockInMapper;
 import top.continew.admin.wms.model.entity.WhseStockInDO;
@@ -57,6 +59,17 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
         sortquery.setSort(null);
         List<WhseStockInDetailResp> list = detailService.list(query, sortquery);
         stockInInfo.setGoodsList(list);
-        return null;
+        return stockInInfo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateStatus(Long id, int status) {
+        WhseStockInDO entity = this.getById(id);
+        if (entity == null) {
+            throw new RuntimeException("数据不存在，请检查！");
+        }
+        entity.setStatus(status);
+        baseMapper.updateById(entity);
     }
 }

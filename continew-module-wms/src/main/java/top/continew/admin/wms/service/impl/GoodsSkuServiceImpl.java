@@ -1,5 +1,8 @@
 package top.continew.admin.wms.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -21,4 +24,14 @@ import top.continew.admin.wms.service.GoodsSkuService;
  */
 @Service
 @RequiredArgsConstructor
-public class GoodsSkuServiceImpl extends BaseServiceImpl<GoodsSkuMapper, GoodsSkuDO, GoodsSkuResp, GoodsSkuDetailResp, GoodsSkuQuery, GoodsSkuReq> implements GoodsSkuService {}
+public class GoodsSkuServiceImpl extends BaseServiceImpl<GoodsSkuMapper, GoodsSkuDO, GoodsSkuResp, GoodsSkuDetailResp, GoodsSkuQuery, GoodsSkuReq> implements GoodsSkuService {
+    @Override
+    public GoodsSkuDetailResp getBySkuNo(String skuNo) {
+        LambdaQueryWrapper<GoodsSkuDO> query = new LambdaQueryWrapper<>();
+        query.eq(GoodsSkuDO::getBarcode,skuNo);
+        GoodsSkuDO goodsSkuDo = baseMapper.selectOne(query);
+        GoodsSkuDetailResp resp = new GoodsSkuDetailResp();
+        BeanUtil.copyProperties(goodsSkuDo,resp);
+        return resp;
+    }
+}

@@ -13,5 +13,18 @@ import top.continew.starter.extension.crud.service.BaseService;
  * @since 2024/11/07 17:49
  */
 public interface WhseStockInService extends BaseService<WhseStockInResp, WhseStockInInfoResp, WhseStockInQuery, WhseStockInReq> {
+    /**
+     * 获取入库单详情（包括物料信息）
+     * @param id
+     * @return
+     */
     WhseStockInInfoResp detailById(Long id);
+
+    /**
+     * 更新状态
+     * @param id
+     * @param status
+     * @return
+     */
+    void updateStatus(Long id, int status);
 }
