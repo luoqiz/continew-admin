@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { Message } from '@arco-design/web-vue'
 import { get${classNamePrefix}, add${classNamePrefix}, update${classNamePrefix} } from '@/apis/${apiModuleName}/${apiName}'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
@@ -24,9 +25,11 @@ const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
 
+const { t } = useI18n()
+
 const dataId = ref('')
 const isUpdate = computed(() => !!dataId.value)
-const title = computed(() => (isUpdate.value ? '修改${businessName}' : '新增${businessName}'))
+const title = computed(() => (isUpdate.value ? t('${tableName?replace("_",".")}.page.modify.title') : t('${tableName?replace("_",".")}.page.add.title')))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
 <#if hasDictField>
@@ -46,7 +49,7 @@ const columns = computed<Columns<typeof form>>(() => [
 <#list fieldConfigs as fieldConfig>
   <#if fieldConfig.showInForm>
   {
-    label: '${fieldConfig.comment}',
+    label: t('${tableName?replace("_",".")}.field.${fieldConfig.fieldName}'),
     field: '${fieldConfig.fieldName}',
     <#if fieldConfig.formType = 'INPUT'>
     type: 'input',
@@ -75,7 +78,7 @@ const columns = computed<Columns<typeof form>>(() => [
     options: ${fieldConfig.dictCode},
     </#if>
     <#if fieldConfig.isRequired>
-    rules: [{ required: true, message: '请输入${fieldConfig.comment}' }]
+    rules: [{ required: true, message: t('${tableName?replace("_",".")}.field.${fieldConfig.fieldName}_placeholder') }]
     </#if>
   },
   </#if>
@@ -112,10 +115,10 @@ const save = async () => {
     if (isInvalid) return false
     if (isUpdate.value) {
       await update${classNamePrefix}(form, dataId.value)
-      Message.success('修改成功')
+      Message.success(t('page.common.message.modify.success'))
     } else {
       await add${classNamePrefix}(form)
-      Message.success('新增成功')
+      Message.success(t('page.common.message.add.success'))
     }
     emit('save-success')
     return true

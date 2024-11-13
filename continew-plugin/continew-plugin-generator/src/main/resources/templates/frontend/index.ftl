@@ -2,7 +2,7 @@
   <div class="table-page">
     <GiTable
       row-key="id"
-      title="${businessName}管理"
+      :title="$t('${tableName?replace("_",".")}.table')"
       :data="dataList"
       :columns="columns"
       :loading="loading"
@@ -59,17 +59,17 @@
       </#list>
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
-          <template #default>重置</template>
+          <template #default>{{ $t('page.common.button.reset') }}</template>
         </a-button>
       </template>
       <template #toolbar-right>
         <a-button v-permission="['${apiModuleName}:${apiName}:add']" type="primary" @click="onAdd">
           <template #icon><icon-plus /></template>
-          <template #default>新增</template>
+          <template #default>{{ $t('page.common.button.add') }}</template>
         </a-button>
         <a-button v-permission="['${apiModuleName}:${apiName}:export']" @click="onExport">
           <template #icon><icon-download /></template>
-          <template #default>导出</template>
+          <template #default>{{ $t('page.common.button.export') }}</template>
         </a-button>
       </template>
       <#list fieldConfigs as fieldConfig>
@@ -83,16 +83,16 @@
       </#list>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['${apiModuleName}:${apiName}:list']" title="查看" @click="onDetail(record)">查看</a-link>
-          <a-link v-permission="['${apiModuleName}:${apiName}:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+          <a-link v-permission="['${apiModuleName}:${apiName}:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+          <a-link v-permission="['${apiModuleName}:${apiName}:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
           <a-link
             v-permission="['${apiModuleName}:${apiName}:delete']"
             status="danger"
             :disabled="record.disabled"
-            title="删除"
+            :title="$t('page.common.button.delete')"
             @click="onDelete(record)"
           >
-            删除
+            {{ $t('page.common.button.delete') }}
           </a-link>
         </a-space>
       </template>
@@ -104,6 +104,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import ${classNamePrefix}AddModal from './${classNamePrefix}AddModal.vue'
 import ${classNamePrefix}DetailDrawer from './${classNamePrefix}DetailDrawer.vue'
 import { type ${classNamePrefix}Resp, type ${classNamePrefix}Query, delete${classNamePrefix}, export${classNamePrefix}, list${classNamePrefix} } from '@/apis/${apiModuleName}'
@@ -114,7 +115,7 @@ import has from '@/utils/has'
 import { useDict } from '@/hooks/app'
 
 defineOptions({ name: '${classNamePrefix}' })
-
+const { t } = useI18n()
 <#if hasDictField>
 const { <#list dictCodes as dictCode>${dictCode}<#if dictCode_has_next>,</#if></#list> } = useDict(<#list dictCodes as dictCode>'${dictCode}'<#if dictCode_has_next>,</#if></#list>)
 </#if>
@@ -136,23 +137,47 @@ const {
   handleDelete
 } = useTable((page) => list${classNamePrefix}({ ...queryForm, ...page }), { immediate: true })
 
-const columns: TableInstanceColumns[] = [
+const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
 <#if fieldConfigs??>
   <#list fieldConfigs as fieldConfig>
   <#if fieldConfig.showInList>
-  { title: '${fieldConfig.comment}', dataIndex: '${fieldConfig.fieldName}', slotName: '${fieldConfig.fieldName}' },
+  { title: t('${tableName?replace("_",".")}.field.${fieldConfig.fieldName}'), dataIndex: '${fieldConfig.fieldName}', slotName: '${fieldConfig.fieldName}' },
+  </#if>
+  </#list>
+
+  <!-- 转换翻译类 -->
+  ${tableName?replace("_",".")}.table: ${businessName}
+  ${tableName?replace("_",".")}.page.modify.title: 修改${businessName}
+  ${tableName?replace("_",".")}.page.add.title: 新增${businessName}
+  ${tableName?replace("_",".")}.page.detail.title: ${businessName}详情
+  <#list fieldConfigs as fieldConfig>
+  <#if fieldConfig.showInList>
+  ${tableName?replace("_",".")}.field.${fieldConfig.fieldName}: ${fieldConfig.comment}
+  ${tableName?replace("_",".")}.field.${fieldConfig.fieldName}_placeholder: 请输入${fieldConfig.comment}
+  </#if>
+  </#list>
+
+  <!-- 转换翻译类 -->
+  ${tableName?replace("_",".")}.table: ${businessName}
+  ${tableName?replace("_",".")}.page.modify.title: update ${businessName}
+  ${tableName?replace("_",".")}.page.add.title: Add ${businessName}
+  ${tableName?replace("_",".")}.page.detail.title: ${businessName} detail
+  <#list fieldConfigs as fieldConfig>
+  <#if fieldConfig.showInList>
+  ${tableName?replace("_",".")}.field.${fieldConfig.fieldName}: ${fieldConfig.fieldName}
+  ${tableName?replace("_",".")}.field.${fieldConfig.fieldName}_placeholder: please input ${fieldConfig.fieldName}
   </#if>
   </#list>
 </#if>
   {
-    title: '操作',
+    title: t('page.common.button.operator'),
     slotName: 'action',
     width: 130,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
     show: has.hasPermOr(['${apiModuleName}:${apiName}:update', '${apiModuleName}:${apiName}:delete'])
   }
-]
+])
 
 // 重置
 const reset = () => {
@@ -167,7 +192,7 @@ const reset = () => {
 // 删除
 const onDelete = (record: ${classNamePrefix}Resp) => {
   return handleDelete(() => delete${classNamePrefix}(record.id), {
-    content: `是否确定删除该条数据？`,
+    content: t('page.common.message.delete'),
     showModal: true
   })
 }

@@ -26,7 +26,7 @@ export interface ${classNamePrefix}Query {
 <#if fieldConfigs??>
 <#list fieldConfigs as fieldConfig>
   <#if fieldConfig.showInQuery>
-  ${fieldConfig.fieldName}: string
+  ${fieldConfig.fieldName}: string | undefined
   </#if>
 </#list>
 </#if>
