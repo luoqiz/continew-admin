@@ -172,7 +172,8 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   {
     title: t('page.common.button.operator'),
     slotName: 'action',
-    width: 130,
+    dataIndex: 'action',
+    width: 180,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
     show: has.hasPermOr(['${apiModuleName}:${apiName}:update', '${apiModuleName}:${apiName}:delete'])
