@@ -1,7 +1,6 @@
 package top.continew.admin.wms.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,7 @@ import top.continew.admin.wms.service.WhseStockInService;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -68,6 +68,10 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
         WhseStockInDO entity = this.getById(id);
         if (entity == null) {
             throw new RuntimeException("数据不存在，请检查！");
+        }
+        // 如果是完成入库，则补充上入库时间
+        if (status == 3) {
+            entity.setInTime(LocalDateTime.now());
         }
         entity.setStatus(status);
         baseMapper.updateById(entity);
