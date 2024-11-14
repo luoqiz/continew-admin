@@ -8,20 +8,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.wms.enums.WhseStockInStatusEnum;
 import top.continew.admin.wms.mapper.WhseStockInMapper;
+import top.continew.admin.wms.model.entity.GoodsStockDO;
 import top.continew.admin.wms.model.entity.WhseStockInDO;
 import top.continew.admin.wms.model.entity.WhseStockInDetailDO;
 import top.continew.admin.wms.model.query.WhseStockInDetailQuery;
 import top.continew.admin.wms.model.query.WhseStockInQuery;
 import top.continew.admin.wms.model.req.WhseStockInReq;
+import top.continew.admin.wms.model.resp.AddrDetailResp;
 import top.continew.admin.wms.model.resp.WhseStockInDetailResp;
 import top.continew.admin.wms.model.resp.WhseStockInInfoResp;
 import top.continew.admin.wms.model.resp.WhseStockInResp;
+import top.continew.admin.wms.service.AddrService;
+import top.continew.admin.wms.service.GoodsStockService;
 import top.continew.admin.wms.service.WhseStockInDetailService;
 import top.continew.admin.wms.service.WhseStockInService;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +41,12 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
 
     @Resource
     private WhseStockInDetailService detailService;
+
+    @Resource
+    private GoodsStockService goodsStockService;
+
+    @Resource
+    private AddrService addrService;
 
     @Override
     public Long add(WhseStockInReq req) {
@@ -72,6 +83,31 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
         // 如果是完成入库，则补充上入库时间
         if (status == 3) {
             entity.setInTime(LocalDateTime.now());
+            WhseStockInDetailQuery query = new WhseStockInDetailQuery();
+            query.setStockInId(id);
+            List<WhseStockInDetailResp> stockInDetail = detailService.list(query, new SortQuery());
+            List<GoodsStockDO> datas = new ArrayList<>();
+            AddrDetailResp whseInfo = addrService.get(entity.getWhseId());
+            for (WhseStockInDetailResp whseStockInDetailResp : stockInDetail) {
+                if (!whseStockInDetailResp.getStatus().equals(2)) {
+                    throw new RuntimeException("有物料尚未核验，请重新检查！");
+                }
+                GoodsStockDO temp = new GoodsStockDO();
+                temp.setStockInId(id);
+                temp.setStockInNo(entity.getStockInNo());
+                temp.setStockInDetailId(whseStockInDetailResp.getId());
+                temp.setGoodsSku(whseStockInDetailResp.getGoodsSku());
+                temp.setInitNum(whseStockInDetailResp.getRealNum());
+                temp.setRealNum(whseStockInDetailResp.getRealNum());
+                temp.setWhseId(entity.getWhseId());
+                temp.setWhseType(whseInfo.getWhseType());
+                temp.setStatus(1);
+                temp.setProdTime(whseStockInDetailResp.getProdTime());
+                temp.setExpiryTime(whseStockInDetailResp.getExpiryTime());
+                temp.setInfo("");
+                datas.add(temp);
+            }
+            goodsStockService.batchAdd(datas);
         }
         entity.setStatus(status);
         baseMapper.updateById(entity);
