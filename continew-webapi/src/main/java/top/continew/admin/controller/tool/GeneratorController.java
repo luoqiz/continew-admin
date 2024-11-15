@@ -27,10 +27,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.continew.admin.generator.model.entity.FieldConfigDO;
 import top.continew.admin.generator.model.entity.GenConfigDO;
-import top.continew.admin.generator.model.query.TableQuery;
+import top.continew.admin.generator.model.query.GenConfigQuery;
 import top.continew.admin.generator.model.req.GenConfigReq;
 import top.continew.admin.generator.model.resp.GeneratePreviewResp;
-import top.continew.admin.generator.model.resp.TableResp;
 import top.continew.admin.generator.service.GeneratorService;
 import top.continew.admin.system.service.DictService;
 import top.continew.starter.extension.crud.model.query.PageQuery;
@@ -56,11 +55,11 @@ public class GeneratorController {
     private final GeneratorService baseService;
     private final DictService dictService;
 
-    @Operation(summary = "分页查询数据表", description = "分页查询数据表")
+    @Operation(summary = "分页查询生成配置", description = "分页查询生成配置列表")
     @SaCheckPermission("tool:generator:list")
-    @GetMapping("/table")
-    public PageResp<TableResp> pageTable(TableQuery query, @Validated PageQuery pageQuery) throws SQLException {
-        return baseService.pageTable(query, pageQuery);
+    @GetMapping("/config")
+    public PageResp<GenConfigDO> pageGenConfig(GenConfigQuery query, @Validated PageQuery pageQuery) {
+        return baseService.pageGenConfig(query, pageQuery);
     }
 
     @Operation(summary = "查询生成配置信息", description = "查询生成配置信息")

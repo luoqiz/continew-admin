@@ -18,9 +18,13 @@ package top.continew.admin.controller.system;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import top.continew.admin.system.model.query.RoleQuery;
@@ -42,6 +46,7 @@ import java.util.List;
  * @since 2023/2/8 23:11
  */
 @Tag(name = "角色管理 API")
+@Validated
 @RestController
 @RequiredArgsConstructor
 @CrudRequestMapping(value = "/system/role", api = {Api.PAGE, Api.GET, Api.ADD, Api.UPDATE, Api.DELETE})
@@ -49,16 +54,18 @@ public class RoleController extends BaseController<RoleService, RoleResp, RoleDe
 
     private final UserRoleService userRoleService;
 
-    @Operation(summary = "查询角色关联用户", description = "查询角色组绑定的关联用户")
-    @GetMapping("/listRoleUsers/{id}")
-    public List<Long> listUsers(@PathVariable("id") Long roleId) {
-        return userRoleService.listUserIdByRoleId(roleId);
+    @Operation(summary = "查询角色关联用户", description = "查询角色关联的用户ID列表")
+    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @GetMapping("/{id}/user")
+    public List<Long> listUser(@PathVariable("id") Long id) {
+        return userRoleService.listUserIdByRoleId(id);
     }
 
-    @Operation(summary = "关联用户", description = "批量关联用户")
-    @SaCheckPermission("system:role:bindUsers")
-    @PostMapping("/bindUsers/{id}")
-    public void bindUsers(@PathVariable("id") Long roleId, @RequestBody List<Long> userIds) {
-        userRoleService.bindUserIds(roleId, userIds);
+    @Operation(summary = "分配角色给用户", description = "批量分配角色给用户")
+    @SaCheckPermission("system:role:assign")
+    @PostMapping("/{id}/user")
+    public void assignToUsers(@PathVariable("id") Long id,
+                              @Validated @NotEmpty(message = "用户ID列表不能为空") @RequestBody List<Long> userIds) {
+        baseService.assignToUsers(id, userIds);
     }
 }

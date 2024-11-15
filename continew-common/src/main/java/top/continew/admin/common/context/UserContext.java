@@ -100,7 +100,7 @@ public class UserContext implements Serializable {
         if (CollUtil.isEmpty(roleCodes)) {
             return false;
         }
-        return roleCodes.contains(SysConstants.ADMIN_ROLE_CODE);
+        return roleCodes.contains(SysConstants.SUPER_ROLE_CODE);
     }
 
     /**

@@ -66,6 +66,13 @@ continew-starter.web:
     # 是否将原生异常错误信息填充到状态信息中
     origin-exception-using-detail-message: false
 
+--- ### 全局树结构配置（简单树，对应前端 UI）
+continew-starter.crud:
+  tree:
+    id-key: key
+    name-key: title
+    weight-key: sort
+
 --- ### 接口文档配置
 springdoc:
   # 设置对象型参数的展示形式（设为 true 表示将对象型参数平展开，即对象内的属性直接作为参数展示而不是嵌套在对象内，默认 false）

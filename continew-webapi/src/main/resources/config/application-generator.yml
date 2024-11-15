@@ -129,3 +129,8 @@ generator:
       packageName: src/views
       extension: .vue
       backend: false
+    Menu:
+      template-path: backend/Menu.ftl
+      packageName: sql
+      extension: .sql
+      backend: true

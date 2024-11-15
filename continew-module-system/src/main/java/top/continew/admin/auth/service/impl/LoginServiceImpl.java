@@ -22,6 +22,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
+import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -61,7 +62,7 @@ import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.autoconfigure.project.ProjectProperties;
 import top.continew.starter.core.util.validate.CheckUtils;
 import top.continew.starter.extension.crud.annotation.TreeField;
-import top.continew.starter.extension.crud.util.TreeUtils;
+import top.continew.starter.extension.crud.autoconfigure.CrudProperties;
 import top.continew.starter.messaging.websocket.util.WebSocketUtils;
 import top.continew.starter.web.util.SpringWebUtils;
 
@@ -83,6 +84,7 @@ import static top.continew.admin.system.enums.PasswordPolicyEnum.PASSWORD_EXPIRA
 public class LoginServiceImpl implements LoginService {
 
     private final ProjectProperties projectProperties;
+    private final CrudProperties crudProperties;
     private final PasswordEncoder passwordEncoder;
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
     private final UserService userService;
@@ -145,8 +147,8 @@ public class LoginServiceImpl implements LoginService {
             user.setAvatar(authUser.getAvatar());
             user.setDeptId(SysConstants.SUPER_DEPT_ID);
             Long userId = userService.add(user);
-            RoleDO role = roleService.getByCode(SysConstants.ADMIN_ROLE_CODE);
-            userRoleService.add(Collections.singletonList(role.getId()), userId);
+            RoleDO role = roleService.getByCode(SysConstants.SUPER_ROLE_CODE);
+            userRoleService.assignRolesToUser(Collections.singletonList(role.getId()), userId);
             userSocial = new UserSocialDO();
             userSocial.setUserId(userId);
             userSocial.setSource(source);
@@ -170,7 +172,7 @@ public class LoginServiceImpl implements LoginService {
         }
         // 查询菜单列表
         Set<MenuResp> menuSet = new LinkedHashSet<>();
-        if (roleCodeSet.contains(SysConstants.ADMIN_ROLE_CODE)) {
+        if (roleCodeSet.contains(SysConstants.SUPER_ROLE_CODE)) {
             menuSet.addAll(menuService.listAll());
         } else {
             roleCodeSet.forEach(roleCode -> menuSet.addAll(menuService.listByRoleCode(roleCode)));
@@ -178,8 +180,8 @@ public class LoginServiceImpl implements LoginService {
         List<MenuResp> menuList = menuSet.stream().filter(m -> !MenuTypeEnum.BUTTON.equals(m.getType())).toList();
         // 构建路由树
         TreeField treeField = MenuResp.class.getDeclaredAnnotation(TreeField.class);
-        TreeNodeConfig treeNodeConfig = TreeUtils.genTreeNodeConfig(treeField);
-        List<Tree<Long>> treeList = TreeUtils.build(menuList, treeNodeConfig, (m, tree) -> {
+        TreeNodeConfig treeNodeConfig = crudProperties.getTree().genTreeNodeConfig(treeField);
+        List<Tree<Long>> treeList = TreeUtil.build(menuList, treeField.rootId(), treeNodeConfig, (m, tree) -> {
             tree.setId(m.getId());
             tree.setParentId(m.getParentId());
             tree.setName(m.getTitle());

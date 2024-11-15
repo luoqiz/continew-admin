@@ -19,10 +19,9 @@ package top.continew.admin.generator.service;
 import jakarta.servlet.http.HttpServletResponse;
 import top.continew.admin.generator.model.entity.FieldConfigDO;
 import top.continew.admin.generator.model.entity.GenConfigDO;
-import top.continew.admin.generator.model.query.TableQuery;
+import top.continew.admin.generator.model.query.GenConfigQuery;
 import top.continew.admin.generator.model.req.GenConfigReq;
 import top.continew.admin.generator.model.resp.GeneratePreviewResp;
-import top.continew.admin.generator.model.resp.TableResp;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 
@@ -38,14 +37,13 @@ import java.util.List;
 public interface GeneratorService {
 
     /**
-     * 分页查询表信息列表
+     * 分页查询生成配置列表
      *
      * @param query     查询条件
      * @param pageQuery 分页查询条件
-     * @return 表信息分页列表
-     * @throws SQLException /
+     * @return 分页列表信息
      */
-    PageResp<TableResp> pageTable(TableQuery query, PageQuery pageQuery) throws SQLException;
+    PageResp<GenConfigDO> pageGenConfig(GenConfigQuery query, PageQuery pageQuery);
 
     /**
      * 查询生成配置信息

@@ -78,7 +78,7 @@ services:
       - redis
       - mysql
   schedule-server:
-    build: schedule-server
+    build: ./schedule-server
     restart: always
     container_name: continew-admin-schedule-server
     ports:
@@ -91,6 +91,8 @@ services:
       DB_USER: 你的数据库用户名
       DB_PWD: 你的数据库密码
       DB_NAME: continew_admin_job
+    volumes:
+      - /docker/schedule-server/logs/:/app/logs/
     depends_on:
       - mysql
   nginx:

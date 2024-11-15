@@ -83,13 +83,13 @@
       </#list>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['${apiModuleName}:${apiName}:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+          <a-link v-permission="['${apiModuleName}:${apiName}:detail']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
           <a-link v-permission="['${apiModuleName}:${apiName}:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
           <a-link
             v-permission="['${apiModuleName}:${apiName}:delete']"
             status="danger"
             :disabled="record.disabled"
-            :title="$t('page.common.button.delete')"
+            :title="record.disabled ? $t('page.common.button.disabledDelete') : $t('page.common.button.delete')"
             @click="onDelete(record)"
           >
             {{ $t('page.common.button.delete') }}
@@ -107,12 +107,12 @@
 import { useI18n } from 'vue-i18n'
 import ${classNamePrefix}AddModal from './${classNamePrefix}AddModal.vue'
 import ${classNamePrefix}DetailDrawer from './${classNamePrefix}DetailDrawer.vue'
-import { type ${classNamePrefix}Resp, type ${classNamePrefix}Query, delete${classNamePrefix}, export${classNamePrefix}, list${classNamePrefix} } from '@/apis/${apiModuleName}'
+import { type ${classNamePrefix}Resp, type ${classNamePrefix}Query, delete${classNamePrefix}, export${classNamePrefix}, list${classNamePrefix} } from '@/apis/${apiModuleName}/${apiName}'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
+import { useDict } from '@/hooks/app'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
-import { useDict } from '@/hooks/app'
 
 defineOptions({ name: '${classNamePrefix}' })
 const { t } = useI18n()
@@ -126,7 +126,7 @@ const queryForm = reactive<${classNamePrefix}Query>({
   ${fieldConfig.fieldName}: undefined,
 </#if>
 </#list>
-  sort: ['createTime,desc']
+  sort: ['id,desc']
 })
 
 const {
@@ -172,7 +172,6 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   {
     title: t('page.common.button.operator'),
     slotName: 'action',
-    dataIndex: 'action',
     width: 180,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
@@ -217,7 +216,7 @@ const onUpdate = (record: ${classNamePrefix}Resp) => {
 const ${classNamePrefix}DetailDrawerRef = ref<InstanceType<typeof ${classNamePrefix}DetailDrawer>>()
 // 详情
 const onDetail = (record: ${classNamePrefix}Resp) => {
-  ${classNamePrefix}DetailDrawerRef.value?.onDetail(record.id)
+  ${classNamePrefix}DetailDrawerRef.value?.onOpen(record.id)
 }
 </script>
 

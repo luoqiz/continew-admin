@@ -15,11 +15,11 @@ spring.datasource:
   username: ${DB_USER:root}
   password: ${DB_PWD:!qaz2wsX}
   driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-  # PostgreSQL 配置
-  #  url: jdbc:p6spy:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:continew_admin}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&rewriteBatchedStatements=true&autoReconnect=true&maxReconnects=10&failOverReadOnly=false
-  #  username: ${DB_USER:root}
-  #  password: ${DB_PWD:123456}
-  #  driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+#  # PostgreSQL 配置
+#  url: jdbc:p6spy:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:continew_admin}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&rewriteBatchedStatements=true&autoReconnect=true&maxReconnects=10&failOverReadOnly=false
+#  username: ${DB_USER:root}
+#  password: ${DB_PWD:123456}
+#  driver-class-name: com.p6spy.engine.spy.P6SpyDriver
   # Hikari 连接池配置（完整配置请参阅：https://github.com/brettwooldridge/HikariCP）
   hikari:
     # 最大连接数量（默认 10，根据实际环境调整）
@@ -274,17 +274,17 @@ snail-job:
   # 客户端端口（默认：1789）
   port: 1789
   # 命名空间 ID
-  namespace: 764d604ec6fc45f68cd92514c40e9e1a
+  namespace: ${SCHEDULE_NAMESPACE:764d604ec6fc45f68cd92514c40e9e1a}
   # 分组名
-  group: continew-admin
+  group: ${SCHEDULE_GROUP:continew-admin}
   # 令牌
-  token: SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj
+  token: ${SCHEDULE_TOKEN:SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj}
   ## 服务端配置（任务调度中心）
   server:
     # 服务端地址，若服务端集群部署则此处配置域名
-    host: 127.0.0.1
+    host: ${SCHEDULE_HOST:127.0.0.1}
     # Netty 端口号
-    port: 1788
+    port: ${SCHEDULE_PORT:1788}
     # API 配置
     api:
       # URL

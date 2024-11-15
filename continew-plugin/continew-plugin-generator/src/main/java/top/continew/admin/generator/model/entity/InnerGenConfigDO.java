@@ -22,7 +22,6 @@ import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import top.continew.starter.core.constant.StringConstants;
-import top.continew.starter.core.util.StrUtils;
 
 import java.io.Serial;
 import java.util.List;
@@ -118,10 +117,8 @@ public class InnerGenConfigDO extends GenConfigDO {
             .lastIndexOfIgnoreCase(realPackageName, StringConstants.DOT) + 1));
     }
 
+    @Override
     public String getClassNamePrefix() {
-        String tableName = super.getTableName();
-        String rawClassName = StrUtils.blankToDefault(super.getTablePrefix(), tableName, prefix -> StrUtil
-            .removePrefix(tableName, prefix));
-        return StrUtil.upperFirst(StrUtil.toCamelCase(rawClassName));
+        return super.getClassNamePrefix();
     }
 }

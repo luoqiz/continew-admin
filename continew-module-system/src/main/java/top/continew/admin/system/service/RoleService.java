@@ -91,4 +91,12 @@ public interface RoleService extends BaseService<RoleResp, RoleDetailResp, RoleQ
      * @return 角色数量
      */
     int countByNames(List<String> roleNames);
+
+    /**
+     * 分配角色给用户
+     *
+     * @param id      角色 ID
+     * @param userIds 用户 ID 列表
+     */
+    void assignToUsers(Long id, List<Long> userIds);
 }

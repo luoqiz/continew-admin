@@ -73,7 +73,7 @@ public class NoticeController extends BaseController<NoticeService, NoticeResp, 
         }
         // 校验通知范围
         if (NoticeScopeEnum.USER.equals(req.getNoticeScope())) {
-            ValidationUtils.throwIfEmpty(req.getNoticeUsers(), "请选择通知用户");
+            ValidationUtils.throwIfEmpty(req.getNoticeUsers(), "通知用户不能为空");
         }
     }
 }

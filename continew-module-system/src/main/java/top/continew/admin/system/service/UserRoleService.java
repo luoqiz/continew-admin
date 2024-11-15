@@ -29,22 +29,22 @@ import java.util.List;
 public interface UserRoleService {
 
     /**
-     * 新增
+     * 批量分配角色给指定用户
      *
      * @param roleIds 角色 ID 列表
      * @param userId  用户 ID
-     * @return 是否新增成功（true：成功；false：无变更/失败）
+     * @return 是否成功（true：成功；false：无变更/失败）
      */
-    boolean add(List<Long> roleIds, Long userId);
+    boolean assignRolesToUser(List<Long> roleIds, Long userId);
 
     /**
-     * 关联用户
+     * 批量分配角色给用户
      *
-     * @param roleId  角色id
-     * @param userIds 用户id列表
-     * @return 是否新增成功（true：成功；false：无变更/失败）
+     * @param roleId  角色 ID
+     * @param userIds 用户 ID 列表
+     * @return 是否成功（true：成功；false：无变更/失败）
      */
-    boolean bindUserIds(Long roleId, List<Long> userIds);
+    boolean assignRoleToUsers(Long roleId, List<Long> userIds);
 
     /**
      * 根据用户 ID 删除
@@ -83,5 +83,4 @@ public interface UserRoleService {
      * @return 是否已关联（true：已关联；false：未关联）
      */
     boolean isRoleIdExists(List<Long> roleIds);
-
 }

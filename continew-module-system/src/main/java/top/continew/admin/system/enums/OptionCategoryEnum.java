@@ -14,30 +14,28 @@
  * limitations under the License.
  */
 
-package top.continew.admin.generator.model.query;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
-import java.io.Serial;
-import java.io.Serializable;
+package top.continew.admin.system.enums;
 
 /**
- * 表信息查询条件
+ * 参数类别枚举
  *
  * @author Charles7c
- * @since 2023/4/12 20:21
+ * @since 2024/11/14 20:00
  */
-@Data
-@Schema(description = "表信息查询条件")
-public class TableQuery implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public enum OptionCategoryEnum {
 
     /**
-     * 表名称
+     * 系统配置
      */
-    @Schema(description = "表名称", example = "sys_user")
-    private String tableName;
+    SITE,
+
+    /**
+     * 密码配置
+     */
+    PASSWORD,
+
+    /**
+     * 邮箱配置
+     */
+    MAIL,
 }

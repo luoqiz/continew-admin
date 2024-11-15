@@ -25,6 +25,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.db.meta.Column;
+import cn.hutool.db.meta.Table;
 import cn.hutool.system.SystemUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,10 +41,9 @@ import top.continew.admin.generator.mapper.GenConfigMapper;
 import top.continew.admin.generator.model.entity.FieldConfigDO;
 import top.continew.admin.generator.model.entity.GenConfigDO;
 import top.continew.admin.generator.model.entity.InnerGenConfigDO;
-import top.continew.admin.generator.model.query.TableQuery;
+import top.continew.admin.generator.model.query.GenConfigQuery;
 import top.continew.admin.generator.model.req.GenConfigReq;
 import top.continew.admin.generator.model.resp.GeneratePreviewResp;
-import top.continew.admin.generator.model.resp.TableResp;
 import top.continew.admin.generator.service.GeneratorService;
 import top.continew.starter.core.autoconfigure.project.ProjectProperties;
 import top.continew.starter.core.constant.StringConstants;
@@ -52,7 +52,6 @@ import top.continew.starter.core.util.TemplateUtils;
 import top.continew.starter.core.util.validate.CheckUtils;
 import top.continew.starter.data.core.enums.DatabaseType;
 import top.continew.starter.data.core.util.MetaUtils;
-import top.continew.starter.data.core.util.Table;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.starter.web.util.FileUploadUtils;
@@ -83,25 +82,30 @@ public class GeneratorServiceImpl implements GeneratorService {
     private static final List<String> TIME_PACKAGE_CLASS = Arrays.asList("LocalDate", "LocalTime", "LocalDateTime");
 
     @Override
-    public PageResp<TableResp> pageTable(TableQuery query, PageQuery pageQuery) throws SQLException {
+    public PageResp<GenConfigDO> pageGenConfig(GenConfigQuery query, PageQuery pageQuery) {
+        // 查询所有表
         List<Table> tableList = MetaUtils.getTables(dataSource);
+        tableList.removeIf(table -> StrUtil.equalsAnyIgnoreCase(table.getTableName(), generatorProperties
+            .getExcludeTables()));
         String tableName = query.getTableName();
         if (StrUtil.isNotBlank(tableName)) {
             tableList.removeIf(table -> !StrUtil.containsAnyIgnoreCase(table.getTableName(), tableName));
         }
-        tableList.removeIf(table -> StrUtil.equalsAnyIgnoreCase(table.getTableName(), generatorProperties
-            .getExcludeTables()));
-        CollUtil.sort(tableList, Comparator.comparing(Table::getCreateTime)
-            .thenComparing(table -> Optional.ofNullable(table.getUpdateTime()).orElse(table.getCreateTime()))
-            .reversed());
-        List<TableResp> tableRespList = BeanUtil.copyToList(tableList, TableResp.class);
-        PageResp<TableResp> pageResp = PageResp.build(pageQuery.getPage(), pageQuery.getSize(), tableRespList);
-        pageResp.getList().parallelStream().forEach(tableResp -> {
-            long count = genConfigMapper.selectCount(Wrappers.lambdaQuery(GenConfigDO.class)
-                .eq(GenConfigDO::getTableName, tableResp.getTableName()));
-            tableResp.setIsConfiged(count > 0);
-        });
-        return pageResp;
+        // 查询生成配置
+        List<GenConfigDO> list = tableList.parallelStream().map(table -> {
+            GenConfigDO genConfig = genConfigMapper.selectById(table.getTableName());
+            if (genConfig == null) {
+                genConfig = new GenConfigDO(table.getTableName());
+            }
+            genConfig.setComment(table.getComment());
+            return genConfig;
+        })
+            .sorted(Comparator.comparing(GenConfigDO::getTableName)
+                .thenComparing(GenConfigDO::getUpdateTime, Comparator.nullsLast(Comparator.naturalOrder()))
+                .thenComparing(GenConfigDO::getCreateTime, Comparator.nullsLast(Comparator.naturalOrder())))
+            .toList();
+        // 分页
+        return PageResp.build(pageQuery.getPage(), pageQuery.getSize(), list);
     }
 
     @Override

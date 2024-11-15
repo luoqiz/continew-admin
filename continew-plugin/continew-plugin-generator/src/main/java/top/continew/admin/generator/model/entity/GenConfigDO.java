@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import top.continew.admin.common.constant.RegexConstants;
 import top.continew.starter.core.constant.StringConstants;
+import top.continew.starter.core.util.StrUtils;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -54,6 +55,13 @@ public class GenConfigDO implements Serializable {
     @TableId(type = IdType.INPUT)
     @NotBlank(message = "表名称不能为空")
     private String tableName;
+
+    /**
+     * 描述
+     */
+    @Schema(description = "描述", example = "用户表")
+    @TableField(exist = false)
+    private String comment;
 
     /**
      * 模块名称
@@ -126,5 +134,16 @@ public class GenConfigDO implements Serializable {
         if (-1 != underLineIndex) {
             this.tablePrefix = StrUtil.subPre(tableName, underLineIndex + 1);
         }
+    }
+
+    /**
+     * 类名前缀
+     */
+    @Schema(description = "类名前缀", example = "User")
+    public String getClassNamePrefix() {
+        String tableName = this.getTableName();
+        String rawClassName = StrUtils.blankToDefault(this.getTablePrefix(), tableName, prefix -> StrUtil
+            .removePrefix(tableName, prefix));
+        return StrUtil.upperFirst(StrUtil.toCamelCase(rawClassName));
     }
 }
