@@ -3,10 +3,14 @@ package top.continew.admin.wms.model.resp;
 import java.io.Serial;
 import java.time.*;
 
+import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
+import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import top.continew.admin.wms.constant.WmsConstants;
 import top.continew.starter.extension.crud.model.resp.BaseResp;
 
 /**
@@ -43,8 +47,16 @@ public class WhseStockOutResp extends BaseResp {
     /**
      * 仓库id编号
      */
+    @ConditionOnPropertyNotNull
+    @Assemble(
+            container = WmsConstants.addrContainer,
+            prop = "name:whseName"
+    )
     @Schema(description = "仓库id编号")
-    private String whseId;
+    private Long whseId;
+
+    @ExcelProperty(value = "仓库名称")
+    private String whseName;
 
     /**
      * 仓库区域id编号

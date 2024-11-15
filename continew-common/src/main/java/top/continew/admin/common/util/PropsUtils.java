@@ -16,6 +16,7 @@ public class PropsUtils {
         for (String item : lines) {
             String[] list = item.split(": ");
             if(list.length==2){
+                System.out.println(list[0]+"---" + list[1]);
                 properties.put(list[0], list[1]);
             }
         }

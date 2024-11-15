@@ -61,7 +61,9 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
     @Override
     public WhseStockInInfoResp detailById(Long id) {
         WhseStockInInfoResp stockInInfo = get(id);
-
+        if(stockInInfo==null){
+            throw new RuntimeException("数据不存在");
+        }
         LambdaQueryWrapper<WhseStockInDetailDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(WhseStockInDetailDO::getStockInId, id);
         SortQuery sortquery = new SortQuery();

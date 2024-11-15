@@ -2,7 +2,10 @@ package top.continew.admin.wms.model.resp;
 
 import java.io.Serial;
 import java.time.*;
+import java.util.List;
 
+import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
 import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 
+import top.continew.admin.wms.constant.WmsConstants;
 import top.continew.starter.extension.crud.model.resp.BaseDetailResp;
 
 /**
@@ -21,7 +25,7 @@ import top.continew.starter.extension.crud.model.resp.BaseDetailResp;
 @Data
 @ExcelIgnoreUnannotated
 @Schema(description = "仓库出库详情信息")
-public class WhseStockOutDetailResp extends BaseDetailResp {
+public class WhseStockOutInfoResp extends BaseDetailResp {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -50,16 +54,25 @@ public class WhseStockOutDetailResp extends BaseDetailResp {
     /**
      * 仓库id编号
      */
+    @ConditionOnPropertyNotNull
+    @Assemble(
+            container = WmsConstants.addrContainer,
+            prop = "name:whseName"
+    )
     @Schema(description = "仓库id编号")
     @ExcelProperty(value = "仓库id编号")
-    private String whseId;
+    private Long whseId;
 
-    /**
-     * 仓库区域id编号
-     */
-    @Schema(description = "仓库区域id编号")
-    @ExcelProperty(value = "仓库区域id编号")
-    private String whseAreaId;
+    @Schema(description = "仓库名称")
+    @ExcelProperty(value = "仓库名称")
+    private String whseName;
+
+//    /**
+//     * 仓库区域id编号
+//     */
+//    @Schema(description = "仓库区域id编号")
+//    @ExcelProperty(value = "仓库区域id编号")
+//    private String whseAreaId;
 
     /**
      * 关联移库单号
@@ -81,4 +94,8 @@ public class WhseStockOutDetailResp extends BaseDetailResp {
     @Schema(description = "状态 (1审核中 2操作中 3已完成)")
     @ExcelProperty(value = "状态 (1审核中 2操作中 3已完成)")
     private Integer status;
+
+    @Schema(description = "物料列表")
+    @ExcelProperty(value = "物料列表")
+    public List<WhseStockOutDetailMainResp> goodsList;
 }

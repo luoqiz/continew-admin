@@ -1,5 +1,6 @@
 package top.continew.admin.wms.service;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import top.continew.admin.wms.model.entity.GoodsStockDO;
 import top.continew.admin.wms.model.query.GoodsStockQuery;
 import top.continew.admin.wms.model.req.GoodsStockReq;
@@ -17,4 +18,6 @@ import java.util.List;
  */
 public interface GoodsStockService extends BaseService<GoodsStockResp, GoodsStockDetailResp, GoodsStockQuery, GoodsStockReq> {
     boolean batchAdd(List<GoodsStockDO> datas);
+
+    void updates(LambdaUpdateWrapper<GoodsStockDO> updateQuery);
 }

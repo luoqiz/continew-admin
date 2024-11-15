@@ -1,5 +1,6 @@
 package top.continew.admin.wms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import top.continew.admin.wms.mapper.GoodsStockMapper;
@@ -24,5 +25,10 @@ import java.util.List;
 public class GoodsStockServiceImpl extends BaseServiceImpl<GoodsStockMapper, GoodsStockDO, GoodsStockResp, GoodsStockDetailResp, GoodsStockQuery, GoodsStockReq> implements GoodsStockService {
     public boolean batchAdd(List<GoodsStockDO> datas) {
         return baseMapper.insertBatch(datas);
+    }
+
+    @Override
+    public void updates(LambdaUpdateWrapper<GoodsStockDO> updateQuery) {
+        baseMapper.update(updateQuery);
     }
 }
