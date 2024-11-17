@@ -50,5 +50,5 @@ public class OptionQuery implements Serializable {
      * 类别
      */
     @Schema(description = "类别", example = "SITE")
-    private OptionCategoryEnum category;
+    private String category;
 }

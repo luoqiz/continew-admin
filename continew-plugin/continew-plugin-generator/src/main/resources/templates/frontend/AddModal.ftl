@@ -41,7 +41,7 @@ const options: Options = {
   btns: { hide: true },
 }
 
-const columns: Columns = reactive([
+const columns: Columns = computed<Columns<typeof form>>(() => [
 <#list fieldConfigs as fieldConfig>
   <#if fieldConfig.showInForm>
   {

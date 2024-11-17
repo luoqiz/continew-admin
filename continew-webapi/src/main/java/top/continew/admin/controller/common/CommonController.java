@@ -109,7 +109,7 @@ public class CommonController {
     @Cached(key = "'SITE'", name = CacheConstants.OPTION_KEY_PREFIX)
     public List<LabelValueResp<String>> listSiteOptionDict() {
         OptionQuery optionQuery = new OptionQuery();
-        optionQuery.setCategory(OptionCategoryEnum.SITE);
+        optionQuery.setCategory(OptionCategoryEnum.SITE.name());
         return optionService.list(optionQuery)
             .stream()
             .map(option -> new LabelValueResp<>(option.getCode(), StrUtil.nullToDefault(option.getValue(), option

@@ -13,6 +13,7 @@ import top.continew.admin.wms.model.resp.WhseStockOutInfoResp;
 import top.continew.admin.wms.model.resp.WhseStockOutResp;
 import top.continew.admin.wms.service.WhseStockOutDetailService;
 import top.continew.admin.wms.service.WhseStockOutService;
+import top.continew.starter.core.exception.BusinessException;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
@@ -42,6 +43,17 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
         List<WhseStockOutDetailMainResp> list = detailService.list(query, new SortQuery());
         info.setGoodsList(list);
         return info;
+    }
+
+    @Override
+    public void update(WhseStockOutReq req, Long id) {
+        WhseStockOutDetailQuery query = new WhseStockOutDetailQuery();
+        query.setStockOutId(id);
+        List<WhseStockOutDetailMainResp> list = detailService.list(query, new SortQuery());
+        if (list.size() > 0) {
+            throw new BusinessException("已经录入商品无法修改！");
+        }
+        super.update(req, id);
     }
 
     @Override
