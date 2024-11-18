@@ -18,6 +18,10 @@
             <groupId>top.continew</groupId>
             <artifactId>continew-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>top.continew</groupId>
+            <artifactId>continew-module-system</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,13 +1,17 @@
 package top.continew.admin.wms.model.resp;
 
-import java.io.Serial;
-import java.time.*;
-
-import lombok.Data;
-
+import cn.crane4j.annotation.AssembleMethod;
+import cn.crane4j.annotation.ContainerMethod;
+import cn.crane4j.annotation.Mapping;
+import cn.crane4j.annotation.condition.ConditionOnExpression;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import lombok.Data;
+import top.continew.admin.system.model.resp.DeptResp;
+import top.continew.admin.system.service.DeptService;
 import top.continew.starter.extension.crud.model.resp.BaseResp;
+
+import java.io.Serial;
+import java.time.LocalDateTime;
 
 /**
  * 仓库地址信息
@@ -61,9 +65,16 @@ public class AddrResp extends BaseResp {
     /**
      * 所属部门
      */
+    @ConditionOnExpression("#target.deptName == null")
+    @AssembleMethod(props = @Mapping(src = "name", ref = "deptName"), targetType = DeptService.class, method = @ContainerMethod(bindMethod = "get", resultType = DeptResp.class))
     @Schema(description = "所属部门")
     private Long deptId;
 
+    /**
+     * 所属部门
+     */
+    @Schema(description = "所属部门", example = "测试部")
+    private String deptName;
     /**
      * 修改人
      */

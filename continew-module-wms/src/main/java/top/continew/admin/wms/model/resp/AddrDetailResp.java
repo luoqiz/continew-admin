@@ -1,16 +1,18 @@
 package top.continew.admin.wms.model.resp;
 
-import java.io.Serial;
-import java.time.*;
-
-import lombok.Data;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-
+import cn.crane4j.annotation.AssembleMethod;
+import cn.crane4j.annotation.ContainerMethod;
+import cn.crane4j.annotation.Mapping;
+import cn.crane4j.annotation.condition.ConditionOnExpression;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
-
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import top.continew.admin.system.model.resp.DeptResp;
+import top.continew.admin.system.service.DeptService;
 import top.continew.starter.extension.crud.model.resp.BaseDetailResp;
+
+import java.io.Serial;
 
 /**
  * 仓库地址详情信息
@@ -72,6 +74,15 @@ public class AddrDetailResp extends BaseDetailResp {
      * 所属部门
      */
     @Schema(description = "所属部门")
+    @ConditionOnExpression("#target.deptName == null")
+    @AssembleMethod(props = @Mapping(src = "name", ref = "deptName"), targetType = DeptService.class, method = @ContainerMethod(bindMethod = "get", resultType = DeptResp.class))
     @ExcelProperty(value = "所属部门")
     private Long deptId;
+
+    /**
+     * 所属部门
+     */
+    @Schema(description = "所属部门", example = "测试部")
+    @ExcelProperty(value = "所属部门", order = 7)
+    private String deptName;
 }
