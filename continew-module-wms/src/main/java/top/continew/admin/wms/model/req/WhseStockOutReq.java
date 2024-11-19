@@ -48,12 +48,16 @@ public class WhseStockOutReq extends BaseReq {
     @Schema(description = "仓库id编号")
     @NotBlank(message = "仓库id编号不能为空")
     @Length(max = 100, message = "仓库id编号长度不能超过 {max} 个字符")
-    private String whseId;
+    private Long whseId;
 
-//    /**
-//     * 状态 (1审核中 2操作中 3已完成)
-//     */
-//    @Schema(description = "状态 (1审核中 2操作中 3已完成)")
-//    @NotNull(message = "状态 (1审核中 2操作中 3已完成)不能为空")
-//    private Integer status;
+    /**
+     * 状态 (1审核中 2操作中 3已完成)
+     */
+    @Schema(description = "状态 (1审核中 2操作中 3已完成)")
+    private Integer status;
+
+    /**
+     * 关联移库单号
+     */
+    private Long stockMoveId;
 }

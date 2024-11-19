@@ -28,9 +28,15 @@ public class WhseStockInDetailReq extends BaseReq {
      * 入库id编号
      */
     @Schema(description = "入库id编号")
-    @NotBlank(message = "入库id编号不能为空")
-    @Length(max = 100, message = "入库id编号长度不能超过 {max} 个字符")
-    private String stockInId;
+    @NotNull(message = "入库id编号不能为空")
+    private Long stockInId;
+
+    /**
+     * 库存物料id
+     */
+    @Schema(description = "库存物料id")
+//    @NotNull(message = "库存id不能为空")
+    private Long goodsStockId;
 
     /**
      * 商品sku

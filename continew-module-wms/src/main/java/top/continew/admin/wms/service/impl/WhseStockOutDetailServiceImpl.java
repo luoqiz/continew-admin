@@ -91,4 +91,10 @@ public class WhseStockOutDetailServiceImpl extends BaseServiceImpl<WhseStockOutD
         }
         super.delete(ids);
     }
+
+    @Transactional
+    @Override
+    public void batchAdd(List<WhseStockOutDetailDO> stockOutDetailList) {
+        baseMapper.insertBatch(stockOutDetailList);
+    }
 }

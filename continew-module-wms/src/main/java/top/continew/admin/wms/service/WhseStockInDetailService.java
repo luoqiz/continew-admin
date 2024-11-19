@@ -19,5 +19,12 @@ public interface WhseStockInDetailService extends BaseService<WhseStockInDetailR
 
     @Override
     List<WhseStockInDetailResp> list(WhseStockInDetailQuery query, SortQuery sortQuery);
+
+    /**
+     * 批量插入数据
+     *
+     * @param reqs
+     */
+    void batchAdd(List<WhseStockInDetailReq> reqs);
 }
 

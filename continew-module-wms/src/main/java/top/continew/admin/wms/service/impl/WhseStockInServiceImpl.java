@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.wms.enums.WhseStockInStatusEnum;
@@ -13,15 +14,13 @@ import top.continew.admin.wms.model.entity.WhseStockInDO;
 import top.continew.admin.wms.model.entity.WhseStockInDetailDO;
 import top.continew.admin.wms.model.query.WhseStockInDetailQuery;
 import top.continew.admin.wms.model.query.WhseStockInQuery;
+import top.continew.admin.wms.model.req.WhseStockInDetailReq;
 import top.continew.admin.wms.model.req.WhseStockInReq;
 import top.continew.admin.wms.model.resp.AddrDetailResp;
 import top.continew.admin.wms.model.resp.WhseStockInDetailResp;
 import top.continew.admin.wms.model.resp.WhseStockInInfoResp;
 import top.continew.admin.wms.model.resp.WhseStockInResp;
-import top.continew.admin.wms.service.AddrService;
-import top.continew.admin.wms.service.GoodsStockService;
-import top.continew.admin.wms.service.WhseStockInDetailService;
-import top.continew.admin.wms.service.WhseStockInService;
+import top.continew.admin.wms.service.*;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
@@ -48,11 +47,17 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
     @Resource
     private AddrService addrService;
 
+    @Resource
+    @Lazy
+    private WhseStockMoveService moveService;
+
     @Override
     public Long add(WhseStockInReq req) {
         this.beforeAdd(req);
         WhseStockInDO entity = BeanUtil.copyProperties(req, super.getEntityClass());
-        entity.setStatus(WhseStockInStatusEnum.AWAIT_APPROVAL.getValue());
+        if (entity.getStatus() == null) {
+            entity.setStatus(WhseStockInStatusEnum.AWAIT_APPROVAL.getValue());
+        }
         baseMapper.insert(entity);
         this.afterAdd(req, entity);
         return entity.getId();
@@ -61,7 +66,7 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
     @Override
     public WhseStockInInfoResp detailById(Long id) {
         WhseStockInInfoResp stockInInfo = get(id);
-        if(stockInInfo==null){
+        if (stockInInfo == null) {
             throw new RuntimeException("数据不存在");
         }
         LambdaQueryWrapper<WhseStockInDetailDO> queryWrapper = new LambdaQueryWrapper<>();
@@ -110,8 +115,24 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
                 datas.add(temp);
             }
             goodsStockService.batchAdd(datas);
+            // 更新移库单完成
+            if (entity.getStockMoveId() != null) {
+                moveService.updateStatus(entity.getStockMoveId(), 3);
+            }
         }
         entity.setStatus(status);
+
         baseMapper.updateById(entity);
+    }
+
+    @Transactional
+    @Override
+    public Long add(WhseStockInReq stockInReq, List<WhseStockInDetailReq> stockInDetailReqList) {
+        Long id = add(stockInReq);
+        for (WhseStockInDetailReq whseStockInDetailReq : stockInDetailReqList) {
+            whseStockInDetailReq.setStockInId(id);
+        }
+        detailService.batchAdd(stockInDetailReqList);
+        return id;
     }
 }

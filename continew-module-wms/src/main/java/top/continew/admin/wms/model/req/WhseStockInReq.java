@@ -42,4 +42,15 @@ public class WhseStockInReq extends BaseReq {
      */
     @Schema(description = "仓库id编号")
     private Long whseId;
+
+    /**
+     * 状态 (1待核检 2核检通过)
+     */
+    @Schema(description = "核检状态")
+    private Integer status;
+
+    /**
+     * 关联移库单号
+     */
+    private Long stockMoveId;
 }

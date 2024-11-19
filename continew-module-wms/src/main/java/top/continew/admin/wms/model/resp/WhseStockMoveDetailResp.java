@@ -2,6 +2,7 @@ package top.continew.admin.wms.model.resp;
 
 import java.io.Serial;
 import java.time.*;
+import java.util.List;
 
 import cn.crane4j.annotation.Assemble;
 import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
@@ -133,4 +134,9 @@ public class WhseStockMoveDetailResp extends BaseDetailResp {
     @Schema(description = "备注信息")
     @ExcelProperty(value = "备注信息")
     private String memo;
+
+    /**
+     * 物品信息
+     */
+    List<WhseStockMoveDetialResp> goodsList;
 }

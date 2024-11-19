@@ -55,7 +55,7 @@ public class WhseStockInController extends BaseController<WhseStockInService, Wh
     @ResponseBody
     @PutMapping("/status/{id}/{status}")
     public void updateStatus(@PathVariable("id") Long id,@PathVariable("status") int status) {
-        this.checkPermission(Api.LIST);
+        this.checkPermission(Api.UPDATE);
         baseService.updateStatus(id,status);
     }
 }

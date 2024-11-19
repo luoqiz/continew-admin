@@ -2,6 +2,7 @@ package top.continew.admin.wms.model.resp;
 
 import java.io.Serial;
 import java.time.*;
+import java.util.List;
 
 import lombok.Data;
 
@@ -80,4 +81,5 @@ public class WhseStockMoveDetialResp extends BaseResp {
      */
     @Schema(description = "备注信息")
     private String memo;
+
 }

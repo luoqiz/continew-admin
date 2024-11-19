@@ -12,4 +12,9 @@ import top.continew.admin.wms.model.resp.WhseStockMoveResp;
  * @author luoqiz
  * @since 2024/11/15 14:50
  */
-public interface WhseStockMoveService extends BaseService<WhseStockMoveResp, WhseStockMoveDetailResp, WhseStockMoveQuery, WhseStockMoveReq> {}
+public interface WhseStockMoveService extends BaseService<WhseStockMoveResp, WhseStockMoveDetailResp, WhseStockMoveQuery, WhseStockMoveReq> {
+
+    WhseStockMoveDetailResp detail(Long id);
+
+    void updateStatus(Long id, int status);
+}
