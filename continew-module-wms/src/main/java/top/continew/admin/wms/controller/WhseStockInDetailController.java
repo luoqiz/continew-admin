@@ -38,4 +38,5 @@ import top.continew.starter.extension.crud.enums.Api;
 @CrudRequestMapping(value = "/wms/whseStockInDetail", api = {Api.PAGE, Api.GET, Api.ADD, Api.UPDATE, Api.DELETE,
     Api.EXPORT})
 public class WhseStockInDetailController extends BaseController<WhseStockInDetailService, WhseStockInDetailResp, WhseStockInDetailDetailResp, WhseStockInDetailQuery, WhseStockInDetailReq> {
+
 }

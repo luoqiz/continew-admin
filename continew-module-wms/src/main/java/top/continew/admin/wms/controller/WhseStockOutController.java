@@ -33,6 +33,9 @@ import top.continew.admin.wms.model.resp.WhseStockOutInfoResp;
 import top.continew.admin.wms.model.resp.WhseStockOutResp;
 import top.continew.admin.wms.service.WhseStockOutService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 仓库出库管理 API
  *
@@ -60,5 +63,13 @@ public class WhseStockOutController extends BaseController<WhseStockOutService, 
     public void updateStatus(@PathVariable("id") Long id, @PathVariable("status") int status) {
         this.checkPermission(Api.UPDATE);
         baseService.updateStatus(id, status);
+    }
+
+    @Operation(summary = "获取指定库的今日出库信息", description = "获取指定库的今日出库信息")
+    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @ResponseBody
+    @GetMapping("/statics/{whseId}")
+    public List<Map<String, Integer>> statistics(@PathVariable Long whseId) {
+        return baseService.staticsToday(whseId);
     }
 }

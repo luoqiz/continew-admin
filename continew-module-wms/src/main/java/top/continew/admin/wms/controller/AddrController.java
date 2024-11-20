@@ -16,6 +16,8 @@
 
 package top.continew.admin.wms.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.json.JSONUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
@@ -105,6 +107,8 @@ public class AddrController extends BaseController<AddrService, AddrResp, AddrDe
     @ResponseBody
     @GetMapping("/all")
     public List<AddrResp> all(AddrQuery query, @Validated PageQuery pageQuery) {
+        List<String> roleList = StpUtil.getRoleList();
+        System.out.printf(JSONUtil.toJsonPrettyStr(roleList));
         this.checkPermission(Api.LIST);
         return this.baseService.list(query, pageQuery);
     }

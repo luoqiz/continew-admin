@@ -25,6 +25,7 @@ import top.continew.admin.wms.model.resp.GoodsStockResp;
 import top.continew.starter.extension.crud.service.BaseService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品库存业务接口
@@ -36,4 +37,22 @@ public interface GoodsStockService extends BaseService<GoodsStockResp, GoodsStoc
     boolean batchAdd(List<GoodsStockDO> datas);
 
     void updates(LambdaUpdateWrapper<GoodsStockDO> updateQuery);
+
+    List<Map<String, Integer>> staticsToday(Long whseId);
+
+    /**
+     * 库存信息
+     *
+     * @param whseId 仓库信息
+     * @return
+     */
+    List<Map<String, Integer>> statisticsStock(Long whseId);
+
+    /**
+     * 获取临期库存
+     *
+     * @param whseId 仓库id
+     * @return
+     */
+    List<GoodsStockResp> expiredStock(Long whseId, int day);
 }

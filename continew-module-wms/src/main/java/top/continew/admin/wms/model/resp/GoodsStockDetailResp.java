@@ -86,11 +86,8 @@ public class GoodsStockDetailResp extends BaseDetailResp {
      * 物料sku条码
      */
     @ConditionOnPropertyNotNull
-    @Assemble(container = WmsConstants.goodsSkuContainer, props = {
-            @Mapping(src = "name",ref = "goodsName"),
-            @Mapping(src = "unit",ref = "goodsUnit"),
-            @Mapping(src = "packUnit",ref = "goodsPackUnit")
-    })
+    @Assemble(container = WmsConstants.goodsSkuContainer, props = {@Mapping(src = "name", ref = "goodsName"),
+        @Mapping(src = "unit", ref = "goodsUnit"), @Mapping(src = "packUnit", ref = "goodsPackUnit")})
     @Schema(description = "物料sku条码")
     @ExcelProperty(value = "物料sku条码")
     private String goodsSku;

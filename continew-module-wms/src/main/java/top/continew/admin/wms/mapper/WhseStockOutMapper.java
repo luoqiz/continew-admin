@@ -16,8 +16,13 @@
 
 package top.continew.admin.wms.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import top.continew.starter.data.mp.base.BaseMapper;
 import top.continew.admin.wms.model.entity.WhseStockOutDO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 仓库出库 Mapper
@@ -25,4 +30,8 @@ import top.continew.admin.wms.model.entity.WhseStockOutDO;
  * @author luoqiz
  * @since 2024/11/14 15:15
  */
-public interface WhseStockOutMapper extends BaseMapper<WhseStockOutDO> {}
+public interface WhseStockOutMapper extends BaseMapper<WhseStockOutDO> {
+
+    @Select("select goods_sku,SUM(real_num) as realNum from wms_whse_stock_out_detail where stock_out_id IN (select id FROM wms_whse_stock_out WHERE TO_DAYS(out_time) = TO_DAYS(NOW()) AND whse_id = #{whseId}) GROUP BY goods_sku;")
+    List<Map<String, Integer>> staticsToday(@Param("whseId") Long whseId);
+}

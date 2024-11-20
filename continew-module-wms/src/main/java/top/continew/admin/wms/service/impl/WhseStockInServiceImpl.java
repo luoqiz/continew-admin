@@ -127,7 +127,6 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
                 skuInfoList = goodsSkuService.getBySkuNoList(skuList);
             }
 
-
             List<GoodsStockDO> datas = new ArrayList<>();
             for (WhseStockInDetailResp whseStockInDetailResp : stockInDetail) {
                 if (!whseStockInDetailResp.getStatus().equals(2)) {
@@ -139,13 +138,15 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
                 temp.setStockInDetailId(whseStockInDetailResp.getId());
                 temp.setGoodsSku(whseStockInDetailResp.getGoodsSku());
                 if (isArea) {
-                    Optional<GoodsSkuDO> skuInfo = skuInfoList.stream().filter(domain -> domain.getBarcode().equals(whseStockInDetailResp.getGoodsSku())).findFirst();
-                    if(skuInfo.isPresent()) {
+                    Optional<GoodsSkuDO> skuInfo = skuInfoList.stream()
+                        .filter(domain -> domain.getBarcode().equals(whseStockInDetailResp.getGoodsSku()))
+                        .findFirst();
+                    if (skuInfo.isPresent()) {
                         GoodsSkuDO sku = skuInfo.get();
-                        if(sku.getUnpacking()){
+                        if (sku.getUnpacking()) {
                             temp.setInitNum(whseStockInDetailResp.getRealNum() * skuInfo.get().getPackAmount());
                             temp.setRealNum(whseStockInDetailResp.getRealNum() * skuInfo.get().getPackAmount());
-                        }else{
+                        } else {
                             temp.setInitNum(whseStockInDetailResp.getRealNum());
                             temp.setRealNum(whseStockInDetailResp.getRealNum());
                         }

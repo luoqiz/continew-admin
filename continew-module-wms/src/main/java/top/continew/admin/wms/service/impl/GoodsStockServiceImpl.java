@@ -29,6 +29,7 @@ import top.continew.admin.wms.service.GoodsStockService;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品库存业务实现
@@ -46,5 +47,20 @@ public class GoodsStockServiceImpl extends BaseServiceImpl<GoodsStockMapper, Goo
     @Override
     public void updates(LambdaUpdateWrapper<GoodsStockDO> updateQuery) {
         baseMapper.update(updateQuery);
+    }
+
+    @Override
+    public List<Map<String, Integer>> staticsToday(Long whseId) {
+        return baseMapper.staticsToday(whseId);
+    }
+
+    @Override
+    public List<Map<String, Integer>> statisticsStock(Long whseId) {
+        return baseMapper.statisticsStock(whseId);
+    }
+
+    @Override
+    public List<GoodsStockResp> expiredStock(Long whseId,int day) {
+        return baseMapper.expiredStock(whseId,day);
     }
 }

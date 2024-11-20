@@ -70,11 +70,8 @@ public class GoodsStockResp extends BaseResp {
      * 物料sku条码
      */
     @ConditionOnPropertyNotNull
-    @Assemble(container = WmsConstants.goodsSkuContainer, props = {
-            @Mapping(src = "name",ref = "goodsName"),
-            @Mapping(src = "unit",ref = "goodsUnit"),
-            @Mapping(src = "packUnit",ref = "goodsPackUnit")
-    })
+    @Assemble(container = WmsConstants.goodsSkuContainer, props = {@Mapping(src = "name", ref = "goodsName"),
+        @Mapping(src = "unit", ref = "goodsUnit"), @Mapping(src = "packUnit", ref = "goodsPackUnit")})
     @Schema(description = "物料sku条码")
     private String goodsSku;
 

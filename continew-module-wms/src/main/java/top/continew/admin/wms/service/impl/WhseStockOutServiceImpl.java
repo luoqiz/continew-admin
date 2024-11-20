@@ -40,6 +40,7 @@ import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 仓库出库业务实现
@@ -114,5 +115,10 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
         }
         detailService.batchAdd(list);
         return id;
+    }
+
+    @Override
+    public List<Map<String, Integer>> staticsToday(Long whseId) {
+        return baseMapper.staticsToday(whseId);
     }
 }

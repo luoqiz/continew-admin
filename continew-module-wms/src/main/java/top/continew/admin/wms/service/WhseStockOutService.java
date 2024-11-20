@@ -16,14 +16,15 @@
 
 package top.continew.admin.wms.service;
 
-import top.continew.admin.wms.model.req.WhseStockOutDetailReq;
-import top.continew.starter.extension.crud.service.BaseService;
 import top.continew.admin.wms.model.query.WhseStockOutQuery;
+import top.continew.admin.wms.model.req.WhseStockOutDetailReq;
 import top.continew.admin.wms.model.req.WhseStockOutReq;
 import top.continew.admin.wms.model.resp.WhseStockOutInfoResp;
 import top.continew.admin.wms.model.resp.WhseStockOutResp;
+import top.continew.starter.extension.crud.service.BaseService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 仓库出库业务接口
@@ -37,4 +38,12 @@ public interface WhseStockOutService extends BaseService<WhseStockOutResp, WhseS
     void updateStatus(Long id, int status);
 
     Long add(WhseStockOutReq stockOutReq, List<WhseStockOutDetailReq> stockOutDetailReqList);
+
+    /**
+     * 统计仓库内今日物料出库信息
+     *
+     * @param whseId 仓库id
+     * @return
+     */
+    List<Map<String, Integer>> staticsToday(Long whseId);
 }
