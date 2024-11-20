@@ -210,18 +210,18 @@ public class LoginServiceImpl implements LoginService {
     private String login(UserDO user) {
         Long userId = user.getId();
         CompletableFuture<Set<String>> permissionFuture = CompletableFuture.supplyAsync(() -> roleService
-                .listPermissionByUserId(userId), threadPoolTaskExecutor);
+            .listPermissionByUserId(userId), threadPoolTaskExecutor);
         CompletableFuture<Set<RoleContext>> roleFuture = CompletableFuture.supplyAsync(() -> roleService
-                .listByUserId(userId), threadPoolTaskExecutor);
+            .listByUserId(userId), threadPoolTaskExecutor);
         CompletableFuture<Integer> passwordExpirationDaysFuture = CompletableFuture.supplyAsync(() -> optionService
-                .getValueByCode2Int(PASSWORD_EXPIRATION_DAYS.name()));
+            .getValueByCode2Int(PASSWORD_EXPIRATION_DAYS.name()));
         CompletableFuture.allOf(permissionFuture, roleFuture, passwordExpirationDaysFuture);
         UserContext userContext = new UserContext(permissionFuture.join(), roleFuture
-                .join(), passwordExpirationDaysFuture.join());
+            .join(), passwordExpirationDaysFuture.join());
         BeanUtil.copyProperties(user, userContext);
         // 登录并缓存用户信息
         StpUtil.login(userContext.getId(), SaLoginConfig.setExtraData(BeanUtil
-                .beanToMap(new UserExtraContext(SpringWebUtils.getRequest()))));
+            .beanToMap(new UserExtraContext(SpringWebUtils.getRequest()))));
         UserContextHolder.setContext(userContext);
         return StpUtil.getTokenValue();
     }
@@ -252,7 +252,7 @@ public class LoginServiceImpl implements LoginService {
         }
         // 检测是否已被锁定
         String key = CacheConstants.USER_PASSWORD_ERROR_KEY_PREFIX + RedisUtils.formatKey(username, JakartaServletUtil
-                .getClientIP(request));
+            .getClientIP(request));
         int lockMinutes = optionService.getValueByCode2Int(PasswordPolicyEnum.PASSWORD_ERROR_LOCK_MINUTES.name());
         Integer currentErrorCount = ObjectUtil.defaultIfNull(RedisUtils.get(key), 0);
         CheckUtils.throwIf(currentErrorCount >= maxErrorCount, "账号锁定 {} 分钟，请稍后再试", lockMinutes);

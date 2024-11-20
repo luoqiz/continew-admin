@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2022-present Charles7c Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package top.continew.admin.wms.service;
 
 import top.continew.admin.wms.model.query.WhseStockInQuery;
@@ -18,6 +34,7 @@ import java.util.List;
 public interface WhseStockInService extends BaseService<WhseStockInResp, WhseStockInInfoResp, WhseStockInQuery, WhseStockInReq> {
     /**
      * 获取入库单详情（包括物料信息）
+     * 
      * @param id
      * @return
      */
@@ -25,6 +42,7 @@ public interface WhseStockInService extends BaseService<WhseStockInResp, WhseSto
 
     /**
      * 更新状态
+     * 
      * @param id
      * @param status
      * @return
@@ -33,6 +51,7 @@ public interface WhseStockInService extends BaseService<WhseStockInResp, WhseSto
 
     /**
      * 添加完整的入库记录
+     * 
      * @param stockInReq
      * @param stockInDetailReqList
      */

@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2022-present Charles7c Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package top.continew.admin.wms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -49,7 +65,7 @@ public class WhseStockMoveDetialServiceImpl extends BaseServiceImpl<WhseStockMov
         stockQuery.setWhseId(stockMoveInfo.getStockOutWhseId());
         stockQuery.setGoodsSku(req.getGoodsSku());
         SortQuery stockSortQuery = new SortQuery();
-        stockSortQuery.setSort(new String[]{"createTime", "asc"});
+        stockSortQuery.setSort(new String[] {"createTime", "asc"});
         List<GoodsStockResp> goodsStock = stockService.list(stockQuery, stockSortQuery);
         // 若是按照入库时间排序后，第一条不是现在提交的数据，则不允许提交。必须先入库的先出库
         if (goodsStock.get(0) == null) {
@@ -80,7 +96,9 @@ public class WhseStockMoveDetialServiceImpl extends BaseServiceImpl<WhseStockMov
         for (WhseStockMoveDetialDO re : res) {
             GoodsStockDO temp = new GoodsStockDO();
             temp.setId(re.getGoodsStockId());
-            LambdaUpdateWrapper<GoodsStockDO> updateQuery = Wrappers.update(temp).setSql("`real_num` = `real_num` + " + re.getPlanNum()).lambda();
+            LambdaUpdateWrapper<GoodsStockDO> updateQuery = Wrappers.update(temp)
+                .setSql("`real_num` = `real_num` + " + re.getPlanNum())
+                .lambda();
             updateQuery.eq(GoodsStockDO::getId, re.getGoodsStockId());
             stockService.updates(updateQuery);
         }

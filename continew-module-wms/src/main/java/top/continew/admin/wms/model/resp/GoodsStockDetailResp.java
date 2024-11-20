@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2022-present Charles7c Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package top.continew.admin.wms.model.resp;
 
 import cn.crane4j.annotation.Assemble;
@@ -62,10 +78,7 @@ public class GoodsStockDetailResp extends BaseDetailResp {
      * 物料sku条码
      */
     @ConditionOnPropertyNotNull
-    @Assemble(
-            container = WmsConstants.goodsSkuContainer,
-            prop = "name:goodsName"
-    )
+    @Assemble(container = WmsConstants.goodsSkuContainer, prop = "name:goodsName")
     @Schema(description = "物料sku条码")
     @ExcelProperty(value = "物料sku条码")
     private String goodsSku;
@@ -95,10 +108,7 @@ public class GoodsStockDetailResp extends BaseDetailResp {
      * 仓库id
      */
     @ConditionOnPropertyNotNull
-    @Assemble(
-            container = WmsConstants.addrContainer,
-            prop = "name:whseName"
-    )
+    @Assemble(container = WmsConstants.addrContainer, prop = "name:whseName")
     @Schema(description = "仓库id")
     @ExcelProperty(value = "仓库id")
     private Long whseId;

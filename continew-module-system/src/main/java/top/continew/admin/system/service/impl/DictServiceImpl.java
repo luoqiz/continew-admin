@@ -64,12 +64,12 @@ public class DictServiceImpl extends BaseServiceImpl<DictMapper, DictDO, DictRes
     @Override
     protected void beforeDelete(List<Long> ids) {
         List<DictDO> list = baseMapper.lambdaQuery()
-                .select(DictDO::getName, DictDO::getIsSystem)
-                .in(DictDO::getId, ids)
-                .list();
+            .select(DictDO::getName, DictDO::getIsSystem)
+            .in(DictDO::getId, ids)
+            .list();
         Optional<DictDO> isSystemData = list.stream().filter(DictDO::getIsSystem).findFirst();
         CheckUtils.throwIf(isSystemData::isPresent, "所选字典 [{}] 是系统内置字典，不允许删除", isSystemData.orElseGet(DictDO::new)
-                .getName());
+            .getName());
         dictItemService.deleteByDictIds(ids);
     }
 
