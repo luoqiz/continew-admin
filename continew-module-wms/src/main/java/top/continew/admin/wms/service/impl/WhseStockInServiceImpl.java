@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.wms.enums.WhseStockInStatusEnum;
 import top.continew.admin.wms.mapper.WhseStockInMapper;
+import top.continew.admin.wms.model.entity.GoodsSkuDO;
 import top.continew.admin.wms.model.entity.GoodsStockDO;
 import top.continew.admin.wms.model.entity.WhseStockInDO;
 import top.continew.admin.wms.model.entity.WhseStockInDetailDO;
@@ -43,6 +44,7 @@ import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 仓库入库业务实现
@@ -66,6 +68,9 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
     @Resource
     @Lazy
     private WhseStockMoveService moveService;
+
+    @Resource
+    private GoodsSkuService goodsSkuService;
 
     @Override
     public Long add(WhseStockInReq req) {
@@ -106,11 +111,24 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
         // 如果是完成入库，则补充上入库时间
         if (status == 3) {
             entity.setInTime(LocalDateTime.now());
+
+            // 入库单详情
             WhseStockInDetailQuery query = new WhseStockInDetailQuery();
             query.setStockInId(id);
             List<WhseStockInDetailResp> stockInDetail = detailService.list(query, new SortQuery());
-            List<GoodsStockDO> datas = new ArrayList<>();
+
+            // 如果是地区入库转为小件存储
+            boolean isArea = false;
+            List<GoodsSkuDO> skuInfoList = null;
             AddrDetailResp whseInfo = addrService.get(entity.getWhseId());
+            if (whseInfo.getWhseType() == 2) {
+                isArea = true;
+                List<String> skuList = stockInDetail.stream().map(WhseStockInDetailResp::getGoodsSku).toList();
+                skuInfoList = goodsSkuService.getBySkuNoList(skuList);
+            }
+
+
+            List<GoodsStockDO> datas = new ArrayList<>();
             for (WhseStockInDetailResp whseStockInDetailResp : stockInDetail) {
                 if (!whseStockInDetailResp.getStatus().equals(2)) {
                     throw new RuntimeException("有物料尚未核验，请重新检查！");
@@ -120,8 +138,22 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
                 temp.setStockInNo(entity.getStockInNo());
                 temp.setStockInDetailId(whseStockInDetailResp.getId());
                 temp.setGoodsSku(whseStockInDetailResp.getGoodsSku());
-                temp.setInitNum(whseStockInDetailResp.getRealNum());
-                temp.setRealNum(whseStockInDetailResp.getRealNum());
+                if (isArea) {
+                    Optional<GoodsSkuDO> skuInfo = skuInfoList.stream().filter(domain -> domain.getBarcode().equals(whseStockInDetailResp.getGoodsSku())).findFirst();
+                    if(skuInfo.isPresent()) {
+                        GoodsSkuDO sku = skuInfo.get();
+                        if(sku.getUnpacking()){
+                            temp.setInitNum(whseStockInDetailResp.getRealNum() * skuInfo.get().getPackAmount());
+                            temp.setRealNum(whseStockInDetailResp.getRealNum() * skuInfo.get().getPackAmount());
+                        }else{
+                            temp.setInitNum(whseStockInDetailResp.getRealNum());
+                            temp.setRealNum(whseStockInDetailResp.getRealNum());
+                        }
+                    }
+                } else {
+                    temp.setInitNum(whseStockInDetailResp.getRealNum());
+                    temp.setRealNum(whseStockInDetailResp.getRealNum());
+                }
                 temp.setWhseId(entity.getWhseId());
                 temp.setWhseType(whseInfo.getWhseType());
                 temp.setStatus(1);

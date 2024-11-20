@@ -17,6 +17,7 @@
 package top.continew.admin.wms.model.resp;
 
 import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.Mapping;
 import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
 import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -69,13 +70,26 @@ public class GoodsStockResp extends BaseResp {
      * 物料sku条码
      */
     @ConditionOnPropertyNotNull
-    @Assemble(container = WmsConstants.goodsSkuContainer, prop = "name:goodsName")
+    @Assemble(container = WmsConstants.goodsSkuContainer, props = {
+            @Mapping(src = "name",ref = "goodsName"),
+            @Mapping(src = "unit",ref = "goodsUnit"),
+            @Mapping(src = "packUnit",ref = "goodsPackUnit")
+    })
     @Schema(description = "物料sku条码")
     private String goodsSku;
 
     @Schema(description = "物料名称")
     @ExcelProperty(value = "物料名称")
     private String goodsName;
+
+    @Schema(description = "物料单位")
+    @ExcelProperty(value = "物料单位")
+    private String goodsUnit;
+
+    @Schema(description = "物料拆箱单位")
+    @ExcelProperty(value = "物料拆箱单位")
+    private String goodsPackUnit;
+
     /**
      * 初始库存
      */
