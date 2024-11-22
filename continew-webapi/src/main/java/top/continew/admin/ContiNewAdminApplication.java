@@ -76,11 +76,13 @@ public class ContiNewAdminApplication implements ApplicationRunner {
         String baseUrl = URLUtil.normalize("%s:%s%s".formatted(hostAddress, port, contextPath));
         log.info("----------------------------------------------");
         log.info("{} service started successfully.", projectProperties.getName());
-        log.info("API 地址：{}", baseUrl);
+        log.info("API地址：{}", baseUrl);
         Knife4jProperties knife4jProperties = SpringUtil.getBean(Knife4jProperties.class);
         if (!knife4jProperties.isProduction()) {
-            log.info("API 文档：{}/doc.html", baseUrl);
+            log.info("API文档：{}/doc.html", baseUrl);
         }
+        log.info("在线文档：https://continew.top");
+        log.info("常见问题：https://continew.top/faq.html");
         log.info("----------------------------------------------");
     }
 }

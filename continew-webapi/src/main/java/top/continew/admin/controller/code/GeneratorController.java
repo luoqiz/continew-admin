@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package top.continew.admin.controller.tool;
+package top.continew.admin.controller.code;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,14 +49,14 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/generator")
+@RequestMapping("/code/generator")
 public class GeneratorController {
 
     private final GeneratorService baseService;
     private final DictService dictService;
 
     @Operation(summary = "分页查询生成配置", description = "分页查询生成配置列表")
-    @SaCheckPermission("tool:generator:list")
+    @SaCheckPermission("code:generator:list")
     @GetMapping("/config")
     public PageResp<GenConfigDO> pageGenConfig(GenConfigQuery query, @Validated PageQuery pageQuery) {
         return baseService.pageGenConfig(query, pageQuery);
@@ -64,7 +64,7 @@ public class GeneratorController {
 
     @Operation(summary = "查询生成配置信息", description = "查询生成配置信息")
     @Parameter(name = "tableName", description = "表名称", required = true, example = "sys_user", in = ParameterIn.PATH)
-    @SaCheckPermission("tool:generator:list")
+    @SaCheckPermission("code:generator:list")
     @GetMapping("/config/{tableName}")
     public GenConfigDO getGenConfig(@PathVariable String tableName) throws SQLException {
         return baseService.getGenConfig(tableName);
@@ -73,7 +73,7 @@ public class GeneratorController {
     @Operation(summary = "查询字段配置列表", description = "查询字段配置列表")
     @Parameter(name = "tableName", description = "表名称", required = true, example = "sys_user", in = ParameterIn.PATH)
     @Parameter(name = "requireSync", description = "是否需要同步", example = "false", in = ParameterIn.QUERY)
-    @SaCheckPermission("tool:generator:list")
+    @SaCheckPermission("code:generator:config")
     @GetMapping("/field/{tableName}")
     public List<FieldConfigDO> listFieldConfig(@PathVariable String tableName,
                                                @RequestParam(required = false, defaultValue = "false") Boolean requireSync) {
@@ -82,7 +82,7 @@ public class GeneratorController {
 
     @Operation(summary = "保存配置信息", description = "保存配置信息")
     @Parameter(name = "tableName", description = "表名称", required = true, example = "sys_user", in = ParameterIn.PATH)
-    @SaCheckPermission("tool:generator:list")
+    @SaCheckPermission("code:generator:config")
     @PostMapping("/config/{tableName}")
     public void saveConfig(@Validated @RequestBody GenConfigReq req, @PathVariable String tableName) {
         baseService.saveConfig(req, tableName);
@@ -90,7 +90,7 @@ public class GeneratorController {
 
     @Operation(summary = "生成预览", description = "预览生成代码")
     @Parameter(name = "tableName", description = "表名称", required = true, example = "sys_user", in = ParameterIn.PATH)
-    @SaCheckPermission("tool:generator:list")
+    @SaCheckPermission("code:generator:preview")
     @GetMapping("/preview/{tableName}")
     public List<GeneratePreviewResp> preview(@PathVariable String tableName) {
         return baseService.preview(tableName);
@@ -98,14 +98,14 @@ public class GeneratorController {
 
     @Operation(summary = "生成代码", description = "生成代码")
     @Parameter(name = "tableName", description = "表名称", required = true, example = "sys_user", in = ParameterIn.PATH)
-    @SaCheckPermission("tool:generator:list")
+    @SaCheckPermission("code:generator:generate")
     @PostMapping("/{tableNames}")
     public void generate(@PathVariable List<String> tableNames, HttpServletResponse response) {
         baseService.generate(tableNames, response);
     }
 
     @Operation(summary = "查询字典", description = "查询字典列表")
-    @SaCheckPermission("tool:generator:list")
+    @SaCheckPermission("code:generator:config")
     @GetMapping("/dict")
     public List<LabelValueResp> listDict() {
         List<LabelValueResp> dictList = dictService.listDict(null, null);

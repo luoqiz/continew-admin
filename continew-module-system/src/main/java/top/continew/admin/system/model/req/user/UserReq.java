@@ -34,13 +34,13 @@ import java.io.Serial;
 import java.util.List;
 
 /**
- * 创建或修改用户信息
+ * 创建或修改用户参数
  *
  * @author Charles7c
  * @since 2023/2/20 21:03
  */
 @Data
-@Schema(description = "创建或修改用户信息")
+@Schema(description = "创建或修改用户参数")
 public class UserReq extends BaseReq {
 
     @Serial

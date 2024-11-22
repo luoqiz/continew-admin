@@ -31,13 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 创建或修改角色信息
+ * 创建或修改角色参数
  *
  * @author Charles7c
  * @since 2023/2/8 23:12
  */
 @Data
-@Schema(description = "创建或修改角色信息")
+@Schema(description = "创建或修改角色参数")
 public class RoleReq extends BaseReq {
 
     @Serial

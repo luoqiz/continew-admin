@@ -24,13 +24,13 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 参数重置信息
+ * 参数重置请求参数
  *
  * @author Bull-BCLS
  * @since 2023/9/21 23:10
  */
 @Data
-@Schema(description = "参数重置信息")
+@Schema(description = "参数重置请求参数")
 public class OptionResetValueReq implements Serializable {
 
     @Serial

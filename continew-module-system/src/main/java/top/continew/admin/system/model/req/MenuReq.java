@@ -29,13 +29,13 @@ import top.continew.starter.extension.crud.model.req.BaseReq;
 import java.io.Serial;
 
 /**
- * 创建或修改菜单信息
+ * 创建或修改菜单参数
  *
  * @author Charles7c
  * @since 2023/2/15 20:21
  */
 @Data
-@Schema(description = "创建或修改菜单信息")
+@Schema(description = "创建或修改菜单参数")
 public class MenuReq extends BaseReq {
 
     @Serial

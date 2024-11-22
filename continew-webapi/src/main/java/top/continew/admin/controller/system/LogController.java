@@ -60,7 +60,7 @@ public class LogController {
 
     @Operation(summary = "查询详情", description = "查询详情")
     @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
-    @SaCheckPermission("monitor:log:list")
+    @SaCheckPermission("monitor:log:detail")
     @GetMapping("/{id}")
     public LogDetailResp get(@PathVariable Long id) {
         return baseService.get(id);

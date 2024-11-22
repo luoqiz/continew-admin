@@ -330,6 +330,7 @@ CREATE TABLE IF NOT EXISTS "sys_log" (
 );
 CREATE INDEX "idx_log_module"      ON "sys_log" ("module");
 CREATE INDEX "idx_log_ip"          ON "sys_log" ("ip");
+CREATE INDEX "idx_log_address"     ON "sys_log" ("address");
 CREATE INDEX "idx_log_create_time" ON "sys_log" ("create_time");
 COMMENT ON COLUMN "sys_log"."id"               IS 'ID';
 COMMENT ON COLUMN "sys_log"."trace_id"         IS '链路ID';

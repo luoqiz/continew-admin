@@ -47,10 +47,9 @@
         <dependency>
             <groupId>top.continew</groupId>
             <artifactId>continew-plugin-schedule</artifactId>
-            <version>${revision}</version>
         </dependency>
 
-        <!-- 能力开放插件（包括应用管理、API开放授权、API开发等） -->
+        <!-- 能力开放插件（后续会改造为独立插件） -->
         <dependency>
             <groupId>top.continew</groupId>
             <artifactId>continew-plugin-open</artifactId>

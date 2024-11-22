@@ -28,13 +28,13 @@ import top.continew.starter.extension.crud.model.req.BaseReq;
 import java.io.Serial;
 
 /**
- * 创建或修改字典项信息
+ * 创建或修改字典项参数
  *
  * @author Charles7c
  * @since 2023/9/11 21:29
  */
 @Data
-@Schema(description = "创建或修改字典项信息")
+@Schema(description = "创建或修改字典项参数")
 public class DictItemReq extends BaseReq {
 
     @Serial

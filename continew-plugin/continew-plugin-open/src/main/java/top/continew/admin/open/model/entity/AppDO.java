@@ -16,19 +16,20 @@
 
 package top.continew.admin.open.model.entity;
 
-import java.io.Serial;
-import java.time.*;
-
-import lombok.Data;
-
 import com.baomidou.mybatisplus.annotation.TableName;
-
+import lombok.Data;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.starter.extension.crud.model.entity.BaseDO;
+import top.continew.starter.security.crypto.annotation.FieldEncrypt;
+
+import java.io.Serial;
+import java.time.LocalDateTime;
 
 /**
  * 应用实体
  *
  * @author chengzi
+ * @author Charles7c
  * @since 2024/10/17 16:03
  */
 @Data
@@ -39,42 +40,46 @@ public class AppDO extends BaseDO {
     private static final long serialVersionUID = 1L;
 
     /**
-     * ID
-     */
-    private Long id;
-
-    /**
-     * 应用名称
+     * 名称
      */
     private String name;
 
     /**
-     * APPKEY
+     * Access Key（访问密钥）
      */
-    private String appKey;
+    @FieldEncrypt
+    private String accessKey;
 
     /**
-     * APPSECRET
+     * Secret Key（私有密钥）
      */
-    private String appSecret;
-
-    /**
-     * 应用状态
-     */
-    private String status;
+    @FieldEncrypt
+    private String secretKey;
 
     /**
      * 失效时间
      */
-    private LocalDateTime expirationTime;
+    private LocalDateTime expireTime;
 
     /**
-     * 应用描述
+     * 描述
      */
-    private String appDesc;
+    private String description;
 
     /**
-     * secret查看状态
+     * 状态
      */
-    private String secretStatus;
+    private DisEnableStatusEnum status;
+
+    /**
+     * 是否已过期
+     *
+     * @return true：已过期；false：未过期
+     */
+    public boolean isExpired() {
+        if (expireTime == null) {
+            return false;
+        }
+        return LocalDateTime.now().isAfter(expireTime);
+    }
 }

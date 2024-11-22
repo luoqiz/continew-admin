@@ -31,13 +31,13 @@ import top.continew.starter.extension.crud.model.req.BaseReq;
 import java.io.Serial;
 
 /**
- * 存储请求信息
+ * 存储请求参数
  *
  * @author Charles7c
  * @since 2023/12/26 22:09
  */
 @Data
-@Schema(description = "存储请求信息")
+@Schema(description = "存储请求参数")
 public class StorageReq extends BaseReq {
 
     @Serial

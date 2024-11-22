@@ -49,17 +49,10 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@CrudRequestMapping(value = "/system/role", api = {Api.PAGE, Api.GET, Api.ADD, Api.UPDATE, Api.DELETE})
+@CrudRequestMapping(value = "/system/role", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE})
 public class RoleController extends BaseController<RoleService, RoleResp, RoleDetailResp, RoleQuery, RoleReq> {
 
     private final UserRoleService userRoleService;
-
-    @Operation(summary = "查询角色关联用户", description = "查询角色关联的用户ID列表")
-    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
-    @GetMapping("/{id}/user")
-    public List<Long> listUser(@PathVariable("id") Long id) {
-        return userRoleService.listUserIdByRoleId(id);
-    }
 
     @Operation(summary = "分配角色给用户", description = "批量分配角色给用户")
     @SaCheckPermission("system:role:assign")
@@ -67,5 +60,12 @@ public class RoleController extends BaseController<RoleService, RoleResp, RoleDe
     public void assignToUsers(@PathVariable("id") Long id,
                               @Validated @NotEmpty(message = "用户ID列表不能为空") @RequestBody List<Long> userIds) {
         baseService.assignToUsers(id, userIds);
+    }
+
+    @Operation(summary = "查询角色关联用户", description = "查询角色关联的用户ID列表")
+    @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
+    @GetMapping("/{id}/user")
+    public List<Long> listUser(@PathVariable("id") Long id) {
+        return userRoleService.listUserIdByRoleId(id);
     }
 }

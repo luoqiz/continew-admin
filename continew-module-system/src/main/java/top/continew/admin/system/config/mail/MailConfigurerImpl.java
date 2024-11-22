@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import top.continew.admin.common.constant.SysConstants;
+import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.service.OptionService;
 import top.continew.starter.messaging.mail.core.MailConfig;
 import top.continew.starter.messaging.mail.core.MailConfigurer;
@@ -43,7 +44,7 @@ public class MailConfigurerImpl implements MailConfigurer {
     @Override
     public MailConfig getMailConfig() {
         // 查询邮件配置
-        Map<String, String> map = optionService.getByCategory("MAIL");
+        Map<String, String> map = optionService.getByCategory(OptionCategoryEnum.MAIL);
         // 封装邮件配置
         MailConfig mailConfig = new MailConfig();
         mailConfig.setProtocol(MapUtil.getStr(map, "MAIL_PROTOCOL"));

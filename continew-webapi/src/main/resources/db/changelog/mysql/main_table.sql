@@ -210,6 +210,7 @@ CREATE TABLE IF NOT EXISTS `sys_log` (
     PRIMARY KEY (`id`),
     INDEX `idx_module`(`module`),
     INDEX `idx_ip`(`ip`),
+    INDEX `idx_address`(`address`),
     INDEX `idx_create_time`(`create_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统日志表';
 

@@ -31,7 +31,7 @@ import top.continew.admin.system.enums.SocialSourceEnum;
 import top.continew.admin.system.mapper.UserSocialMapper;
 import top.continew.admin.system.model.entity.UserSocialDO;
 import top.continew.admin.system.service.UserSocialService;
-import top.continew.starter.core.util.validate.CheckUtils;
+import top.continew.starter.core.validation.CheckUtils;
 
 import me.zhyd.oauth.model.AuthUser;
 

@@ -171,11 +171,12 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
 </#if>
   {
     title: t('page.common.button.operator'),
+    dataIndex: 'action',
     slotName: 'action',
     width: 180,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['${apiModuleName}:${apiName}:update', '${apiModuleName}:${apiName}:delete'])
+    show: has.hasPermOr(['${apiModuleName}:${apiName}:detail', '${apiModuleName}:${apiName}:update', '${apiModuleName}:${apiName}:delete'])
   }
 ])
 
@@ -220,4 +221,4 @@ const onDetail = (record: ${classNamePrefix}Resp) => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped lang="scss"></style>

@@ -16,6 +16,7 @@
 
 package top.continew.admin.system.service;
 
+import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.model.query.OptionQuery;
 import top.continew.admin.system.model.req.OptionReq;
 import top.continew.admin.system.model.req.OptionResetValueReq;
@@ -47,7 +48,7 @@ public interface OptionService {
      * @param category 类别
      * @return 参数信息
      */
-    Map<String, String> getByCategory(String category);
+    Map<String, String> getByCategory(OptionCategoryEnum category);
 
     /**
      * 修改参数

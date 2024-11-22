@@ -27,13 +27,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 邮箱登录信息
+ * 邮箱登录参数
  *
  * @author Charles7c
  * @since 2023/10/23 20:15
  */
 @Data
-@Schema(description = "邮箱登录信息")
+@Schema(description = "邮箱登录参数")
 public class EmailLoginReq implements Serializable {
 
     @Serial

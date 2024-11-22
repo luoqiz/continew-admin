@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { type ${classNamePrefix}DetailResp, get${classNamePrefix} } from '@/apis/${apiModuleName}/${apiName}'
+import { type ${classNamePrefix}DetailResp, get${classNamePrefix} as getDetail } from '@/apis/${apiModuleName}/${apiName}'
 
 const { width } = useWindowSize()
 
@@ -25,7 +25,7 @@ const visible = ref(false)
 
 // 查询详情
 const getDataDetail = async () => {
-  const { data } = await get${classNamePrefix}(dataId.value)
+  const { data } = await getDetail(dataId.value)
   dataDetail.value = data
 }
 
@@ -39,4 +39,4 @@ const onOpen = async (id: string) => {
 defineExpose({ onOpen })
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped lang="scss"></style>

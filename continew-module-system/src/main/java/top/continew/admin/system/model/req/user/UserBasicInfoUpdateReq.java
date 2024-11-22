@@ -28,13 +28,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 用户基础信息修改信息
+ * 用户基础信息修改参数
  *
  * @author Charles7c
  * @since 2023/1/7 23:08
  */
 @Data
-@Schema(description = "用户基础信息修改信息")
+@Schema(description = "用户基础信息修改参数")
 public class UserBasicInfoUpdateReq implements Serializable {
 
     @Serial

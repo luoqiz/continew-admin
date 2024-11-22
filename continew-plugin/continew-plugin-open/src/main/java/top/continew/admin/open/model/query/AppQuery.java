@@ -16,20 +16,19 @@
 
 package top.continew.admin.open.model.query;
 
-import java.io.Serial;
-import java.io.Serializable;
-
-import lombok.Data;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import lombok.Data;
 import top.continew.starter.data.core.annotation.Query;
 import top.continew.starter.data.core.enums.QueryType;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * 应用查询条件
  *
  * @author chengzi
+ * @author Charles7c
  * @since 2024/10/17 16:03
  */
 @Data
@@ -40,16 +39,9 @@ public class AppQuery implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 应用名称
+     * 关键词
      */
-    @Schema(description = "应用名称")
-    @Query(type = QueryType.LIKE)
-    private String name;
-
-    /**
-     * APPKEY
-     */
-    @Schema(description = "APPKEY")
-    @Query(type = QueryType.LIKE)
-    private String appKey;
+    @Schema(description = "关键词", example = "应用1")
+    @Query(columns = {"name", "description"}, type = QueryType.LIKE)
+    private String description;
 }

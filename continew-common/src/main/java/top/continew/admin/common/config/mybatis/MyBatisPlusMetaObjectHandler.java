@@ -20,7 +20,6 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
 import top.continew.admin.common.context.UserContextHolder;
-import top.continew.starter.core.exception.BusinessException;
 import top.continew.starter.extension.crud.model.entity.BaseDO;
 
 import java.time.LocalDateTime;
@@ -57,23 +56,19 @@ public class MyBatisPlusMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
-        try {
-            if (null == metaObject) {
-                return;
-            }
-            Long createUser = UserContextHolder.getUserId();
-            LocalDateTime createTime = LocalDateTime.now();
-            if (metaObject.getOriginalObject() instanceof BaseDO baseDO) {
-                // 继承了 BaseDO 的类，填充创建信息字段
-                baseDO.setCreateUser(ObjectUtil.defaultIfNull(baseDO.getCreateUser(), createUser));
-                baseDO.setCreateTime(ObjectUtil.defaultIfNull(baseDO.getCreateTime(), createTime));
-            } else {
-                // 未继承 BaseDO 的类，如存在创建信息字段则进行填充
-                this.fillFieldValue(metaObject, CREATE_USER, createUser, false);
-                this.fillFieldValue(metaObject, CREATE_TIME, createTime, false);
-            }
-        } catch (Exception e) {
-            throw new BusinessException("插入数据时自动填充异常：" + e.getMessage());
+        if (null == metaObject) {
+            return;
+        }
+        Long createUser = UserContextHolder.getUserId();
+        LocalDateTime createTime = LocalDateTime.now();
+        if (metaObject.getOriginalObject() instanceof BaseDO baseDO) {
+            // 继承了 BaseDO 的类，填充创建信息字段
+            baseDO.setCreateUser(ObjectUtil.defaultIfNull(baseDO.getCreateUser(), createUser));
+            baseDO.setCreateTime(ObjectUtil.defaultIfNull(baseDO.getCreateTime(), createTime));
+        } else {
+            // 未继承 BaseDO 的类，如存在创建信息字段则进行填充
+            this.fillFieldValue(metaObject, CREATE_USER, createUser, false);
+            this.fillFieldValue(metaObject, CREATE_TIME, createTime, false);
         }
     }
 
@@ -84,23 +79,19 @@ public class MyBatisPlusMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void updateFill(MetaObject metaObject) {
-        try {
-            if (null == metaObject) {
-                return;
-            }
-            Long updateUser = UserContextHolder.getUserId();
-            LocalDateTime updateTime = LocalDateTime.now();
-            if (metaObject.getOriginalObject() instanceof BaseDO baseDO) {
-                // 继承了 BaseDO 的类，填充修改信息
-                baseDO.setUpdateUser(updateUser);
-                baseDO.setUpdateTime(updateTime);
-            } else {
-                // 未继承 BaseDO 的类，根据类中拥有的修改信息字段进行填充，不存在修改信息字段不进行填充
-                this.fillFieldValue(metaObject, UPDATE_USER, updateUser, true);
-                this.fillFieldValue(metaObject, UPDATE_TIME, updateTime, true);
-            }
-        } catch (Exception e) {
-            throw new BusinessException("修改数据时自动填充异常：" + e.getMessage());
+        if (null == metaObject) {
+            return;
+        }
+        Long updateUser = UserContextHolder.getUserId();
+        LocalDateTime updateTime = LocalDateTime.now();
+        if (metaObject.getOriginalObject() instanceof BaseDO baseDO) {
+            // 继承了 BaseDO 的类，填充修改信息
+            baseDO.setUpdateUser(updateUser);
+            baseDO.setUpdateTime(updateTime);
+        } else {
+            // 未继承 BaseDO 的类，根据类中拥有的修改信息字段进行填充，不存在修改信息字段不进行填充
+            this.fillFieldValue(metaObject, UPDATE_USER, updateUser, true);
+            this.fillFieldValue(metaObject, UPDATE_TIME, updateTime, true);
         }
     }
 

@@ -16,56 +16,55 @@
 
 package top.continew.admin.open.model.resp;
 
-import java.io.Serial;
-import java.time.*;
-
-import lombok.Data;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import top.continew.admin.common.enums.DisEnableStatusEnum;
+import top.continew.starter.extension.crud.model.resp.BaseDetailResp;
 
-import top.continew.starter.extension.crud.model.resp.BaseResp;
+import java.io.Serial;
+import java.time.LocalDateTime;
 
 /**
  * 应用信息
  *
  * @author chengzi
+ * @author Charles7c
  * @since 2024/10/17 16:03
  */
 @Data
 @Schema(description = "应用信息")
-public class AppResp extends BaseResp {
+public class AppResp extends BaseDetailResp {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 应用名称
+     * 名称
      */
-    @Schema(description = "应用名称")
+    @Schema(description = "名称", example = "应用1")
     private String name;
 
     /**
-     * APPKEY
+     * Access Key（访问密钥）
      */
-    @Schema(description = "应用密钥")
-    private String appKey;
-
-    /**
-     * 应用状态
-     */
-    @Schema(description = "应用状态")
-    private String status;
+    @Schema(description = "Access Key（访问密钥）", example = "YjUyMGJjYjIxNTE0NDAxMWE1NmRiY2")
+    private String accessKey;
 
     /**
      * 失效时间
      */
-    @Schema(description = "失效时间")
-    private LocalDateTime expirationTime;
+    @Schema(description = "失效时间", example = "2023-08-08 08:08:08", type = "string")
+    private LocalDateTime expireTime;
 
     /**
-     * 应用描述
+     * 状态
      */
-    @Schema(description = "应用描述")
-    private String appDesc;
+    @Schema(description = "状态", example = "1")
+    private DisEnableStatusEnum status;
 
+    /**
+     * 描述
+     */
+    @Schema(description = "描述", example = "应用1描述信息")
+    private String description;
 }

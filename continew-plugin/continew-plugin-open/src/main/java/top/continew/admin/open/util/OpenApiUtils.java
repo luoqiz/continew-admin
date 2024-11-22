@@ -18,18 +18,20 @@ package top.continew.admin.open.util;
 
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.context.model.SaRequest;
+import cn.dev33.satoken.sign.SaSignTemplate;
 
 import java.util.List;
 
 /**
- * API签名验证工具类
+ * Open Api 工具类
  *
  * @author chengzi
+ * @author Charles7c
  * @since 2024/10/25 15:31
  */
-public class ApiSignCheckUtils {
+public class OpenApiUtils {
 
-    private ApiSignCheckUtils() {
+    private OpenApiUtils() {
     }
 
     /**
@@ -37,10 +39,9 @@ public class ApiSignCheckUtils {
      *
      * @return 是否包含sign参数（true：包含；false：不包含）
      */
-    public static boolean isExistSignParam() {
+    public static boolean isSignParamExists() {
         SaRequest saRequest = SaHolder.getRequest();
         List<String> paramNames = saRequest.getParamNames();
-        return paramNames.stream().anyMatch(paramName -> paramName.equals("sign"));
+        return paramNames.stream().anyMatch(SaSignTemplate.sign::equals);
     }
-
 }

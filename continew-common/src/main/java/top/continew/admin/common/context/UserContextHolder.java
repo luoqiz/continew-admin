@@ -23,8 +23,6 @@ import cn.hutool.extra.spring.SpringUtil;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.extension.crud.service.CommonUserService;
 
-import java.util.Optional;
-
 /**
  * 用户上下文 Holder
  *
@@ -142,7 +140,7 @@ public class UserContextHolder {
      * @return 用户 ID
      */
     public static Long getUserId() {
-        return Optional.ofNullable(getContext()).map(UserContext::getId).orElse(null);
+        return ExceptionUtils.exToNull(() -> getContext().getId());
     }
 
     /**
@@ -151,7 +149,7 @@ public class UserContextHolder {
      * @return 用户名
      */
     public static String getUsername() {
-        return Optional.ofNullable(getContext()).map(UserContext::getUsername).orElse(null);
+        return ExceptionUtils.exToNull(() -> getContext().getUsername());
     }
 
     /**

@@ -4,6 +4,7 @@
     :title="title"
     :mask-closable="false"
     :esc-to-close="false"
+    draggable
     :width="width >= 600 ? 600 : '100%'"
     @before-ok="save"
     @close="reset"
@@ -15,6 +16,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { Message } from '@arco-design/web-vue'
+import { useWindowSize } from '@vueuse/core'
 import { get${classNamePrefix}, add${classNamePrefix}, update${classNamePrefix} } from '@/apis/${apiModuleName}/${apiName}'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
 import { useForm } from '@/hooks'
@@ -26,12 +28,13 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
+const { width } = useWindowSize()
+
 const dataId = ref('')
 const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? t('${tableName?replace("_",".")}.page.modify.title') : t('${tableName?replace("_",".")}.page.add.title')))
 const formRef = ref<InstanceType<typeof GiForm>>()
-
 <#if hasDictField>
 const { <#list dictCodes as dictCode>${dictCode}<#if dictCode_has_next>,</#if></#list> } = useDict(<#list dictCodes as dictCode>'${dictCode}'<#if dictCode_has_next>,</#if></#list>)
 </#if>
@@ -40,6 +43,10 @@ const options: Options = {
   form: { size: 'large' },
   btns: { hide: true },
 }
+
+const { form, resetForm } = useForm({
+    // todo 待补充
+})
 
 const columns: Columns = computed<Columns<typeof form>>(() => [
 <#list fieldConfigs as fieldConfig>
@@ -80,10 +87,6 @@ const columns: Columns = computed<Columns<typeof form>>(() => [
   </#if>
 </#list>
 ])
-
-const { form, resetForm } = useForm({
-  // todo 待补充
-})
 
 // 重置
 const reset = () => {
@@ -128,3 +131,5 @@ const onUpdate = async (id: string) => {
 
 defineExpose({ onAdd, onUpdate })
 </script>
+
+<style scoped lang="scss"></style>

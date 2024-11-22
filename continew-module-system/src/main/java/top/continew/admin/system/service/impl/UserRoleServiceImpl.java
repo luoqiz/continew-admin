@@ -27,7 +27,7 @@ import top.continew.admin.common.constant.SysConstants;
 import top.continew.admin.system.mapper.UserRoleMapper;
 import top.continew.admin.system.model.entity.UserRoleDO;
 import top.continew.admin.system.service.UserRoleService;
-import top.continew.starter.core.util.validate.CheckUtils;
+import top.continew.starter.core.validation.CheckUtils;
 
 import java.util.List;
 

@@ -26,13 +26,13 @@ import top.continew.starter.extension.crud.model.req.BaseReq;
 import java.io.Serial;
 
 /**
- * 修改参数信息
+ * 修改参数参数
  *
  * @author Bull-BCLS
  * @since 2023/8/26 19:38
  */
 @Data
-@Schema(description = "修改参数信息")
+@Schema(description = "修改参数参数")
 public class OptionReq extends BaseReq {
 
     @Serial

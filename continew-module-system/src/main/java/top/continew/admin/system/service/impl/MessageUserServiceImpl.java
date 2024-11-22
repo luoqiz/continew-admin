@@ -25,7 +25,7 @@ import top.continew.admin.system.model.entity.MessageUserDO;
 import top.continew.admin.system.model.resp.MessageTypeUnreadResp;
 import top.continew.admin.system.model.resp.MessageUnreadResp;
 import top.continew.admin.system.service.MessageUserService;
-import top.continew.starter.core.util.validate.CheckUtils;
+import top.continew.starter.core.validation.CheckUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -38,7 +38,7 @@ import top.continew.admin.system.model.resp.log.LogResp;
 import top.continew.admin.system.model.resp.log.LoginLogExportResp;
 import top.continew.admin.system.model.resp.log.OperationLogExportResp;
 import top.continew.admin.system.service.LogService;
-import top.continew.starter.core.util.validate.CheckUtils;
+import top.continew.starter.core.validation.CheckUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;

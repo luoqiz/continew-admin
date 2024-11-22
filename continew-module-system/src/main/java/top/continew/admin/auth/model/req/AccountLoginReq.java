@@ -24,13 +24,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 账号登录信息
+ * 账号登录参数
  *
  * @author Charles7c
  * @since 2022/12/21 20:43
  */
 @Data
-@Schema(description = "账号登录信息")
+@Schema(description = "账号登录参数")
 public class AccountLoginReq implements Serializable {
 
     @Serial

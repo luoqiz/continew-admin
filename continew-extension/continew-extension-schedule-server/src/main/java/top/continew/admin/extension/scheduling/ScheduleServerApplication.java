@@ -52,7 +52,7 @@ public class ScheduleServerApplication extends com.aizuda.snailjob.server.SnailJ
         String baseUrl = URLUtil.normalize("%s:%s%s".formatted(hostAddress, port, contextPath));
         log.info("----------------------------------------------");
         log.info("{} service started successfully.", SpringUtil.getApplicationName());
-        log.info("API 地址：{}", baseUrl);
+        log.info("访问地址：{}", baseUrl);
         log.info("----------------------------------------------");
     }
 }

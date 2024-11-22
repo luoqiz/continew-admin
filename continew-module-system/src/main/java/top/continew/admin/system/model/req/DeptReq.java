@@ -28,13 +28,13 @@ import top.continew.starter.extension.crud.model.req.BaseReq;
 import java.io.Serial;
 
 /**
- * 创建或修改部门信息
+ * 创建或修改部门参数
  *
  * @author Charles7c
  * @since 2023/1/24 00:21
  */
 @Data
-@Schema(description = "创建或修改部门信息")
+@Schema(description = "创建或修改部门参数")
 public class DeptReq extends BaseReq {
 
     @Serial

@@ -41,7 +41,7 @@ import top.continew.admin.system.model.resp.MenuResp;
 import top.continew.admin.system.model.resp.RoleDetailResp;
 import top.continew.admin.system.model.resp.RoleResp;
 import top.continew.admin.system.service.*;
-import top.continew.starter.core.util.validate.CheckUtils;
+import top.continew.starter.core.validation.CheckUtils;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
 import java.util.*;
@@ -106,7 +106,7 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
     }
 
     @Override
-    protected void beforeDelete(List<Long> ids) {
+    public void beforeDelete(List<Long> ids) {
         List<RoleDO> list = baseMapper.lambdaQuery()
             .select(RoleDO::getName, RoleDO::getIsSystem)
             .in(RoleDO::getId, ids)
@@ -122,7 +122,16 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
     }
 
     @Override
-    protected void fill(Object obj) {
+    public void assignToUsers(Long id, List<Long> userIds) {
+        super.getById(id);
+        // 保存用户和角色关联
+        userRoleService.assignRoleToUsers(id, userIds);
+        // 更新用户上下文
+        this.updateUserContext(id);
+    }
+
+    @Override
+    public void fill(Object obj) {
         super.fill(obj);
         if (obj instanceof RoleDetailResp detail) {
             Long roleId = detail.getId();
@@ -186,15 +195,6 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, RoleDO, RoleRes
             return 0;
         }
         return (int)this.count(Wrappers.<RoleDO>lambdaQuery().in(RoleDO::getName, roleNames));
-    }
-
-    @Override
-    public void assignToUsers(Long id, List<Long> userIds) {
-        super.getById(id);
-        // 保存用户和角色关联
-        userRoleService.assignRoleToUsers(id, userIds);
-        // 更新用户上下文
-        this.updateUserContext(id);
     }
 
     /**

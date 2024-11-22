@@ -4,7 +4,7 @@
 <img src="https://img.shields.io/badge/License-Apache--2.0-blue.svg" alt="License" />
 </a>
 <a href="https://github.com/continew-org/continew-admin" target="_blank">
-<img src="https://img.shields.io/badge/RELEASE-v3.3.0-%23ff3f59.svg" alt="Release" />
+<img src="https://img.shields.io/badge/RELEASE-v3.4.0-%23ff3f59.svg" alt="Release" />
 </a>
 <a href="https://app.codacy.com/gh/continew-org/continew-admin/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade" target="_blank">
 <img src="https://app.codacy.com/project/badge/Grade/19e3e2395d554efe902c3822e65db30e" alt="Codacy Badge" />
@@ -13,7 +13,7 @@
 <img src="https://sonarcloud.io/api/project_badges/measure?project=Charles7c_continew-admin&metric=alert_status" alt="Sonar Status" />
 </a>
 <a href="https://github.com/continew-org/continew-starter" target="_blank">
-<img src="https://img.shields.io/badge/ContiNew Starter-2.7.2-%236CB52D.svg" alt="ContiNew Starter" />
+<img src="https://img.shields.io/badge/ContiNew Starter-2.7.4-%236CB52D.svg" alt="ContiNew Starter" />
 </a>
 <a href="https://spring.io/projects/spring-boot" target="_blank">
 <img src="https://img.shields.io/badge/Spring Boot-3.2.10-%236CB52D.svg?logo=Spring-Boot" alt="Spring Boot" />
@@ -77,6 +77,7 @@ ContiNew Admin（Continue New Admin）持续迭代优化的前后端分离中后
 2.**Starter 组件：** 从 v2.1.0 版本开始，抽取并封装后端基础组件及各框架集成配置到 ContiNew Starter 项目，且 **[已发布至 Maven 中央仓库](https://central.sonatype.com/search?q=continew-starter&namespace=top.continew)**，可在你的任意项目中直接引入所需依赖使用。即使你不用脚手架项目，难道能让你搭项目框架更快、更爽、更省力的 Starter 也要 Say No 吗？
 
 3.**CRUD 套件：** 封装通用增删改查套件，适配后端各分层，几分钟即可提供一套 CRUD API，包括新增、修改、批量删除、查询详情、分页列表查询、全部列表查询、树型列表查询、导出到 Excel，且 API 支持按实际所需开放或扩展。
+
 ```java
 @Tag(name = "部门管理 API")
 @RestController
@@ -100,6 +101,7 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 7.**卓越工程：** 后端采用模块化工程结构，并适配了统一项目版本号、编译项目自动代码格式化、代码混淆等插件，提供了自定义打包部署结构配置（配置文件、三方依赖和主程序分离），提供全套环境及应用的 Docker Compose 部署脚本。为了减少您开发新项目时的改造耗时，项目品牌配置持续进行深度聚合，简单的配置和结构修改即可快速开始独属于你的新项目。
 
 8.**业务脚手架：** 有颜有料，不止是说说而已，持续打磨 UI 设计与色彩主题。提供基于 RBAC 的权限控制、通用数据权限，包含丰富的通用业务功能：第三方登录，邮箱、短信（生产级炸弹漏洞处理方案），个人中心、用户管理、角色管理、部门管理、系统配置（基础站点配置、邮件配置、安全配置）、系统日志、消息中心、通知公告等，设计用心，逻辑合理闭环。
+
 > 一个好的脚手架项目，不仅仅是提供一系列组件集成与配置，也不仅仅是封装一堆好用的工具，还更应该提供一系列通用基础业务解决方案及设计，为初创团队项目减负。
 
 9.**质量与安全：** CI 已集成 Sonar、Codacy，Push 即扫描代码质量，定期扫描 CVE 漏洞，及时解决潜在问题。封装数据库字段加密、JSON 脱敏、XSS 过滤等工具，提供诸多安全解决方案。
@@ -112,49 +114,63 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 > [!TIP]
 > 更多功能和优化正在赶来💦，最新项目计划、进展请进群或关注 [任务清单](https://continew.top/require.html) 和 [更新日志](https://continew.top/admin/other/changelog.html)。
 
+- 仪表盘：提供工作台、分析页，工作台提供功能快捷导航入口、最新公告、动态；分析页提供全面数据可视化能力
 - 个人中心：支持基础信息修改、密码修改、邮箱绑定、手机号绑定（并提供行为验证码、短信限流等安全处理）、第三方账号绑定/解绑、头像裁剪上传
-- 消息中心：提供站内信消息统一查看、标记已读、全部已读、删除等功能
-- 系统管理
-  - 用户管理：提供用户的相关配置，新增、修改、删除、重置密码、导出
-  - 部门管理：可配置系统组织架构，并以树形表格展示
-  - 角色管理：对权限与菜单进行分配，可根据部门设置角色的数据权限
-  - 菜单管理：已实现菜单动态路由，后端可配置化，支持多级菜单
-  - 通知公告：提供公告的发布、查看和删除等功能。管理员可以在后台发布公告，并可以设置公告的生效时间、终止时间，以 markdown-it 为内核渲染 Markdown 格式内容显示
-  - 字典管理：提供对系统公用数据字典的维护，例如：公告类型，支持字典标签背景色和排序等配置
-  - 文件管理：提供文件上传、下载、预览（目前支持图片、音视频）、重命名、切换视图（列表、网格）等功能
-  - 存储管理：提供文件存储库新增、编辑、删除等功能，支持本地存储、兼容 S3 协议存储
-  - 系统配置：
-    - 基础配置：提供修改系统标题、Logo、favicon、版权信息等基础配置功能，以方便用户系统与其自身品牌形象保持一致
-    - 邮件配置：提供系统发件箱配置，也支持通过配置文件指定
-    - 安全配置：提供密码策略修改，支持丰富的密码策略设定，包括但不限于 `密码有效期`、`密码重复次数`、`密码错误锁定账号次数、时间` 等
-
-- 系统监控
-  - 在线用户：管理当前登录用户，可一键踢下线
-  - 日志管理：提供登录日志、操作日志管理功能，可查看指定日志的详细请求及响应信息
-
-- 任务调度
-  - 任务管理：提供定时任务的新增、修改、删除、执行功能，支持 CORN 和固定频率
-  - 任务日志：提供任务执行日志的查询功能，支持停止、重试指定批次，支持查询集群各节点的详细输出日志
-
+- 消息中心：提供站内信消息统一查看、标记已读、全部已读、删除等功能（目前仅支持系统通知消息）
+- 用户管理：管理系统用户，包含新增、修改、删除、导入、导出、重置密码、分配角色等功能
+  
+- 角色管理：管理系统用户的功能权限及数据权限，包含新增、修改、删除、分配角色等功能
+  
+- 菜单管理：管理系统菜单及按钮权限，支持多级菜单，动态路由，包含新增、修改、删除等功能
+  
+- 部门管理：管理系统组织架构，包含新增、修改、删除、导出等功能，以树形列表进行展示
+  
+- 字典管理：管理系统公用数据字典，例如：消息类型。支持字典标签背景色和排序等配置
+  
+- 通知公告：管理系统公告，支持设置公告的生效时间、终止时间、通知范围（所有人、指定用户）
+  
+- 文件管理：管理系统文件，支持上传、下载、预览（目前支持图片、音视频、PDF、Word、Excel、PPT）、重命名、切换视图（列表、网格）等功能
+  
+- 存储管理：管理文件存储配置，支持本地存储、兼容 S3 协议存储
+  
+- 系统配置：
+  - 基础配置：提供修改系统标题、Logo、favicon、版权信息等基础配置功能，以方便用户系统与其自身品牌形象保持一致
+  - 邮件配置：提供系统发件箱配置，也支持通过配置文件指定
+  - 安全配置：提供密码策略修改，支持丰富的密码策略设定，包括但不限于 `密码有效期`、`密码重复次数`、`密码错误锁定账号次数、时间` 等
+  
+- 在线用户：管理当前登录用户，可一键踢除下线
+  
+- 日志管理：管理系统登录日志、操作日志，支持查看日志详情，包含请求头、响应头等报文信息
+  
+- 任务管理：管理系统定时任务，包含新增、修改、删除、执行功能，支持 Cron（可配置式生成 Cron 表达式） 和固定频率
+  
+- 任务日志：管理定时任务执行日志，包含停止、重试指定批次，查询集群各节点的详细输出日志等功能
+  
+- 应用管理：管理第三方系统应用 AK、SK，包含新增、修改、删除、查看密钥、重置密钥等功能，支持设置密钥有效期
+  
 - 代码生成：提供根据数据库表自动生成相应的前后端 CRUD 代码的功能，支持同步最新表结构及代码生成预览
 
 ## 系统截图
 
 > [!TIP]
-> 受篇幅长度及功能更新频率影响，下方仅为系统 **部分** 功能于 **2024年6月13日** 进行的截图，更多新增功能及细节请登录演示环境或 clone 代码到本地启动查看。
+> 受篇幅长度及功能更新频率影响，下方仅为系统 **部分** 功能于 **2024年11月18日** 进行的截图，更多新增功能及细节请登录演示环境或 clone 代码到本地启动查看。
 
 <table border="1" cellpadding="1" cellspacing="1" style="width: 500px">
     <tbody>
         <tr>
             <td><img src=".image/screenshot/000登录页面.png" alt="登录页面" width="1920" /></td>
+            <td><img src=".image/screenshot/000登录页面-H5.png" alt="登录页面-H5" width="1920" /></td>
+        </tr>
+        <tr>
             <td><img src=".image/screenshot/001仪表盘.png" alt="仪表盘" width="1920" /></td>
+            <td><img src=".image/screenshot/002分析页.png" alt="分析页" width="1920" /></td>
         </tr>
-        <tr>
-            <td><img src=".image/screenshot/002仪表盘-查看公告.png" alt="仪表盘-查看公告" width="1920" /></td>
+       <tr>
             <td><img src=".image/screenshot/010个人中心.png" alt="个人中心" width="1920" /></td>
+            <td><img src=".image/screenshot/013消息中心.png" alt="消息中心" width="1920" /></td>
         </tr>
         <tr>
-            <td><img src=".image/screenshot/011消息中心.png" alt="消息中心" width="1920" /></td>
+            <td><img src=".image/screenshot/011安全设置-修改邮箱.png" alt="安全设置-修改邮箱" width="1920" /></td>
             <td><img src=".image/screenshot/012安全设置-修改邮箱-邮箱验证码.png" alt="安全设置-修改邮箱-邮箱验证码" width="1920" /></td>
         </tr>
         <tr>
@@ -166,47 +182,40 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
             <td><img src=".image/screenshot/021系统管理-用户管理-新增.png" alt="系统管理-用户管理-新增" width="1920" /></td>
         </tr>
         <tr>
-            <td><img src=".image/screenshot/025系统管理-部门管理-列表.png" alt="系统管理-部门管理-列表" width="1920" /></td>
-            <td><img src=".image/screenshot/026系统管理-部门管理-新增.png" alt="系统管理-部门管理-新增" width="1920" /></td>
+            <td><img src=".image/screenshot/025系统管理-角色管理-列表.png" alt="系统管理-角色管理-列表" width="1920" /></td>
+            <td><img src=".image/screenshot/026系统管理-角色管理-新增.png" alt="系统管理-角色管理-新增" width="1920" /></td>
         </tr>
         <tr>
-            <td><img src=".image/screenshot/030系统管理-角色管理-列表.png" alt="系统管理-角色管理-列表" width="1920" /></td>
-            <td><img src=".image/screenshot/031系统管理-角色管理-新增.png" alt="系统管理-角色管理-新增" width="1920" /></td>
+            <td><img src=".image/screenshot/030系统管理-菜单管理-列表.png" alt="系统管理-菜单管理-列表" width="1920" /></td>
+            <td><img src=".image/screenshot/031系统管理-菜单管理-新增.png" alt="系统管理-菜单管理-新增" width="1920" /></td>
         </tr>
         <tr>
-            <td><img src=".image/screenshot/035系统管理-菜单管理-列表.png" alt="系统管理-菜单管理-列表" width="1920" /></td>
-            <td><img src=".image/screenshot/036系统管理-菜单管理-新增.png" alt="系统管理-菜单管理-新增" width="1920" /></td>
+            <td><img src=".image/screenshot/045系统管理-公告管理-列表.png" alt="系统管理-公告管理-列表" width="1920" /></td>
+            <td><img src=".image/screenshot/046系统管理-公告管理-修改.png" alt="系统管理-公告管理-修改" width="1920" /></td>
         </tr>
         <tr>
-            <td><img src=".image/screenshot/040系统管理-公告管理-列表.png" alt="系统管理-公告管理-列表" width="1920" /></td>
-            <td><img src=".image/screenshot/041系统管理-公告管理-修改.png" alt="系统管理-公告管理-修改" width="1920" /></td>
+            <td><img src=".image/screenshot/040系统管理-字典管理-列表.png" alt="系统管理-字典管理-列表" width="1920" /></td>
+            <td><img src=".image/screenshot/041系统管理-字典项管理.png" alt="系统管理-字典项管理" width="1920" /></td>
         </tr>
         <tr>
-            <td><img src=".image/screenshot/045系统管理-字典管理-列表.png" alt="系统管理-字典管理-列表" width="1920" /></td>
-            <td><img src=".image/screenshot/046系统管理-字典项管理.png" alt="系统管理-字典项管理" width="1920" /></td>
-        </tr>
-        <tr>
-            <td><img src=".image/screenshot/050系统管理-文件管理-列表-1.png" alt="系统管理-文件管理-列表-1" width="1920" /></td>
             <td><img src=".image/screenshot/051系统管理-文件管理-列表-2.png" alt="系统管理-文件管理-列表-2" width="1920" /></td>
+            <td><img src=".image/screenshot/052系统管理-文件管理-查看文档.png" alt="系统管理-文件管理-查看文档" width="1920" /></td>
         </tr>
         <tr>
-            <td><img src=".image/screenshot/052系统管理-文件管理-图片.png" alt="系统管理-文件管理-图片" width="1920" /></td>
-            <td><img src=".image/screenshot/053系统管理-文件管理-音乐.png" alt="系统管理-文件管理-音乐" width="1920" /></td>
+            <td><img src=".image/screenshot/301系统工具-代码生成-配置.png" alt="系统工具-代码生成-配置" width="1920" /></td>
+            <td><img src=".image/screenshot/302系统工具-代码生成-预览.png" alt="系统工具-代码生成-预览" width="1920" /></td>
         </tr>
         <tr>
-            <td><img src=".image/screenshot/101系统工具-代码生成-配置.png" alt="系统工具-代码生成-配置" width="1920" /></td>
-            <td><img src=".image/screenshot/102系统工具-代码生成-预览.png" alt="系统工具-代码生成-预览" width="1920" /></td>
+            <td><img src=".image/screenshot/100系统监控-在线用户.png" alt="系统监控-在线用户" width="1920" /></td>
+            <td><img src=".image/screenshot/101系统监控-系统日志-登录日志.png" alt="系统监控-系统日志-登录日志" width="1920" /></td>
         </tr>
         <tr>
-            <td><img src=".image/screenshot/200系统监控-在线用户.png" alt="系统监控-在线用户" width="1920" /></td>
-            <td><img src=".image/screenshot/201系统监控-系统日志-登录日志.png" alt="系统监控-系统日志-登录日志" width="1920" /></td>
-        </tr>
-        <tr>
-            <td><img src=".image/screenshot/202系统监控-系统日志-操作日志.png" alt="系统监控-系统日志-操作日志" width="1920" /></td>
-            <td><img src=".image/screenshot/202系统监控-系统日志-操作日志-详情.png" alt="系统监控-系统日志-操作日志-详情" width="1920" /></td>
+            <td><img src=".image/screenshot/102系统监控-系统日志-操作日志.png" alt="系统监控-系统日志-操作日志" width="1920" /></td>
+            <td><img src=".image/screenshot/103系统监控-系统日志-操作日志-详情.png" alt="系统监控-系统日志-操作日志-详情" width="1920" /></td>
         </tr>
     </tbody>
 </table>
+
 
 ## 核心技术栈
 
@@ -216,7 +225,7 @@ public class DeptController extends BaseController<DeptService, DeptResp, DeptDe
 | <a href="https://arco.design/vue/docs/start" target="_blank">Arco Design</a> | 2.56.0       | 字节跳动推出的前端 UI 框架，年轻化的色彩和组件设计。         |
 | <a href="https://www.typescriptlang.org/zh/" target="_blank">TypeScript</a> | 5.0.4        | TypeScript 是微软开发的一个开源的编程语言，通过在 JavaScript 的基础上添加静态类型定义构建而成。 |
 | <a href="https://cn.vitejs.dev/" target="_blank">Vite</a>    | 5.1.5        | 下一代的前端工具链，为开发提供极速响应。                     |
-| [ContiNew Starter](https://github.com/continew-org/continew-starter) | 2.7.2        | ContiNew Starter 包含了一系列经过企业实践优化的依赖包（如 MyBatis-Plus、SaToken），可轻松集成到应用中，为开发人员减少手动引入依赖及配置的麻烦，为 Spring Boot Web 项目的灵活快速构建提供支持。 |
+| [ContiNew Starter](https://github.com/continew-org/continew-starter) | 2.7.4        | ContiNew Starter 包含了一系列经过企业实践优化的依赖包（如 MyBatis-Plus、SaToken），可轻松集成到应用中，为开发人员减少手动引入依赖及配置的麻烦，为 Spring Boot Web 项目的灵活快速构建提供支持。 |
 | <a href="https://spring.io/projects/spring-boot" target="_blank">Spring Boot</a> | 3.2.10       | 简化 Spring 应用的初始搭建和开发过程，基于“约定优于配置”的理念，使开发人员不再需要定义样板化的配置。（Spring Boot 3.0 开始，要求 Java 17 作为最低版本） |
 | <a href="https://undertow.io/" target="_blank">Undertow</a>  | 2.3.13.Final | 采用 Java 开发的灵活的高性能 Web 服务器，提供包括阻塞和基于 NIO 的非堵塞机制。 |
 | <a href="https://sa-token.dev33.cn/" target="_blank">Sa-Token + JWT</a> | 1.39.0       | 轻量级 Java 权限认证框架，让鉴权变得简单、优雅。             |
@@ -324,7 +333,8 @@ continew-admin
 │  │  │  │     │  ├─ query（系统管理相关查询条件）
 │  │  │  │     │  ├─ req（系统管理相关请求对象（Request））
 │  │  │  │     │  └─ resp（系统管理相关响应对象（Response））
-│  │  │  │     └─ service（系统管理相关业务接口及实现类）
+│  │  │  │     ├─ service（系统管理相关业务接口及实现类）
+│  │  │  │     └─ util（系统管理相关工具类）
 │  │  │  └─ resources
 │  │  │     └─ mapper（系统管理相关 Mapper XML 文件目录）
 │  │  └─ test（测试相关代码目录）
@@ -342,6 +352,18 @@ continew-admin
 │  │  │  │  │  ├─ req（任务调度相关请求对象（Request））
 │  │  │  │  │  └─ resp（任务调度相关响应对象（Response））
 │  │  │  │  └─ service（代码生成器相关业务接口及实现类）
+│  │  │  └─ test（测试相关代码目录）
+│  │  └─ pom.xml
+│  ├─ continew-plugin-open（能力开放插件模块）
+│  │  ├─ src
+│  │  │  ├─ main/java/top/continew/admin/open
+│  │  │  │  ├─ mapper（代码生成器相关 Mapper）
+│  │  │  │  ├─ model（能力开放相关模型）
+│  │  │  │  │  ├─ entity（能力开放相关实体对象）
+│  │  │  │  │  ├─ query（能力开放相关查询条件）
+│  │  │  │  │  ├─ req（能力开放相关请求对象（Request））
+│  │  │  │  │  └─ resp（能力开放相关响应对象（Response））
+│  │  │  │  └─ service（能力开放相关业务接口及实现类）
 │  │  │  └─ test（测试相关代码目录）
 │  │  └─ pom.xml
 │  ├─ continew-plugin-generator（代码生成器插件模块）
@@ -400,7 +422,7 @@ continew-admin
 ├─ .idea
 │  └─ icon.png（IDEA 项目图标，实际开发时直接删除）
 ├─ .image（截图目录，实际开发时直接删除）
-├─ .style（代码格式相关配置目录，实际开发时根据需要取舍，删除时注意删除 spotless 插件配置）
+├─ .style（代码格式、License文件头相关配置目录，实际开发时根据需要取舍，删除时注意删除 spotless 插件配置）
 ├─ .gitignore（Git 忽略文件相关配置文件）
 ├─ docker（项目部署相关配置目录，实际开发时可备份后直接删除）
 ├─ LICENSE（开源协议文件）

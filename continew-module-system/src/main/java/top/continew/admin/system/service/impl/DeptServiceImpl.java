@@ -31,7 +31,7 @@ import top.continew.admin.system.model.resp.DeptResp;
 import top.continew.admin.system.service.DeptService;
 import top.continew.admin.system.service.RoleDeptService;
 import top.continew.admin.system.service.UserService;
-import top.continew.starter.core.util.validate.CheckUtils;
+import top.continew.starter.core.validation.CheckUtils;
 import top.continew.starter.data.core.enums.DatabaseType;
 import top.continew.starter.data.core.util.MetaUtils;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
@@ -52,36 +52,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptResp, DeptResp, DeptQuery, DeptReq> implements DeptService {
 
+    private final RoleDeptService roleDeptService;
     @Resource
     private UserService userService;
-    private final RoleDeptService roleDeptService;
     @Resource
     private DataSource dataSource;
 
     @Override
-    public List<DeptDO> listChildren(Long id) {
-        DatabaseType databaseType = MetaUtils.getDatabaseTypeOrDefault(dataSource, DatabaseType.MYSQL);
-        return baseMapper.lambdaQuery().apply(databaseType.findInSet(id, "ancestors")).list();
-    }
-
-    @Override
-    public List<DeptDO> listByNames(List<String> list) {
-        if (CollUtil.isEmpty(list)) {
-            return Collections.emptyList();
-        }
-        return this.list(Wrappers.<DeptDO>lambdaQuery().in(DeptDO::getName, list));
-    }
-
-    @Override
-    public int countByNames(List<String> deptNames) {
-        if (CollUtil.isEmpty(deptNames)) {
-            return 0;
-        }
-        return (int)this.count(Wrappers.<DeptDO>lambdaQuery().in(DeptDO::getName, deptNames));
-    }
-
-    @Override
-    protected void beforeAdd(DeptReq req) {
+    public void beforeAdd(DeptReq req) {
         String name = req.getName();
         boolean isExists = this.isNameExists(name, req.getParentId(), null);
         CheckUtils.throwIf(isExists, "新增失败，[{}] 已存在", name);
@@ -89,7 +67,7 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
     }
 
     @Override
-    protected void beforeUpdate(DeptReq req, Long id) {
+    public void beforeUpdate(DeptReq req, Long id) {
         String name = req.getName();
         boolean isExists = this.isNameExists(name, req.getParentId(), id);
         CheckUtils.throwIf(isExists, "修改失败，[{}] 已存在", name);
@@ -124,7 +102,7 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
     }
 
     @Override
-    protected void beforeDelete(List<Long> ids) {
+    public void beforeDelete(List<Long> ids) {
         List<DeptDO> list = baseMapper.lambdaQuery()
             .select(DeptDO::getName, DeptDO::getIsSystem)
             .in(DeptDO::getId, ids)
@@ -136,6 +114,28 @@ public class DeptServiceImpl extends BaseServiceImpl<DeptMapper, DeptDO, DeptRes
         CheckUtils.throwIf(userService.countByDeptIds(ids) > 0, "所选部门存在用户关联，请解除关联后重试");
         // 删除角色和部门关联
         roleDeptService.deleteByDeptIds(ids);
+    }
+
+    @Override
+    public List<DeptDO> listChildren(Long id) {
+        DatabaseType databaseType = MetaUtils.getDatabaseTypeOrDefault(dataSource, DatabaseType.MYSQL);
+        return baseMapper.lambdaQuery().apply(databaseType.findInSet(id, "ancestors")).list();
+    }
+
+    @Override
+    public List<DeptDO> listByNames(List<String> list) {
+        if (CollUtil.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+        return this.list(Wrappers.<DeptDO>lambdaQuery().in(DeptDO::getName, list));
+    }
+
+    @Override
+    public int countByNames(List<String> deptNames) {
+        if (CollUtil.isEmpty(deptNames)) {
+            return 0;
+        }
+        return (int)this.count(Wrappers.<DeptDO>lambdaQuery().in(DeptDO::getName, deptNames));
     }
 
     /**

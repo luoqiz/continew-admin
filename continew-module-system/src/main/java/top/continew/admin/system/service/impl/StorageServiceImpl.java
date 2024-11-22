@@ -41,8 +41,8 @@ import top.continew.admin.system.util.ValidateGroup;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.ExceptionUtils;
 import top.continew.starter.core.util.URLUtils;
-import top.continew.starter.core.util.validate.CheckUtils;
-import top.continew.starter.core.util.validate.ValidationUtils;
+import top.continew.starter.core.validation.CheckUtils;
+import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 import top.continew.starter.web.util.SpringWebUtils;
 
@@ -65,7 +65,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
     private FileService fileService;
 
     @Override
-    protected void beforeAdd(StorageReq req) {
+    public void beforeAdd(StorageReq req) {
         this.decodeSecretKey(req, null);
         CheckUtils.throwIf(Boolean.TRUE.equals(req.getIsDefault()) && this.isDefaultExists(null), "请先取消原有默认存储");
         String code = req.getCode();
@@ -74,7 +74,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
     }
 
     @Override
-    protected void beforeUpdate(StorageReq req, Long id) {
+    public void beforeUpdate(StorageReq req, Long id) {
         StorageDO oldStorage = super.getById(id);
         CheckUtils.throwIfNotEqual(req.getCode(), oldStorage.getCode(), "不允许修改存储编码");
         CheckUtils.throwIfNotEqual(req.getType(), oldStorage.getType(), "不允许修改存储类型");
@@ -99,7 +99,7 @@ public class StorageServiceImpl extends BaseServiceImpl<StorageMapper, StorageDO
     }
 
     @Override
-    protected void beforeDelete(List<Long> ids) {
+    public void beforeDelete(List<Long> ids) {
         CheckUtils.throwIf(fileService.countByStorageIds(ids) > 0, "所选存储存在文件关联，请删除文件后重试");
         List<StorageDO> storageList = baseMapper.lambdaQuery().in(StorageDO::getId, ids).list();
         storageList.forEach(s -> {

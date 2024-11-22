@@ -43,7 +43,7 @@ import top.continew.admin.system.service.StorageService;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.StrUtils;
 import top.continew.starter.core.util.URLUtils;
-import top.continew.starter.core.util.validate.CheckUtils;
+import top.continew.starter.core.validation.CheckUtils;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
 import java.time.LocalDate;

@@ -27,13 +27,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 用户手机号修改信息
+ * 用户手机号修改参数
  *
  * @author Charles7c
  * @since 2023/10/27 20:11
  */
 @Data
-@Schema(description = "用户手机号修改信息")
+@Schema(description = "用户手机号修改参数")
 public class UserPhoneUpdateReq implements Serializable {
 
     @Serial

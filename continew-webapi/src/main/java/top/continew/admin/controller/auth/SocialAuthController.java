@@ -34,7 +34,7 @@ import top.continew.admin.auth.model.resp.LoginResp;
 import top.continew.admin.auth.model.resp.SocialAuthAuthorizeResp;
 import top.continew.admin.auth.service.LoginService;
 import top.continew.starter.core.exception.BadRequestException;
-import top.continew.starter.core.util.validate.ValidationUtils;
+import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.log.core.annotation.Log;
 
 /**

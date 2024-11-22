@@ -27,13 +27,13 @@ import top.continew.starter.extension.crud.model.req.BaseReq;
 import java.io.Serial;
 
 /**
- * 创建消息信息
+ * 创建消息参数
  *
  * @author Bull-BCLS
  * @since 2023/10/15 19:05
  */
 @Data
-@Schema(description = "创建消息信息")
+@Schema(description = "创建消息参数")
 public class MessageReq extends BaseReq {
 
     @Serial

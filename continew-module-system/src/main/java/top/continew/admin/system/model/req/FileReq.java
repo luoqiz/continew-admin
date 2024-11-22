@@ -25,13 +25,13 @@ import top.continew.starter.extension.crud.model.req.BaseReq;
 import java.io.Serial;
 
 /**
- * 修改文件信息
+ * 修改文件参数
  *
  * @author Charles7c
  * @since 2023/12/23 10:38
  */
 @Data
-@Schema(description = "修改文件信息")
+@Schema(description = "修改文件参数")
 public class FileReq extends BaseReq {
 
     @Serial

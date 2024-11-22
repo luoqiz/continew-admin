@@ -16,67 +16,68 @@
 
 package top.continew.admin.open.model.req;
 
-import java.io.Serial;
-import java.time.*;
-
-import jakarta.validation.constraints.*;
-
-import lombok.Data;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-
+import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.starter.extension.crud.model.req.BaseReq;
 
+import java.io.Serial;
+import java.time.LocalDateTime;
+
 /**
- * 创建或修改应用信息
+ * 创建或修改应用参数
  *
  * @author chengzi
+ * @author Charles7c
  * @since 2024/10/17 16:03
  */
 @Data
-@Schema(description = "创建或修改应用信息")
+@Schema(description = "创建或修改应用参数")
 public class AppReq extends BaseReq {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 应用名称
+     * 名称
      */
-    @Schema(description = "应用名称")
-    @NotBlank(message = "应用名称不能为空")
-    @Length(max = 255, message = "应用名称长度不能超过 {max} 个字符")
+    @Schema(description = "名称", example = "应用1")
+    @NotBlank(message = "名称不能为空")
+    @Length(max = 100, message = "名称长度不能超过 {max} 个字符")
     private String name;
-
-    /**
-     * APPKEY
-     */
-    @Schema(description = "应用密钥")
-    @NotBlank(message = "应用密钥不能为空")
-    @Length(max = 255, message = "应用密钥长度不能超过 {max} 个字符")
-    private String appKey;
-
-    /**
-     * 应用状态
-     */
-    @Schema(description = "应用状态")
-    @NotBlank(message = "应用状态不能为空")
-    @Length(max = 255, message = "应用状态长度不能超过 {max} 个字符")
-    private String status;
 
     /**
      * 失效时间
      */
-    @Schema(description = "失效时间")
-    @NotNull(message = "失效时间不能为空")
-    private LocalDateTime expirationTime;
+    @Schema(description = "失效时间", example = "2023-08-08 23:59:59", type = "string")
+    @Future(message = "失效时间必须是未来时间")
+    private LocalDateTime expireTime;
 
     /**
-     * 应用描述
+     * 描述
      */
-    @Schema(description = "应用描述")
-    @Length(max = 255, message = "应用描述长度不能超过 {max} 个字符")
-    private String appDesc;
+    @Schema(description = "描述", example = "应用1描述信息")
+    @Length(max = 200, message = "描述长度不能超过 {max} 个字符")
+    private String description;
+
+    /**
+     * 状态
+     */
+    @Schema(description = "状态", example = "1")
+    private DisEnableStatusEnum status;
+
+    /**
+     * Access Key（访问密钥）
+     */
+    @Schema(hidden = true)
+    private String accessKey;
+
+    /**
+     * Secret Key（密钥）
+     */
+    @Schema(hidden = true)
+    private String secretKey;
 }

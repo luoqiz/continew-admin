@@ -16,8 +16,11 @@
 
 package top.continew.admin.open.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import top.continew.starter.data.mp.base.BaseMapper;
 import top.continew.admin.open.model.entity.AppDO;
+import top.continew.starter.security.crypto.annotation.FieldEncrypt;
 
 /**
  * 应用 Mapper
@@ -25,4 +28,14 @@ import top.continew.admin.open.model.entity.AppDO;
  * @author chengzi
  * @since 2024/10/17 16:03
  */
-public interface AppMapper extends BaseMapper<AppDO> {}
+public interface AppMapper extends BaseMapper<AppDO> {
+
+    /**
+     * 根据 Access Key 查询
+     * 
+     * @param accessKey Access Key
+     * @return 应用信息
+     */
+    @Select("select * from sys_app where access_key = #{accessKey}")
+    AppDO selectByAccessKey(@FieldEncrypt @Param("accessKey") String accessKey);
+}

@@ -20,28 +20,31 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serial;
+import java.io.Serializable;
 
 /**
- * 应用密钥/密码信息
+ * 应用密钥信息
  *
  * @author chengzi
+ * @author Charles7c
  * @since 2024/10/17 16:03
  */
 @Data
-@Schema(description = "应用密钥/密码信息")
-public class AppSecretGetResp {
+@Schema(description = "应用密钥信息")
+public class AppSecretResp implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 应用密钥
+     * Access Key（访问密钥）
      */
-    @Schema(description = "应用密钥")
-    private String appKey;
+    @Schema(description = "Access Key（访问密钥）", example = "YjUyMGJjYjIxNTE0NDAxMWE1NmRiY2")
+    private String accessKey;
 
     /**
-     * 应用密码
+     * Secret Key（私有密钥）
      */
-    @Schema(description = "应用密码")
-    private String appSecret;
+    @Schema(description = "Secret Key（私有密钥）", example = "MDI2YzQ3YTU1NGEyNDM1ZWIwNTU5NmNjNmZjM2M2Nzg=")
+    private String secretKey;
 }

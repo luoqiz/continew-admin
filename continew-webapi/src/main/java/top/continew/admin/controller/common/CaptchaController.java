@@ -48,13 +48,14 @@ import org.springframework.web.bind.annotation.*;
 import top.continew.admin.common.config.properties.CaptchaProperties;
 import top.continew.admin.common.constant.CacheConstants;
 import top.continew.admin.auth.model.resp.CaptchaResp;
+import top.continew.admin.system.enums.OptionCategoryEnum;
 import top.continew.admin.system.service.OptionService;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.captcha.graphic.core.GraphicCaptchaService;
 import top.continew.starter.core.autoconfigure.project.ProjectProperties;
 import top.continew.starter.core.util.TemplateUtils;
-import top.continew.starter.core.util.validate.CheckUtils;
-import top.continew.starter.core.util.validate.ValidationUtils;
+import top.continew.starter.core.validation.CheckUtils;
+import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.log.core.annotation.Log;
 import top.continew.starter.messaging.mail.util.MailUtils;
 import top.continew.starter.security.limiter.annotation.RateLimiter;
@@ -151,7 +152,7 @@ public class CaptchaController {
         String captcha = RandomUtil.randomNumbers(captchaMail.getLength());
         // 发送验证码
         Long expirationInMinutes = captchaMail.getExpirationInMinutes();
-        Map<String, String> siteConfig = optionService.getByCategory("SITE");
+        Map<String, String> siteConfig = optionService.getByCategory(OptionCategoryEnum.SITE);
         String content = TemplateUtils.render(captchaMail.getTemplatePath(), Dict.create()
             .set("siteUrl", projectProperties.getUrl())
             .set("siteTitle", siteConfig.get("SITE_TITLE"))

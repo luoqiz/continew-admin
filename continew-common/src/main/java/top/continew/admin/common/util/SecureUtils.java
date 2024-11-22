@@ -22,10 +22,11 @@ import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.extra.spring.SpringUtil;
 import top.continew.admin.common.config.properties.RsaProperties;
 import top.continew.starter.core.exception.BusinessException;
-import top.continew.starter.core.util.validate.ValidationUtils;
+import top.continew.starter.core.validation.ValidationUtils;
 import top.continew.starter.security.crypto.autoconfigure.CryptoProperties;
 import top.continew.starter.security.crypto.encryptor.AesEncryptor;
 import top.continew.starter.security.crypto.encryptor.IEncryptor;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,18 @@ public class SecureUtils {
     }
 
     /**
+     * 公钥加密
+     *
+     * @param data 要加密的内容
+     * @return 加密后的内容
+     */
+    public static String encryptByRsaPublicKey(String data) {
+        String publicKey = RsaProperties.PUBLIC_KEY;
+        ValidationUtils.throwIfBlank(publicKey, "请配置 RSA 公钥");
+        return encryptByRsaPublicKey(data, publicKey);
+    }
+
+    /**
      * 私钥解密
      *
      * @param data 要解密的内容（Base64 加密过）
@@ -50,6 +63,17 @@ public class SecureUtils {
         String privateKey = RsaProperties.PRIVATE_KEY;
         ValidationUtils.throwIfBlank(privateKey, "请配置 RSA 私钥");
         return decryptByRsaPrivateKey(data, privateKey);
+    }
+
+    /**
+     * 公钥加密
+     *
+     * @param data      要加密的内容
+     * @param publicKey 公钥
+     * @return 加密后的内容
+     */
+    public static String encryptByRsaPublicKey(String data, String publicKey) {
+        return new String(SecureUtil.rsa(null, publicKey).encrypt(data, KeyType.PublicKey));
     }
 
     /**

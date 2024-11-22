@@ -27,14 +27,14 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 创建或修改任务信息
+ * 创建或修改任务参数
  *
  * @author KAI
  * @author Charles7c
  * @since 2024/6/25 16:40
  */
 @Data
-@Schema(description = "创建或修改任务信息")
+@Schema(description = "创建或修改任务参数")
 public class JobReq implements Serializable {
 
     @Serial

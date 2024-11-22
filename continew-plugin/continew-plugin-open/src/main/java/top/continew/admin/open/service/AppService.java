@@ -16,71 +16,43 @@
 
 package top.continew.admin.open.service;
 
-import top.continew.admin.open.model.resp.AppSecretGetResp;
-import top.continew.starter.extension.crud.service.BaseService;
+import top.continew.admin.open.model.entity.AppDO;
 import top.continew.admin.open.model.query.AppQuery;
 import top.continew.admin.open.model.req.AppReq;
 import top.continew.admin.open.model.resp.AppDetailResp;
 import top.continew.admin.open.model.resp.AppResp;
+import top.continew.admin.open.model.resp.AppSecretResp;
+import top.continew.starter.extension.crud.service.BaseService;
 
 /**
  * 应用业务接口
  *
  * @author chengzi
+ * @author Charles7c
  * @since 2024/10/17 16:03
  */
 public interface AppService extends BaseService<AppResp, AppDetailResp, AppQuery, AppReq> {
+
     /**
-     * 根据ID查询应用密码
+     * 获取密钥
      *
      * @param id ID
-     * @return 应用密码
+     * @return 密钥信息
      */
-    AppSecretGetResp getAppSecretById(Long id);
+    AppSecretResp getSecret(Long id);
 
     /**
-     * 根据ID重置应用密码查看状态
-     *
-     * @param id ID
-     */
-    void resetAppSecretStatusById(Long id, String status);
-
-    /**
-     * 根据应用密钥重置应用密码查看状态
-     *
-     * @param appKey 应用密钥
-     */
-    void resetAppSecretStatusByAppkey(String appKey, String status);
-
-    /**
-     * 根据ID刷新应用密码
+     * 重置密钥
      *
      * @param id ID
      */
-    void refreshAppSecretByID(Long id);
+    void resetSecret(Long id);
 
     /**
-     * 根据应用密钥获取应用密码
+     * 根据 Access Key 查询
      *
-     * @param appKey 应用密钥
-     * @return 应用密码
+     * @param accessKey Access Key
+     * @return 应用信息
      */
-    String getAppSecretByAppKey(String appKey);
-
-    /**
-     * 判断应用密钥是否存在
-     *
-     * @param appKey 应用密钥
-     * @return 是否存在（true：存在；false：不存在）
-     */
-    boolean isExistAppKey(String appKey);
-
-    /**
-     * 判断应用密钥是否过期
-     *
-     * @param appKey 应用密钥
-     * @return 是否过期（true：已过期；false：未过期）
-     */
-    boolean isExpireAppKey(String appKey);
-
+    AppDO getByAccessKey(String accessKey);
 }
