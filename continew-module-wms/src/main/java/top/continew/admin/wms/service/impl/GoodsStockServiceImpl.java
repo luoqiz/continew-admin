@@ -60,7 +60,7 @@ public class GoodsStockServiceImpl extends BaseServiceImpl<GoodsStockMapper, Goo
     }
 
     @Override
-    public List<GoodsStockResp> expiredStock(Long whseId,int day) {
-        return baseMapper.expiredStock(whseId,day);
+    public List<GoodsStockResp> expiredStock(Long whseId, int day) {
+        return baseMapper.expiredStock(whseId, day);
     }
 }

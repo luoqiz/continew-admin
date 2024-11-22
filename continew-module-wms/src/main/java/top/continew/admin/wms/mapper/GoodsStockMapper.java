@@ -38,7 +38,7 @@ public interface GoodsStockMapper extends BaseMapper<GoodsStockDO> {
     @Select(" SELECT wgs.goods_sku goodsSku,goodsSkuTable.`name` as goodsName, SUM(wgs.real_num) as realNum FROM wms_goods_stock wgs LEFT JOIN wms_goods_sku goodsSkuTable ON wgs.goods_sku = goodsSkuTable.barcode WHERE TO_DAYS(wgs.expiry_time) >= TO_DAYS(NOW()) AND whse_id = #{whseId} GROUP BY wgs.goods_sku,goodsSkuTable.`name`;")
     List<Map<String, Integer>> statisticsStock(Long whseId);
 
-//    @Select("SELECT * FROM wms_goods_stock WHERE expiry_time <= CURDATE() + INTERVAL #{day} DAY AND expiry_time >= CURDATE() and whse_id = #{whseId}")
+    //    @Select("SELECT * FROM wms_goods_stock WHERE expiry_time <= CURDATE() + INTERVAL #{day} DAY AND expiry_time >= CURDATE() and whse_id = #{whseId}")
     @Select("SELECT wgs.goods_sku, wgsku.`name` as goods_name ,SUM(wgs.real_num) as real_num  FROM wms_goods_stock wgs LEFT JOIN wms_goods_sku wgsku on wgsku.barcode = wgs.goods_sku WHERE expiry_time <= CURDATE() + INTERVAL #{day} DAY AND expiry_time >= CURDATE() AND whse_id=#{whseId} GROUP BY goods_sku,`name`")
     List<GoodsStockResp> expiredStock(Long whseId, int day);
 }
