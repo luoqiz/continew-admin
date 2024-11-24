@@ -23,6 +23,7 @@ import top.continew.starter.data.core.enums.QueryType;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 仓库入库查询条件
@@ -55,8 +56,8 @@ public class WhseStockInQuery implements Serializable {
      * 仓库id编号
      */
     @Schema(description = "仓库id编号")
-    @Query(type = QueryType.EQ)
-    private Long whseId;
+    @Query(type = QueryType.IN)
+    private List<Long> whseId;
 
     /**
      * 状态 (1审核中 2待入库 3已完成)

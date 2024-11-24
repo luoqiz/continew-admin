@@ -16,16 +16,14 @@
 
 package top.continew.admin.wms.model.query;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.*;
-
-import lombok.Data;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import lombok.Data;
 import top.continew.starter.data.core.annotation.Query;
 import top.continew.starter.data.core.enums.QueryType;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Set;
 
 /**
  * 仓库地址查询条件
@@ -66,4 +64,11 @@ public class AddrQuery implements Serializable {
     @Schema(description = "状态 (1使用  2停用)")
     @Query(type = QueryType.EQ)
     private Integer status;
+
+    /**
+     * 所属部门
+     */
+    @Schema(description = "所属部门")
+    @Query(type = QueryType.IN)
+    private Set<Long> deptId;
 }

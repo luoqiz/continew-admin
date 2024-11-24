@@ -19,19 +19,16 @@ package top.continew.admin.wms.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import top.continew.starter.extension.crud.enums.Api;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.web.bind.annotation.*;
-
-import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
-import top.continew.starter.extension.crud.controller.BaseController;
 import top.continew.admin.wms.model.query.WhseStockMoveQuery;
 import top.continew.admin.wms.model.req.WhseStockMoveReq;
 import top.continew.admin.wms.model.resp.WhseStockMoveDetailResp;
 import top.continew.admin.wms.model.resp.WhseStockMoveResp;
 import top.continew.admin.wms.service.WhseStockMoveService;
+import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
+import top.continew.starter.extension.crud.controller.BaseController;
+import top.continew.starter.extension.crud.enums.Api;
 
 /**
  * 仓库移库管理 API
@@ -41,8 +38,8 @@ import top.continew.admin.wms.service.WhseStockMoveService;
  */
 @Tag(name = "仓库移库管理 API")
 @RestController
-@CrudRequestMapping(value = "/wms/whseStockMove", api = {Api.PAGE, Api.GET, Api.ADD, Api.UPDATE, Api.DELETE,
-    Api.EXPORT})
+@CrudRequestMapping(value = "/wms/whseStockMove", api = {Api.PAGE, Api.ADD, Api.UPDATE, Api.DELETE,
+        Api.EXPORT})
 public class WhseStockMoveController extends BaseController<WhseStockMoveService, WhseStockMoveResp, WhseStockMoveDetailResp, WhseStockMoveQuery, WhseStockMoveReq> {
 
     @Operation(summary = "查询详情", description = "查询详情")

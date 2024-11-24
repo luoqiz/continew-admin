@@ -41,7 +41,7 @@ import top.continew.starter.extension.crud.enums.Api;
  */
 @Tag(name = "商品规格(sku)管理 API")
 @RestController
-@CrudRequestMapping(value = "/wms/goodsSku", api = {Api.PAGE, Api.GET, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
+@CrudRequestMapping(value = "/wms/goodsSku", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
 public class GoodsSkuController extends BaseController<GoodsSkuService, GoodsSkuResp, GoodsSkuDetailResp, GoodsSkuQuery, GoodsSkuReq> {
 
     /**

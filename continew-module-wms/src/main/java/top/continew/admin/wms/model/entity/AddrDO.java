@@ -16,13 +16,11 @@
 
 package top.continew.admin.wms.model.entity;
 
-import java.io.Serial;
-
-import lombok.Data;
-
 import com.baomidou.mybatisplus.annotation.TableName;
-
+import lombok.Data;
 import top.continew.starter.extension.crud.model.entity.BaseDO;
+
+import java.io.Serial;
 
 /**
  * 仓库地址实体
@@ -31,7 +29,7 @@ import top.continew.starter.extension.crud.model.entity.BaseDO;
  * @since 2024/11/06 19:11
  */
 @Data
-@TableName("whse_addr")
+@TableName("wms_whse_addr")
 public class AddrDO extends BaseDO {
 
     @Serial

@@ -19,19 +19,16 @@ package top.continew.admin.wms.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import top.continew.starter.extension.crud.enums.Api;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.web.bind.annotation.*;
-
-import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
-import top.continew.starter.extension.crud.controller.BaseController;
 import top.continew.admin.wms.model.query.WhseStockOutQuery;
 import top.continew.admin.wms.model.req.WhseStockOutReq;
 import top.continew.admin.wms.model.resp.WhseStockOutInfoResp;
 import top.continew.admin.wms.model.resp.WhseStockOutResp;
 import top.continew.admin.wms.service.WhseStockOutService;
+import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
+import top.continew.starter.extension.crud.controller.BaseController;
+import top.continew.starter.extension.crud.enums.Api;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +41,7 @@ import java.util.Map;
  */
 @Tag(name = "仓库出库管理 API")
 @RestController
-@CrudRequestMapping(value = "/wms/whseStockOut", api = {Api.PAGE, Api.GET, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
+@CrudRequestMapping(value = "/wms/whseStockOut", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
 public class WhseStockOutController extends BaseController<WhseStockOutService, WhseStockOutResp, WhseStockOutInfoResp, WhseStockOutQuery, WhseStockOutReq> {
 
     @Operation(summary = "查询详情", description = "查询详情")

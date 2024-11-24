@@ -197,11 +197,4 @@ VALUES
 (1, '开发环境', 'local_dev', 2, NULL, NULL, NULL, 'C:/continew-admin/data/file/', 'http://localhost:8000/file', '本地存储', b'1', 1, 1, 1, NOW(), NULL, NULL),
 (2, '生产环境', 'local_prod', 2, NULL, NULL, NULL, '../data/file/', 'http://api.continew.top/file', '本地存储', b'0', 2, 2, 1, NOW(), NULL, NULL);
 
-INSERT INTO `sys_language`
-(`id`, `module_id`, `module_name`, `content`, `dict_item`, `status`, `create_user`, `create_time`, `update_user`, `update_time`)
-VALUES
-    (638825372854517764, 'base', '基础配置', 'menu:\n  dashboard:\n    workplace: 数据展台\nlogin:\n  email: 邮箱登录', 'zh', 1, 1, NOW(), NULL, NULL),
-    (638825543151648778, 'base', 'BaseConfig', 'menu:\n  dashboard:\n    workplace: DataBooth\nlogin:\n  email: email login', 'en', 1, 1,  NOW(), NULL, NULL)
-;
-
 

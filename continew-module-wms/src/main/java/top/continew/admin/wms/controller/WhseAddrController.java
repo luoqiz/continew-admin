@@ -17,11 +17,19 @@
 package top.continew.admin.wms.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.json.JSONUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import top.continew.admin.common.context.RoleContext;
+import top.continew.admin.common.enums.DataScopeEnum;
+import top.continew.admin.system.model.entity.DeptDO;
+import top.continew.admin.system.model.entity.UserDO;
+import top.continew.admin.system.service.DeptService;
+import top.continew.admin.system.service.RoleDeptService;
+import top.continew.admin.system.service.RoleService;
+import top.continew.admin.system.service.UserService;
 import top.continew.admin.wms.model.query.AddrQuery;
 import top.continew.admin.wms.model.req.AddrReq;
 import top.continew.admin.wms.model.resp.AddrDetailResp;
@@ -36,7 +44,10 @@ import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.starter.extension.crud.util.ValidateGroup;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 仓库地址管理 API
@@ -46,8 +57,22 @@ import java.util.List;
  */
 @Tag(name = "仓库地址管理 API")
 @RestController
-@CrudRequestMapping(value = "/wms/addr", api = {Api.GET, Api.UPDATE, Api.DELETE, Api.EXPORT})
-public class AddrController extends BaseController<AddrService, AddrResp, AddrDetailResp, AddrQuery, AddrReq> {
+@CrudRequestMapping(value = "/wms/addr", api = {
+        Api.DETAIL, Api.UPDATE, Api.DELETE, Api.EXPORT
+})
+public class WhseAddrController extends BaseController<AddrService, AddrResp, AddrDetailResp, AddrQuery, AddrReq> {
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private DeptService deptService;
+
+    @Resource
+    private RoleDeptService roleDeptService;
 
     @Operation(summary = "新增门仓", description = "新增数据")
     @ResponseBody
@@ -55,7 +80,7 @@ public class AddrController extends BaseController<AddrService, AddrResp, AddrDe
     public BaseIdResp<Serializable> addStore(@Validated({ValidateGroup.Crud.Add.class}) @RequestBody AddrReq req) {
         this.checkPermission(Api.ADD);
         req.setWhseType(3);
-        return BaseIdResp.builder().id(this.baseService.add(req)).build();
+        return new BaseIdResp(this.baseService.add(req));
     }
 
     @Operation(summary = "新增地仓", description = "新增数据")
@@ -64,7 +89,7 @@ public class AddrController extends BaseController<AddrService, AddrResp, AddrDe
     public BaseIdResp<Serializable> addRegion(@Validated({ValidateGroup.Crud.Add.class}) @RequestBody AddrReq req) {
         this.checkPermission(Api.ADD);
         req.setWhseType(2);
-        return BaseIdResp.builder().id(this.baseService.add(req)).build();
+        return new BaseIdResp(this.baseService.add(req));
     }
 
     @Operation(summary = "新增国仓", description = "新增数据")
@@ -73,7 +98,7 @@ public class AddrController extends BaseController<AddrService, AddrResp, AddrDe
     public BaseIdResp<Serializable> addCon(@Validated({ValidateGroup.Crud.Add.class}) @RequestBody AddrReq req) {
         this.checkPermission(Api.ADD);
         req.setWhseType(1);
-        return BaseIdResp.builder().id(this.baseService.add(req)).build();
+        return new BaseIdResp(this.baseService.add(req));
     }
 
     @Operation(summary = "分页店仓查询列表", description = "分页查询列表")
@@ -107,9 +132,34 @@ public class AddrController extends BaseController<AddrService, AddrResp, AddrDe
     @ResponseBody
     @GetMapping("/all")
     public List<AddrResp> all(AddrQuery query, @Validated PageQuery pageQuery) {
-        List<String> roleList = StpUtil.getRoleList();
-        System.out.printf(JSONUtil.toJsonPrettyStr(roleList));
-        this.checkPermission(Api.LIST);
+        Long userId = Long.parseLong(StpUtil.getLoginId().toString());
+        UserDO userInfo = userService.getById(userId);
+        Set<RoleContext> roles = roleService.listByUserId(userId);
+//        deptService.listChildren()
+        Set<Long> deptIdList = new HashSet<>();
+        for (RoleContext role : roles) {
+            if (DataScopeEnum.ALL.equals(role.getDataScope())) {
+                deptIdList = null;
+                break;
+            }
+            if (DataScopeEnum.DEPT_AND_CHILD.equals(role.getDataScope())) {
+                deptIdList.add(userInfo.getDeptId());
+                List<DeptDO> deptLis = deptService.listChildren(userInfo.getDeptId());
+                deptIdList.addAll(deptLis.stream().map(item -> item.getId()).collect(Collectors.toList()));
+            }
+            if (DataScopeEnum.DEPT.equals(role.getDataScope())) {
+                deptIdList.add(userInfo.getDeptId());
+            }
+            if (DataScopeEnum.SELF.equals(role.getDataScope())) {
+//                deptIdList.add(userInfo.getDeptId());
+            }
+            if (DataScopeEnum.CUSTOM.equals(role.getDataScope())) {
+                deptIdList.addAll(roleDeptService.listDeptIdByRoleId(role.getId()));
+            }
+        }
+        if (deptIdList != null) {
+            query.setDeptId(deptIdList);
+        }
         return this.baseService.list(query, pageQuery);
     }
 }

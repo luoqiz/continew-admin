@@ -44,7 +44,7 @@ import java.util.Map;
  */
 @Tag(name = "商品库存管理 API")
 @RestController
-@CrudRequestMapping(value = "/wms/goodsStock", api = {Api.PAGE, Api.GET, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
+@CrudRequestMapping(value = "/wms/goodsStock", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
 public class GoodsStockController extends BaseController<GoodsStockService, GoodsStockResp, GoodsStockDetailResp, GoodsStockQuery, GoodsStockReq> {
 
     @Operation(summary = "获取指定库的今日入库信息", description = "获取指定库的今日入库信息")

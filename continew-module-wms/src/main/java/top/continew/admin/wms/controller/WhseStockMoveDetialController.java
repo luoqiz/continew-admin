@@ -16,19 +16,16 @@
 
 package top.continew.admin.wms.controller;
 
-import top.continew.starter.extension.crud.enums.Api;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import org.springframework.web.bind.annotation.*;
-
-import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
-import top.continew.starter.extension.crud.controller.BaseController;
+import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.wms.model.query.WhseStockMoveDetialQuery;
 import top.continew.admin.wms.model.req.WhseStockMoveDetialReq;
 import top.continew.admin.wms.model.resp.WhseStockMoveDetialDetailResp;
 import top.continew.admin.wms.model.resp.WhseStockMoveDetialResp;
 import top.continew.admin.wms.service.WhseStockMoveDetialService;
+import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
+import top.continew.starter.extension.crud.controller.BaseController;
+import top.continew.starter.extension.crud.enums.Api;
 
 /**
  * 仓库移库明细管理 API
@@ -38,6 +35,7 @@ import top.continew.admin.wms.service.WhseStockMoveDetialService;
  */
 @Tag(name = "仓库移库明细管理 API")
 @RestController
-@CrudRequestMapping(value = "/wms/whseStockMoveDetial", api = {Api.PAGE, Api.GET, Api.ADD, Api.UPDATE, Api.DELETE,
-    Api.EXPORT})
-public class WhseStockMoveDetialController extends BaseController<WhseStockMoveDetialService, WhseStockMoveDetialResp, WhseStockMoveDetialDetailResp, WhseStockMoveDetialQuery, WhseStockMoveDetialReq> {}
+@CrudRequestMapping(value = "/wms/whseStockMoveDetial", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE,
+        Api.EXPORT})
+public class WhseStockMoveDetialController extends BaseController<WhseStockMoveDetialService, WhseStockMoveDetialResp, WhseStockMoveDetialDetailResp, WhseStockMoveDetialQuery, WhseStockMoveDetialReq> {
+}

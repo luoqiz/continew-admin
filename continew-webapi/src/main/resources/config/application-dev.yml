@@ -11,7 +11,7 @@ server:
 --- ### 数据源配置
 spring.datasource:
   type: com.zaxxer.hikari.HikariDataSource
-  url: jdbc:p6spy:mysql://${DB_HOST:hw.luoqiz.top}:${DB_PORT:3396}/${DB_NAME:continew-admin-wms}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&rewriteBatchedStatements=true&autoReconnect=true&maxReconnects=10&failOverReadOnly=false&allowPublicKeyRetrieval=true
+  url: jdbc:p6spy:mysql://${DB_HOST:45.92.158.59}:${DB_PORT:3306}/${DB_NAME:zt_wms_dev}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&rewriteBatchedStatements=true&autoReconnect=true&maxReconnects=10&failOverReadOnly=false&allowPublicKeyRetrieval=true
   username: ${DB_USER:root}
   password: ${DB_PWD:!qaz2wsX}
   driver-class-name: com.p6spy.engine.spy.P6SpyDriver
