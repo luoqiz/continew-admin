@@ -38,8 +38,7 @@ import top.continew.starter.extension.crud.enums.Api;
  */
 @Tag(name = "仓库移库管理 API")
 @RestController
-@CrudRequestMapping(value = "/wms/whseStockMove", api = {Api.PAGE, Api.ADD, Api.UPDATE, Api.DELETE,
-        Api.EXPORT})
+@CrudRequestMapping(value = "/wms/whseStockMove", api = {Api.PAGE, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
 public class WhseStockMoveController extends BaseController<WhseStockMoveService, WhseStockMoveResp, WhseStockMoveDetailResp, WhseStockMoveQuery, WhseStockMoveReq> {
 
     @Operation(summary = "查询详情", description = "查询详情")

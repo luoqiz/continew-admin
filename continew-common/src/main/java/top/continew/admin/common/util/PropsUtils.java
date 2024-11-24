@@ -27,7 +27,8 @@ public class PropsUtils {
         Map<String, String> properties = new HashMap<>();
         List<String> lines = new ArrayList<>();
         for (String prop : props) {
-            if (StrUtil.isEmpty(prop)) continue;
+            if (StrUtil.isEmpty(prop))
+                continue;
             lines.addAll(Arrays.stream(prop.split("\n")).filter(item -> StrUtil.isNotEmpty(item)).toList());
         }
         for (String item : lines) {

@@ -45,7 +45,8 @@ import java.util.List;
  */
 @Tag(name = "语言管理 API")
 @RestController
-@CrudRequestMapping(value = "/system/language", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
+@CrudRequestMapping(value = "/system/language", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE,
+    Api.EXPORT})
 public class LanguageController extends BaseController<LanguageService, LanguageResp, LanguageDetailResp, LanguageQuery, LanguageReq> {
 
     @Resource

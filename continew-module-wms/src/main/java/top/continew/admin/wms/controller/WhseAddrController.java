@@ -57,9 +57,7 @@ import java.util.stream.Collectors;
  */
 @Tag(name = "仓库地址管理 API")
 @RestController
-@CrudRequestMapping(value = "/wms/addr", api = {
-        Api.DETAIL, Api.UPDATE, Api.DELETE, Api.EXPORT
-})
+@CrudRequestMapping(value = "/wms/addr", api = {Api.DETAIL, Api.UPDATE, Api.DELETE, Api.EXPORT})
 public class WhseAddrController extends BaseController<AddrService, AddrResp, AddrDetailResp, AddrQuery, AddrReq> {
 
     @Resource
@@ -135,7 +133,7 @@ public class WhseAddrController extends BaseController<AddrService, AddrResp, Ad
         Long userId = Long.parseLong(StpUtil.getLoginId().toString());
         UserDO userInfo = userService.getById(userId);
         Set<RoleContext> roles = roleService.listByUserId(userId);
-//        deptService.listChildren()
+        //        deptService.listChildren()
         Set<Long> deptIdList = new HashSet<>();
         for (RoleContext role : roles) {
             if (DataScopeEnum.ALL.equals(role.getDataScope())) {
@@ -151,7 +149,7 @@ public class WhseAddrController extends BaseController<AddrService, AddrResp, Ad
                 deptIdList.add(userInfo.getDeptId());
             }
             if (DataScopeEnum.SELF.equals(role.getDataScope())) {
-//                deptIdList.add(userInfo.getDeptId());
+                //                deptIdList.add(userInfo.getDeptId());
             }
             if (DataScopeEnum.CUSTOM.equals(role.getDataScope())) {
                 deptIdList.addAll(roleDeptService.listDeptIdByRoleId(role.getId()));

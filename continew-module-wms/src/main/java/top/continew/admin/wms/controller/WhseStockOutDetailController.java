@@ -36,7 +36,7 @@ import top.continew.starter.extension.crud.enums.Api;
 @Tag(name = "仓库出库明细管理 API")
 @RestController
 @CrudRequestMapping(value = "/wms/whseStockOutDetail", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE,
-        Api.EXPORT})
+    Api.EXPORT})
 public class WhseStockOutDetailController extends BaseController<WhseStockOutDetailService, WhseStockOutDetailMainResp, WhseStockOutDetailDetailResp, WhseStockOutDetailQuery, WhseStockOutDetailReq> {
 
 }

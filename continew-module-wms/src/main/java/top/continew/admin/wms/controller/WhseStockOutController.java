@@ -41,7 +41,8 @@ import java.util.Map;
  */
 @Tag(name = "仓库出库管理 API")
 @RestController
-@CrudRequestMapping(value = "/wms/whseStockOut", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
+@CrudRequestMapping(value = "/wms/whseStockOut", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE,
+    Api.EXPORT})
 public class WhseStockOutController extends BaseController<WhseStockOutService, WhseStockOutResp, WhseStockOutInfoResp, WhseStockOutQuery, WhseStockOutReq> {
 
     @Operation(summary = "查询详情", description = "查询详情")
