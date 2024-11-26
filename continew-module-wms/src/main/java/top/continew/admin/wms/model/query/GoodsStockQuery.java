@@ -107,4 +107,12 @@ public class GoodsStockQuery implements Serializable {
     @Schema(description = "过期日期")
     @Query(type = QueryType.BETWEEN)
     private LocalDateTime[] expiryTime;
+
+
+    /**
+     * 库存余量
+     */
+    @Schema(description = "库存余量")
+    @Query(type = QueryType.GT)
+    private int realNum;
 }

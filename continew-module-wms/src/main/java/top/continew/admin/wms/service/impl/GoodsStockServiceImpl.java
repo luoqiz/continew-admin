@@ -26,6 +26,8 @@ import top.continew.admin.wms.model.req.GoodsStockReq;
 import top.continew.admin.wms.model.resp.GoodsStockDetailResp;
 import top.continew.admin.wms.model.resp.GoodsStockResp;
 import top.continew.admin.wms.service.GoodsStockService;
+import top.continew.starter.extension.crud.model.query.PageQuery;
+import top.continew.starter.extension.crud.model.resp.PageResp;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
 import java.util.List;
@@ -42,6 +44,12 @@ import java.util.Map;
 public class GoodsStockServiceImpl extends BaseServiceImpl<GoodsStockMapper, GoodsStockDO, GoodsStockResp, GoodsStockDetailResp, GoodsStockQuery, GoodsStockReq> implements GoodsStockService {
     public boolean batchAdd(List<GoodsStockDO> datas) {
         return baseMapper.insertBatch(datas);
+    }
+
+    @Override
+    public PageResp<GoodsStockResp> page(GoodsStockQuery query, PageQuery pageQuery) {
+        query.setRealNum(0);
+        return super.page(query, pageQuery);
     }
 
     @Override
