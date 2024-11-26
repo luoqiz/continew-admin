@@ -149,7 +149,7 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
             .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-        ClassPathResource resource = new ClassPathResource("static/stockMove.xlsx");
+        ClassPathResource resource = new ClassPathResource("static/stock_move.xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
                 .withTemplate(resource.getInputStream())

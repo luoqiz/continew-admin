@@ -39,8 +39,4 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class GoodsInventoryCountItemServiceImpl extends BaseServiceImpl<GoodsInventoryCountItemMapper, GoodsInventoryCountItemDO, GoodsInventoryCountItemResp, GoodsInventoryCountItemDetailResp, GoodsInventoryCountItemQuery, GoodsInventoryCountItemReq> implements GoodsInventoryCountItemService {
 
-    @Override
-    public boolean saveBatch(Collection<GoodsInventoryCountItemDO> entityList) {
-        return super.saveBatch(entityList);
-    }
 }

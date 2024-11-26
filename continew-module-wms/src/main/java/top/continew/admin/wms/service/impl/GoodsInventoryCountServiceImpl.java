@@ -16,31 +16,40 @@
 
 package top.continew.admin.wms.service.impl;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.URLUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.fill.FillWrapper;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.wms.mapper.GoodsInventoryCountMapper;
 import top.continew.admin.wms.model.entity.GoodsInventoryCountDO;
 import top.continew.admin.wms.model.entity.GoodsInventoryCountItemDO;
 import top.continew.admin.wms.model.entity.GoodsStockDO;
+import top.continew.admin.wms.model.query.GoodsInventoryCountItemQuery;
 import top.continew.admin.wms.model.query.GoodsInventoryCountQuery;
 import top.continew.admin.wms.model.query.GoodsStockQuery;
 import top.continew.admin.wms.model.req.AddrReq;
 import top.continew.admin.wms.model.req.GoodsInventoryCountReq;
-import top.continew.admin.wms.model.resp.GoodsInventoryCountDetailResp;
-import top.continew.admin.wms.model.resp.GoodsInventoryCountResp;
-import top.continew.admin.wms.model.resp.GoodsStockResp;
+import top.continew.admin.wms.model.resp.*;
 import top.continew.admin.wms.service.GoodsInventoryCountService;
 import top.continew.admin.wms.service.WhseAddrService;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
+import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 物料盘点业务实现
@@ -111,11 +120,51 @@ public class GoodsInventoryCountServiceImpl extends BaseServiceImpl<GoodsInvento
                 }
             }
             goodsStockService.updateBatchById(entityList);
+
+            // 将盘点详情表的状态全部更新为已完成
+            List<Long> itemIdList = items.stream().map(GoodsInventoryCountItemDO::getId).collect(Collectors.toList());
+            LambdaUpdateWrapper<GoodsInventoryCountItemDO> updateWrapper = new LambdaUpdateWrapper<>();
+            updateWrapper.in(GoodsInventoryCountItemDO::getId, itemIdList);
+            updateWrapper.set(GoodsInventoryCountItemDO::getStatus, 3);
+            itemService.update(updateWrapper);
         }
         GoodsInventoryCountDO domain = new GoodsInventoryCountDO();
         domain.setId(id);
         domain.setStatus(status);
         updateById(domain);
         return true;
+    }
+
+    @Override
+    public void export(Long id, HttpServletResponse response) {
+        GoodsInventoryCountDetailResp info = get(id);
+        // 将盘点后的数据更新回库存表中
+        
+        GoodsInventoryCountItemQuery query = new GoodsInventoryCountItemQuery();
+        query.setInventoryCountId(info.getId());
+        List<GoodsInventoryCountItemResp> items = itemService.list(query, new SortQuery());
+
+        String fileName = info.getName() + ".xlsx";
+        String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
+                .format(new Date(), "yyyyMMddHHmmss")));
+        response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        ClassPathResource resource = new ClassPathResource("static/inventory_count.xlsx");
+        try {
+            ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
+                    .withTemplate(resource.getInputStream())
+                    .autoCloseStream(false)
+                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                    .registerConverter(new ExcelBigNumberConverter())
+                    .build();
+            WriteSheet writeSheet = EasyExcel.writerSheet().build();
+            // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
+            excelWriter.fill(new FillWrapper("goodsList", items), writeSheet);
+            excelWriter.fill(info, writeSheet);
+            excelWriter.finish();
+            excelWriter.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

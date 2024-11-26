@@ -16,14 +16,13 @@
 
 package top.continew.admin.wms.controller;
 
+import com.feiniaojin.gracefulresponse.api.ExcludeFromGracefulResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.*;
 import top.continew.admin.wms.model.query.GoodsInventoryCountQuery;
 import top.continew.admin.wms.model.req.GoodsInventoryCountReq;
 import top.continew.admin.wms.model.resp.GoodsInventoryCountDetailResp;
@@ -52,5 +51,13 @@ public class GoodsInventoryCountController extends BaseController<GoodsInventory
     public boolean updateStatus(@PathVariable("id") Long id, @PathVariable("status") int status) {
         this.checkPermission(Api.UPDATE);
         return baseService.updateStatus(id, status);
+    }
+
+    @ExcludeFromGracefulResponse
+    @Operation(summary = "导出数据", description = "导出数据")
+    @GetMapping({"/export/{id}"})
+    public void export(@PathVariable("id") Long id, HttpServletResponse response) {
+        this.checkPermission(Api.EXPORT);
+        this.baseService.export(id, response);
     }
 }

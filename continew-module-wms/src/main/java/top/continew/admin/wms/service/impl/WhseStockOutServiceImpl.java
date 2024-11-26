@@ -142,7 +142,7 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         // 模板文件保存在springboot项目的resources/static下
-        ClassPathResource resource = new ClassPathResource("static/stockOut.xlsx");
+        ClassPathResource resource = new ClassPathResource("static/stock_out.xlsx");
         // 方案1
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())

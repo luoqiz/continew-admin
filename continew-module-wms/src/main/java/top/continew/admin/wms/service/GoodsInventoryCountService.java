@@ -16,6 +16,7 @@
 
 package top.continew.admin.wms.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import top.continew.admin.wms.model.query.GoodsInventoryCountQuery;
 import top.continew.admin.wms.model.req.GoodsInventoryCountReq;
 import top.continew.admin.wms.model.resp.GoodsInventoryCountDetailResp;
@@ -30,4 +31,6 @@ import top.continew.starter.extension.crud.service.BaseService;
  */
 public interface GoodsInventoryCountService extends BaseService<GoodsInventoryCountResp, GoodsInventoryCountDetailResp, GoodsInventoryCountQuery, GoodsInventoryCountReq> {
     boolean updateStatus(Long id, int status);
+
+    void export(Long id, HttpServletResponse response);
 }
