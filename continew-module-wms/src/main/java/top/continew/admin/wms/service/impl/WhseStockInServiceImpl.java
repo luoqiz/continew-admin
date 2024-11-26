@@ -48,6 +48,7 @@ import top.continew.admin.wms.model.resp.WhseStockInDetailResp;
 import top.continew.admin.wms.model.resp.WhseStockInInfoResp;
 import top.continew.admin.wms.model.resp.WhseStockInResp;
 import top.continew.admin.wms.service.*;
+import top.continew.starter.core.exception.BusinessException;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
@@ -76,7 +77,7 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
     private GoodsStockService goodsStockService;
 
     @Resource
-    private AddrService addrService;
+    private WhseAddrService whseAddrService;
 
     @Resource
     @Lazy
@@ -118,12 +119,18 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
     @Transactional(rollbackFor = Exception.class)
     public void updateStatus(Long id, int status) {
         WhseStockInDO entity = this.getById(id);
+
         if (entity == null) {
-            throw new RuntimeException("数据不存在，请检查！");
+            throw new BusinessException("数据不存在，请检查！");
         }
+
         // 如果是完成入库，则补充上入库时间
         if (status == 3) {
             entity.setInTime(LocalDateTime.now());
+            AddrDetailResp whseInfo = whseAddrService.get(entity.getWhseId());
+            if (whseInfo.getStatus() != 1) {
+                throw new BusinessException("当前仓库状态不可用");
+            }
 
             // 入库单详情
             WhseStockInDetailQuery query = new WhseStockInDetailQuery();
@@ -133,7 +140,7 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
             // 如果是地区入库转为小件存储
             boolean isArea = false;
             List<GoodsSkuDO> skuInfoList = null;
-            AddrDetailResp whseInfo = addrService.get(entity.getWhseId());
+
             if (whseInfo.getWhseType() == 2) {
                 isArea = true;
                 List<String> skuList = stockInDetail.stream().map(WhseStockInDetailResp::getGoodsSku).toList();
@@ -147,13 +154,12 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
                 }
                 GoodsStockDO temp = new GoodsStockDO();
                 temp.setStockInId(id);
+                temp.setGoodsId(whseStockInDetailResp.getGoodsId());
                 temp.setStockInNo(entity.getStockInNo());
                 temp.setStockInDetailId(whseStockInDetailResp.getId());
                 temp.setGoodsSku(whseStockInDetailResp.getGoodsSku());
                 if (isArea) {
-                    Optional<GoodsSkuDO> skuInfo = skuInfoList.stream()
-                            .filter(domain -> domain.getBarcode().equals(whseStockInDetailResp.getGoodsSku()))
-                            .findFirst();
+                    Optional<GoodsSkuDO> skuInfo = skuInfoList.stream().filter(domain -> domain.getBarcode().equals(whseStockInDetailResp.getGoodsSku())).findFirst();
                     if (skuInfo.isPresent()) {
                         GoodsSkuDO sku = skuInfo.get();
                         if (sku.getUnpacking()) {
@@ -207,12 +213,7 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         ClassPathResource resource = new ClassPathResource("static/stockIn.xlsx");
         try {
-            ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
-                    .withTemplate(resource.getInputStream())
-                    .autoCloseStream(false)
-                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
-                    .registerConverter(new ExcelBigNumberConverter())
-                    .build();
+            ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream()).withTemplate(resource.getInputStream()).autoCloseStream(false).registerWriteHandler(new LongestMatchColumnWidthStyleStrategy()).registerConverter(new ExcelBigNumberConverter()).build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
             // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
             excelWriter.fill(new FillWrapper("goodsList", info.goodsList), writeSheet);

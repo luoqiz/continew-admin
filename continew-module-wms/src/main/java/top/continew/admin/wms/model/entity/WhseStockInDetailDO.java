@@ -42,6 +42,11 @@ public class WhseStockInDetailDO extends BaseDO {
     private String stockInId;
 
     /**
+     * 物料id
+     */
+    private Long goodsId;
+
+    /**
      * 商品sku
      */
     private String goodsSku;

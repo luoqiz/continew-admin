@@ -31,6 +31,6 @@ import java.util.List;
  * @author luoqiz
  * @since 2024/11/06 18:05
  */
-public interface AddrService extends BaseService<AddrResp, AddrDetailResp, AddrQuery, AddrReq> {
+public interface WhseAddrService extends BaseService<AddrResp, AddrDetailResp, AddrQuery, AddrReq> {
     List<AddrDO> listByIds(List<Long> ids);
 }

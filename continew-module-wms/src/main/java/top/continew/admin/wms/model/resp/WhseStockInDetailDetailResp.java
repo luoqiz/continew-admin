@@ -47,6 +47,13 @@ public class WhseStockInDetailDetailResp extends BaseDetailResp {
     private String stockInId;
 
     /**
+     * 物料id
+     */
+    @Schema(description = "物料id")
+    @ExcelProperty(value = "物料id")
+    private Long goodsId;
+
+    /**
      * 商品sku
      */
     @Schema(description = "商品sku")

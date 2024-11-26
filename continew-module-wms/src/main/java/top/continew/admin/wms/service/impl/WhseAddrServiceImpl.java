@@ -24,7 +24,7 @@ import top.continew.admin.wms.model.query.AddrQuery;
 import top.continew.admin.wms.model.req.AddrReq;
 import top.continew.admin.wms.model.resp.AddrDetailResp;
 import top.continew.admin.wms.model.resp.AddrResp;
-import top.continew.admin.wms.service.AddrService;
+import top.continew.admin.wms.service.WhseAddrService;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class AddrServiceImpl extends BaseServiceImpl<AddrMapper, AddrDO, AddrResp, AddrDetailResp, AddrQuery, AddrReq> implements AddrService {
+public class WhseAddrServiceImpl extends BaseServiceImpl<AddrMapper, AddrDO, AddrResp, AddrDetailResp, AddrQuery, AddrReq> implements WhseAddrService {
 
     @Override
     public List<AddrDO> listByIds(List<Long> ids) {

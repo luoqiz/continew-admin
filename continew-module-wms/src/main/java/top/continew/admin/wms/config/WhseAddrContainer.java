@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import top.continew.admin.wms.constant.WmsConstants;
 import top.continew.admin.wms.model.entity.AddrDO;
-import top.continew.admin.wms.service.AddrService;
+import top.continew.admin.wms.service.WhseAddrService;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,14 +33,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WhseAddrContainer implements Container<Long> {
 
-    private final AddrService addrService;
+    private final WhseAddrService whseAddrService;
 
     public String getNamespace() {
         return WmsConstants.addrContainer;
     }
 
     public Map<Long, AddrDO> get(Collection<Long> ids) {
-        List<AddrDO> addrs = addrService.listByIds(ids.stream().toList());
+        List<AddrDO> addrs = whseAddrService.listByIds(ids.stream().toList());
         return addrs.stream().collect(Collectors.toMap(AddrDO::getId, Function.identity()));
     }
 }

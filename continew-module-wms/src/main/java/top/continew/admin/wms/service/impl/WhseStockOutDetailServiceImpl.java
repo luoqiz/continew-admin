@@ -33,6 +33,7 @@ import top.continew.admin.wms.model.req.GoodsStockReq;
 import top.continew.admin.wms.model.req.WhseStockOutDetailReq;
 import top.continew.admin.wms.model.resp.*;
 import top.continew.admin.wms.service.GoodsStockService;
+import top.continew.admin.wms.service.WhseAddrService;
 import top.continew.admin.wms.service.WhseStockOutDetailService;
 import top.continew.admin.wms.service.WhseStockOutService;
 import top.continew.starter.core.exception.BusinessException;
@@ -55,6 +56,9 @@ public class WhseStockOutDetailServiceImpl extends BaseServiceImpl<WhseStockOutD
     private GoodsStockService stockService;
 
     @Resource
+    private WhseAddrService addrService;
+
+    @Resource
     @Lazy
     private WhseStockOutService stockOutService;
 
@@ -63,6 +67,10 @@ public class WhseStockOutDetailServiceImpl extends BaseServiceImpl<WhseStockOutD
     public Long add(WhseStockOutDetailReq req) {
         // 获取入库单
         WhseStockOutInfoResp stockOutInfo = stockOutService.get(req.getStockOutId());
+        AddrDetailResp whseInfo = addrService.get(stockOutInfo.getWhseId());
+        if (whseInfo.getStatus() != 1) {
+            throw new BusinessException("当前仓库状态不可用");
+        }
 
         // 获取当前仓库有相同物料的所有批次
         GoodsStockQuery stockQuery = new GoodsStockQuery();
@@ -70,7 +78,7 @@ public class WhseStockOutDetailServiceImpl extends BaseServiceImpl<WhseStockOutD
         stockQuery.setWhseId(stockOutInfo.getWhseId());
         stockQuery.setGoodsSku(req.getGoodsSku());
         SortQuery stockSortQuery = new SortQuery();
-        stockSortQuery.setSort(new String[] {"createTime", "asc"});
+        stockSortQuery.setSort(new String[]{"createTime", "asc"});
         List<GoodsStockResp> goodsStock = stockService.list(stockQuery, stockSortQuery);
         // 若是按照入库时间排序后，第一条不是现在提交的数据，则不允许提交。必须先入库的先出库
         if (goodsStock.get(0) == null) {
@@ -102,8 +110,8 @@ public class WhseStockOutDetailServiceImpl extends BaseServiceImpl<WhseStockOutD
             GoodsStockDO temp = new GoodsStockDO();
             temp.setId(re.getGoodsStockId());
             LambdaUpdateWrapper<GoodsStockDO> updateQuery = Wrappers.update(temp)
-                .setSql("`real_num` = `real_num` + " + re.getPlanNum())
-                .lambda();
+                    .setSql("`real_num` = `real_num` + " + re.getPlanNum())
+                    .lambda();
             updateQuery.eq(GoodsStockDO::getId, re.getGoodsStockId());
             stockService.updates(updateQuery);
         }

@@ -34,7 +34,7 @@ import top.continew.admin.wms.model.query.AddrQuery;
 import top.continew.admin.wms.model.req.AddrReq;
 import top.continew.admin.wms.model.resp.AddrDetailResp;
 import top.continew.admin.wms.model.resp.AddrResp;
-import top.continew.admin.wms.service.AddrService;
+import top.continew.admin.wms.service.WhseAddrService;
 import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
 import top.continew.starter.extension.crud.controller.BaseController;
 import top.continew.starter.extension.crud.enums.Api;
@@ -58,7 +58,7 @@ import java.util.stream.Collectors;
 @Tag(name = "仓库地址管理 API")
 @RestController
 @CrudRequestMapping(value = "/wms/addr", api = {Api.DETAIL, Api.UPDATE, Api.DELETE, Api.EXPORT})
-public class WhseAddrController extends BaseController<AddrService, AddrResp, AddrDetailResp, AddrQuery, AddrReq> {
+public class WhseAddrController extends BaseController<WhseAddrService, AddrResp, AddrDetailResp, AddrQuery, AddrReq> {
 
     @Resource
     private RoleService roleService;
@@ -157,6 +157,7 @@ public class WhseAddrController extends BaseController<AddrService, AddrResp, Ad
         }
         if (deptIdList != null) {
             query.setDeptId(deptIdList);
+            query.setStatus(1);
         }
         return this.baseService.list(query, pageQuery);
     }

@@ -19,6 +19,7 @@ package top.continew.admin.wms.model.resp;
 import cn.crane4j.annotation.Assemble;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import top.continew.admin.wms.constant.WmsConstants;
 import top.continew.starter.extension.crud.model.resp.BaseResp;
 
 import java.io.Serial;
@@ -53,14 +54,7 @@ public class WhseStockInResp extends BaseResp {
      * 仓库id编号
      */
     @Schema(description = "仓库id编号")
-    @Assemble(container = "whseAddr",
-              //            props = {@Mapping(
-              //                    src = "name",
-              //                    ref = "whseName"
-              //            )}
-              prop = "name:whseName"
-    //            props = @Mapping(src = "name", ref = "whseName")
-    )
+    @Assemble(container = WmsConstants.addrContainer, prop = "name:whseName")
     private Long whseId;
 
     /**
