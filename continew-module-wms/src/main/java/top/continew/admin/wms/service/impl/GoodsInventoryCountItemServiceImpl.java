@@ -27,8 +27,6 @@ import top.continew.admin.wms.model.resp.GoodsInventoryCountItemResp;
 import top.continew.admin.wms.service.GoodsInventoryCountItemService;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 
-import java.util.Collection;
-
 /**
  * 物料盘点详情业务实现
  *
