@@ -41,7 +41,7 @@ import top.continew.starter.extension.crud.enums.Api;
 @Tag(name = "仓库入库管理 API")
 @RestController
 @CrudRequestMapping(value = "/wms/whseStockIn", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE,
-        Api.EXPORT})
+    Api.EXPORT})
 public class WhseStockInController extends BaseController<WhseStockInService, WhseStockInResp, WhseStockInInfoResp, WhseStockInQuery, WhseStockInReq> {
 
     @Operation(summary = "查询详情", description = "查询详情")
@@ -62,12 +62,8 @@ public class WhseStockInController extends BaseController<WhseStockInService, Wh
         baseService.updateStatus(id, status);
     }
 
-
     @ExcludeFromGracefulResponse
-    @Operation(
-            summary = "导出数据",
-            description = "导出数据"
-    )
+    @Operation(summary = "导出数据", description = "导出数据")
     @GetMapping({"/export/{id}"})
     public void export(@PathVariable("id") Long id, HttpServletResponse response) {
         this.checkPermission(Api.EXPORT);

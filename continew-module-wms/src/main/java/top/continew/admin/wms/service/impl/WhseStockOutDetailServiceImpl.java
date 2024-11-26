@@ -78,7 +78,7 @@ public class WhseStockOutDetailServiceImpl extends BaseServiceImpl<WhseStockOutD
         stockQuery.setWhseId(stockOutInfo.getWhseId());
         stockQuery.setGoodsSku(req.getGoodsSku());
         SortQuery stockSortQuery = new SortQuery();
-        stockSortQuery.setSort(new String[]{"createTime", "asc"});
+        stockSortQuery.setSort(new String[] {"createTime", "asc"});
         List<GoodsStockResp> goodsStock = stockService.list(stockQuery, stockSortQuery);
         // 若是按照入库时间排序后，第一条不是现在提交的数据，则不允许提交。必须先入库的先出库
         if (goodsStock.get(0) == null) {
@@ -110,8 +110,8 @@ public class WhseStockOutDetailServiceImpl extends BaseServiceImpl<WhseStockOutD
             GoodsStockDO temp = new GoodsStockDO();
             temp.setId(re.getGoodsStockId());
             LambdaUpdateWrapper<GoodsStockDO> updateQuery = Wrappers.update(temp)
-                    .setSql("`real_num` = `real_num` + " + re.getPlanNum())
-                    .lambda();
+                .setSql("`real_num` = `real_num` + " + re.getPlanNum())
+                .lambda();
             updateQuery.eq(GoodsStockDO::getId, re.getGoodsStockId());
             stockService.updates(updateQuery);
         }

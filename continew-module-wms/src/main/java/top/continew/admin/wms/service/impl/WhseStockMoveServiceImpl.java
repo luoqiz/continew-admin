@@ -72,7 +72,7 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
         WhseStockMoveDetialQuery query = new WhseStockMoveDetialQuery();
         query.setStockMoveId(id);
         SortQuery sortQuery = new SortQuery();
-        sortQuery.setSort(new String[]{"createTime", "asc"});
+        sortQuery.setSort(new String[] {"createTime", "asc"});
         List<WhseStockMoveDetialResp> deailList = detailService.list(query, sortQuery);
         resp.setGoodsList(deailList);
         return resp;
@@ -145,17 +145,18 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
     public void export(Long id, HttpServletResponse response) {
         WhseStockMoveDetailResp info = detail(id);
         String fileName = info.getName() + ".xlsx";
-        String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil.format(new Date(), "yyyyMMddHHmmss")));
+        String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
+            .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         ClassPathResource resource = new ClassPathResource("static/stockMove.xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
-                    .withTemplate(resource.getInputStream())
-                    .autoCloseStream(false)
-                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
-                    .registerConverter(new ExcelBigNumberConverter())
-                    .build();
+                .withTemplate(resource.getInputStream())
+                .autoCloseStream(false)
+                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                .registerConverter(new ExcelBigNumberConverter())
+                .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
             // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
             excelWriter.fill(new FillWrapper("goodsList", info.getGoodsList()), writeSheet);

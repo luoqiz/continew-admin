@@ -62,10 +62,7 @@ public class WhseStockMoveController extends BaseController<WhseStockMoveService
     }
 
     @ExcludeFromGracefulResponse
-    @Operation(
-            summary = "导出数据",
-            description = "导出数据"
-    )
+    @Operation(summary = "导出数据", description = "导出数据")
     @GetMapping({"/export/{id}"})
     public void export(@PathVariable("id") Long id, HttpServletResponse response) {
         this.checkPermission(Api.EXPORT);

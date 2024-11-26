@@ -108,7 +108,6 @@ public class GoodsStockQuery implements Serializable {
     @Query(type = QueryType.BETWEEN)
     private LocalDateTime[] expiryTime;
 
-
     /**
      * 库存余量
      */
