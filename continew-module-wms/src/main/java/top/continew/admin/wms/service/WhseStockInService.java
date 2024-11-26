@@ -16,6 +16,7 @@
 
 package top.continew.admin.wms.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import top.continew.admin.wms.model.query.WhseStockInQuery;
 import top.continew.admin.wms.model.req.WhseStockInDetailReq;
 import top.continew.admin.wms.model.req.WhseStockInReq;
@@ -34,7 +35,7 @@ import java.util.List;
 public interface WhseStockInService extends BaseService<WhseStockInResp, WhseStockInInfoResp, WhseStockInQuery, WhseStockInReq> {
     /**
      * 获取入库单详情（包括物料信息）
-     * 
+     *
      * @param id
      * @return
      */
@@ -42,7 +43,7 @@ public interface WhseStockInService extends BaseService<WhseStockInResp, WhseSto
 
     /**
      * 更新状态
-     * 
+     *
      * @param id
      * @param status
      * @return
@@ -51,9 +52,11 @@ public interface WhseStockInService extends BaseService<WhseStockInResp, WhseSto
 
     /**
      * 添加完整的入库记录
-     * 
+     *
      * @param stockInReq
      * @param stockInDetailReqList
      */
     Long add(WhseStockInReq stockInReq, List<WhseStockInDetailReq> stockInDetailReqList);
+
+    void export(Long id, HttpServletResponse response);
 }

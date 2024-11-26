@@ -16,10 +16,12 @@
 
 package top.continew.admin.wms.controller;
 
+import com.feiniaojin.gracefulresponse.api.ExcludeFromGracefulResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 import top.continew.admin.wms.model.query.WhseStockMoveQuery;
 import top.continew.admin.wms.model.req.WhseStockMoveReq;
@@ -57,5 +59,16 @@ public class WhseStockMoveController extends BaseController<WhseStockMoveService
     public void updateStatus(@PathVariable("id") Long id, @PathVariable("status") int status) {
         this.checkPermission(Api.UPDATE);
         baseService.updateStatus(id, status);
+    }
+
+    @ExcludeFromGracefulResponse
+    @Operation(
+            summary = "导出数据",
+            description = "导出数据"
+    )
+    @GetMapping({"/export/{id}"})
+    public void export(@PathVariable("id") Long id, HttpServletResponse response) {
+        this.checkPermission(Api.EXPORT);
+        this.baseService.export(id, response);
     }
 }

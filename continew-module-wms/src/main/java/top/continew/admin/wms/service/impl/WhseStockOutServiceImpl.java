@@ -17,8 +17,17 @@
 package top.continew.admin.wms.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.URLUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.fill.FillWrapper;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.wms.mapper.WhseStockOutMapper;
@@ -36,9 +45,11 @@ import top.continew.admin.wms.service.WhseStockOutService;
 import top.continew.starter.core.exception.BusinessException;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
+import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -120,5 +131,33 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
     @Override
     public List<Map<String, Integer>> staticsToday(Long whseId) {
         return baseMapper.staticsToday(whseId);
+    }
+
+    @Override
+    public void export(Long id, HttpServletResponse response) {
+        WhseStockOutInfoResp info = detailById(id);
+        String fileName = info.getName() + ".xlsx";
+        String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil.format(new Date(), "yyyyMMddHHmmss")));
+        response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        // 模板文件保存在springboot项目的resources/static下
+        ClassPathResource resource = new ClassPathResource("static/stockOut.xlsx");
+        // 方案1
+        try {
+            ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
+                    .withTemplate(resource.getInputStream())
+                    .autoCloseStream(false)
+                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                    .registerConverter(new ExcelBigNumberConverter())
+                    .build();
+            WriteSheet writeSheet = EasyExcel.writerSheet().build();
+            // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
+            excelWriter.fill(new FillWrapper("goodsList", info.goodsList), writeSheet);
+            excelWriter.fill(info, writeSheet);
+            excelWriter.finish();
+            excelWriter.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -16,11 +16,12 @@
 
 package top.continew.admin.wms.service;
 
-import top.continew.starter.extension.crud.service.BaseService;
+import jakarta.servlet.http.HttpServletResponse;
 import top.continew.admin.wms.model.query.WhseStockMoveQuery;
 import top.continew.admin.wms.model.req.WhseStockMoveReq;
 import top.continew.admin.wms.model.resp.WhseStockMoveDetailResp;
 import top.continew.admin.wms.model.resp.WhseStockMoveResp;
+import top.continew.starter.extension.crud.service.BaseService;
 
 /**
  * 仓库移库业务接口
@@ -33,4 +34,6 @@ public interface WhseStockMoveService extends BaseService<WhseStockMoveResp, Whs
     WhseStockMoveDetailResp detail(Long id);
 
     void updateStatus(Long id, int status);
+
+    void export(Long id, HttpServletResponse response);
 }

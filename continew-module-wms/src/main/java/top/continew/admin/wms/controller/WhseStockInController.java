@@ -16,10 +16,12 @@
 
 package top.continew.admin.wms.controller;
 
+import com.feiniaojin.gracefulresponse.api.ExcludeFromGracefulResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 import top.continew.admin.wms.model.query.WhseStockInQuery;
 import top.continew.admin.wms.model.req.WhseStockInReq;
@@ -39,7 +41,7 @@ import top.continew.starter.extension.crud.enums.Api;
 @Tag(name = "仓库入库管理 API")
 @RestController
 @CrudRequestMapping(value = "/wms/whseStockIn", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE,
-    Api.EXPORT})
+        Api.EXPORT})
 public class WhseStockInController extends BaseController<WhseStockInService, WhseStockInResp, WhseStockInInfoResp, WhseStockInQuery, WhseStockInReq> {
 
     @Operation(summary = "查询详情", description = "查询详情")
@@ -58,5 +60,17 @@ public class WhseStockInController extends BaseController<WhseStockInService, Wh
     public void updateStatus(@PathVariable("id") Long id, @PathVariable("status") int status) {
         this.checkPermission(Api.UPDATE);
         baseService.updateStatus(id, status);
+    }
+
+
+    @ExcludeFromGracefulResponse
+    @Operation(
+            summary = "导出数据",
+            description = "导出数据"
+    )
+    @GetMapping({"/export/{id}"})
+    public void export(@PathVariable("id") Long id, HttpServletResponse response) {
+        this.checkPermission(Api.EXPORT);
+        this.baseService.export(id, response);
     }
 }

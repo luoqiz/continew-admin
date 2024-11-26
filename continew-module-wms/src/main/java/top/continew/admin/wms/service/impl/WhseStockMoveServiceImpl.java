@@ -16,8 +16,17 @@
 
 package top.continew.admin.wms.service.impl;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.URLUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.fill.FillWrapper;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import top.continew.admin.wms.mapper.WhseStockMoveMapper;
 import top.continew.admin.wms.model.entity.WhseStockMoveDO;
@@ -30,8 +39,10 @@ import top.continew.admin.wms.model.resp.WhseStockMoveResp;
 import top.continew.admin.wms.service.*;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
+import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,7 +72,7 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
         WhseStockMoveDetialQuery query = new WhseStockMoveDetialQuery();
         query.setStockMoveId(id);
         SortQuery sortQuery = new SortQuery();
-        sortQuery.setSort(new String[] {"createTime", "asc"});
+        sortQuery.setSort(new String[]{"createTime", "asc"});
         List<WhseStockMoveDetialResp> deailList = detailService.list(query, sortQuery);
         resp.setGoodsList(deailList);
         return resp;
@@ -128,5 +139,31 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
         }
 
         baseMapper.updateById(entity);
+    }
+
+    @Override
+    public void export(Long id, HttpServletResponse response) {
+        WhseStockMoveDetailResp info = detail(id);
+        String fileName = info.getName() + ".xlsx";
+        String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil.format(new Date(), "yyyyMMddHHmmss")));
+        response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        ClassPathResource resource = new ClassPathResource("static/stockMove.xlsx");
+        try {
+            ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
+                    .withTemplate(resource.getInputStream())
+                    .autoCloseStream(false)
+                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                    .registerConverter(new ExcelBigNumberConverter())
+                    .build();
+            WriteSheet writeSheet = EasyExcel.writerSheet().build();
+            // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
+            excelWriter.fill(new FillWrapper("goodsList", info.getGoodsList()), writeSheet);
+            excelWriter.fill(info, writeSheet);
+            excelWriter.finish();
+            excelWriter.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

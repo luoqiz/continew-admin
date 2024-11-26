@@ -16,14 +16,14 @@
 
 package top.continew.admin.wms.model.resp;
 
-import java.io.Serial;
-import java.time.*;
-
-import lombok.Data;
-
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import lombok.Data;
 import top.continew.starter.extension.crud.model.resp.BaseResp;
+
+import java.io.Serial;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 仓库移库明细信息
@@ -77,18 +77,21 @@ public class WhseStockMoveDetialResp extends BaseResp {
      * 生产日期
      */
     @Schema(description = "生产日期")
+    @ColumnWidth(30)
     private LocalDate prodTime;
 
     /**
      * 过期日期
      */
     @Schema(description = "过期日期")
+    @ColumnWidth(50)
     private LocalDate expiryTime;
 
     /**
      * 计划数量
      */
     @Schema(description = "计划数量")
+    @ColumnWidth(50)
     private Integer planNum;
 
     /**

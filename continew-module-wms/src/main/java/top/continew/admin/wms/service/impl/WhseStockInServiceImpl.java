@@ -17,10 +17,20 @@
 package top.continew.admin.wms.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.URLUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.fill.FillWrapper;
+import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.continew.admin.wms.enums.WhseStockInStatusEnum;
@@ -40,9 +50,11 @@ import top.continew.admin.wms.model.resp.WhseStockInResp;
 import top.continew.admin.wms.service.*;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
+import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +64,7 @@ import java.util.Optional;
  * @author luoqiz
  * @since 2024/11/07 17:49
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, WhseStockInDO, WhseStockInResp, WhseStockInInfoResp, WhseStockInQuery, WhseStockInReq> implements WhseStockInService {
@@ -139,8 +152,8 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
                 temp.setGoodsSku(whseStockInDetailResp.getGoodsSku());
                 if (isArea) {
                     Optional<GoodsSkuDO> skuInfo = skuInfoList.stream()
-                        .filter(domain -> domain.getBarcode().equals(whseStockInDetailResp.getGoodsSku()))
-                        .findFirst();
+                            .filter(domain -> domain.getBarcode().equals(whseStockInDetailResp.getGoodsSku()))
+                            .findFirst();
                     if (skuInfo.isPresent()) {
                         GoodsSkuDO sku = skuInfo.get();
                         if (sku.getUnpacking()) {
@@ -183,5 +196,31 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
         }
         detailService.batchAdd(stockInDetailReqList);
         return id;
+    }
+
+    @Override
+    public void export(Long id, HttpServletResponse response) {
+        WhseStockInInfoResp info = detailById(id);
+        String fileName = info.getName() + ".xlsx";
+        String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil.format(new Date(), "yyyyMMddHHmmss")));
+        response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        ClassPathResource resource = new ClassPathResource("static/stockIn.xlsx");
+        try {
+            ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
+                    .withTemplate(resource.getInputStream())
+                    .autoCloseStream(false)
+                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                    .registerConverter(new ExcelBigNumberConverter())
+                    .build();
+            WriteSheet writeSheet = EasyExcel.writerSheet().build();
+            // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
+            excelWriter.fill(new FillWrapper("goodsList", info.goodsList), writeSheet);
+            excelWriter.fill(info, writeSheet);
+            excelWriter.finish();
+            excelWriter.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

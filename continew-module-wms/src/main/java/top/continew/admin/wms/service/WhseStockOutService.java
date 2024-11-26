@@ -16,6 +16,7 @@
 
 package top.continew.admin.wms.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import top.continew.admin.wms.model.query.WhseStockOutQuery;
 import top.continew.admin.wms.model.req.WhseStockOutDetailReq;
 import top.continew.admin.wms.model.req.WhseStockOutReq;
@@ -46,4 +47,6 @@ public interface WhseStockOutService extends BaseService<WhseStockOutResp, WhseS
      * @return
      */
     List<Map<String, Integer>> staticsToday(Long whseId);
+
+    void export(Long id, HttpServletResponse response);
 }
