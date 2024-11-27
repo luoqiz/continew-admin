@@ -51,7 +51,7 @@ public class WhseStockOutController extends BaseController<WhseStockOutService, 
     @Parameter(name = "id", description = "ID", example = "1", in = ParameterIn.PATH)
     @ResponseBody
     @GetMapping("/detail/{id}")
-    public WhseStockOutInfoResp detail(@PathVariable("id") Long id) {
+    public WhseStockOutInfoResp details(@PathVariable("id") Long id) {
         this.checkPermission(Api.LIST);
         return baseService.detailById(id);
     }

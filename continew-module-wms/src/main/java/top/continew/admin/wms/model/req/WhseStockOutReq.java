@@ -16,18 +16,14 @@
 
 package top.continew.admin.wms.model.req;
 
-import java.io.Serial;
-import java.time.*;
-
-import jakarta.validation.constraints.*;
-
-import lombok.Data;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-
 import top.continew.starter.extension.crud.model.req.BaseReq;
+
+import java.io.Serial;
 
 /**
  * 创建或修改仓库出库信息
@@ -62,8 +58,7 @@ public class WhseStockOutReq extends BaseReq {
      * 仓库id编号
      */
     @Schema(description = "仓库id编号")
-    @NotBlank(message = "仓库id编号不能为空")
-    @Length(max = 100, message = "仓库id编号长度不能超过 {max} 个字符")
+    @NotNull(message = "仓库id编号不能为空")
     private Long whseId;
 
     /**
