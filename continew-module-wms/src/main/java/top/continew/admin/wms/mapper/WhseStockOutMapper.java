@@ -18,8 +18,8 @@ package top.continew.admin.wms.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import top.continew.starter.data.mp.base.BaseMapper;
 import top.continew.admin.wms.model.entity.WhseStockOutDO;
+import top.continew.starter.data.mp.base.BaseMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +32,8 @@ import java.util.Map;
  */
 public interface WhseStockOutMapper extends BaseMapper<WhseStockOutDO> {
 
-    @Select("select goods_sku,SUM(real_num) as realNum from wms_whse_stock_out_detail where stock_out_id IN (select id FROM wms_whse_stock_out WHERE TO_DAYS(out_time) = TO_DAYS(NOW()) AND whse_id = #{whseId}) GROUP BY goods_sku;")
+    @Select("select goods_sku,SUM(real_num) as realNum, goods_name as goodsName from wms_whse_stock_out_detail where stock_out_id IN " +
+            "(select id FROM wms_whse_stock_out WHERE TO_DAYS(out_time) = TO_DAYS(NOW()) AND whse_id = #{whseId}) " +
+            "GROUP BY goods_sku,goods_name")
     List<Map<String, Integer>> staticsToday(@Param("whseId") Long whseId);
 }

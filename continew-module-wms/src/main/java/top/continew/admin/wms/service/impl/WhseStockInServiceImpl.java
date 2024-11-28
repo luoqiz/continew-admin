@@ -54,10 +54,7 @@ import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * 仓库入库业务实现
@@ -160,8 +157,8 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
                 temp.setGoodsSku(whseStockInDetailResp.getGoodsSku());
                 if (isArea) {
                     Optional<GoodsSkuDO> skuInfo = skuInfoList.stream()
-                        .filter(domain -> domain.getBarcode().equals(whseStockInDetailResp.getGoodsSku()))
-                        .findFirst();
+                            .filter(domain -> domain.getBarcode().equals(whseStockInDetailResp.getGoodsSku()))
+                            .findFirst();
                     if (skuInfo.isPresent()) {
                         GoodsSkuDO sku = skuInfo.get();
                         if (sku.getUnpacking()) {
@@ -211,17 +208,17 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
         WhseStockInInfoResp info = detailById(id);
         String fileName = info.getName() + ".xlsx";
         String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
-            .format(new Date(), "yyyyMMddHHmmss")));
+                .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         ClassPathResource resource = new ClassPathResource("static/stock_in.xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
-                .withTemplate(resource.getInputStream())
-                .autoCloseStream(false)
-                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
-                .registerConverter(new ExcelBigNumberConverter())
-                .build();
+                    .withTemplate(resource.getInputStream())
+                    .autoCloseStream(false)
+                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                    .registerConverter(new ExcelBigNumberConverter())
+                    .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
             // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
             excelWriter.fill(new FillWrapper("goodsList", info.goodsList), writeSheet);
@@ -231,5 +228,10 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<WhseStockInDO> getByIds(Collection<Long> ids) {
+        return listByIds(ids);
     }
 }

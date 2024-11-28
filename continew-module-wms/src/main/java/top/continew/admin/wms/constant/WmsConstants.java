@@ -17,6 +17,9 @@
 package top.continew.admin.wms.constant;
 
 public class WmsConstants {
-    public static final String addrContainer = "whseAddr";
-    public static final String goodsSkuContainer = "whseGoodsSku";
+    public static final String addrContainer = "addrContainer";
+    public static final String goodsSkuContainer = "goodsSkuContainer";
+    public static final String whseStockInIdContainer = "whseStockInIdContainer";
+    public static final String whseStockOutIdContainer = "whseStockOutIdContainer";
+    public static final String whseStockMoveIdContainer = "whseStockMoveIdContainer";
 }

@@ -86,9 +86,18 @@ public class WhseStockInInfoResp extends BaseDetailResp {
     /**
      * 关联移库单号
      */
+    @ConditionOnPropertyNotNull
+    @Schema(description = "关联移库单号ID")
+    @ExcelProperty(value = "关联移库单号ID")
+    @Assemble(container = WmsConstants.whseStockMoveIdContainer, prop = "stockMoveNo:stockMoveNo")
+    private Long stockMoveId;
+
+    /**
+     * 关联移库单号
+     */
     @Schema(description = "关联移库单号")
     @ExcelProperty(value = "关联移库单号")
-    private String stockMoveId;
+    private String stockMoveNo;
 
     /**
      * 入库时间

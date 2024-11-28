@@ -130,15 +130,24 @@ public class WhseStockMoveDetailResp extends BaseDetailResp {
     @Schema(description = "关联入库单号")
     @ExcelProperty(value = "关联入库单号")
     @ColumnWidth(50)
+    @ConditionOnPropertyNotNull
+    @Assemble(container = WmsConstants.whseStockInIdContainer, prop = "stockInNo:stockInNo")
     private Long stockInId;
 
+    @Schema(description = "关联入库单号")
+    private String stockInNo;
     /**
      * 关联出库单号
      */
     @Schema(description = "关联出库单号")
     @ExcelProperty(value = "关联出库单号")
     @ColumnWidth(50)
+    @ConditionOnPropertyNotNull
+    @Assemble(container = WmsConstants.whseStockOutIdContainer, prop = "stockOutNo:stockOutNo")
     private Long stockOutId;
+
+    @Schema(description = "关联出库单号")
+    private String stockOutNo;
 
     /**
      * 备注信息

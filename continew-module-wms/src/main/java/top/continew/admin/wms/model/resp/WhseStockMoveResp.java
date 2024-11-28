@@ -16,17 +16,15 @@
 
 package top.continew.admin.wms.model.resp;
 
-import java.io.Serial;
-import java.time.*;
-
 import cn.crane4j.annotation.Assemble;
 import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
-import lombok.Data;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import lombok.Data;
 import top.continew.admin.wms.constant.WmsConstants;
 import top.continew.starter.extension.crud.model.resp.BaseResp;
+
+import java.io.Serial;
+import java.time.LocalDateTime;
 
 /**
  * 仓库移库信息
@@ -99,15 +97,23 @@ public class WhseStockMoveResp extends BaseResp {
     /**
      * 关联入库单号
      */
-    @Schema(description = "关联入库单号")
+    @ConditionOnPropertyNotNull
+    @Schema(description = "关联入库单号ID")
+    @Assemble(container = WmsConstants.whseStockInIdContainer, prop = "stockInNo:stockInNo")
     private Long stockInId;
 
+    @Schema(description = "关联入库单号")
+    private String stockInNo;
     /**
      * 关联出库单号
      */
-    @Schema(description = "关联出库单号")
+    @ConditionOnPropertyNotNull
+    @Schema(description = "关联出库单号ID")
+    @Assemble(container = WmsConstants.whseStockOutIdContainer, prop = "stockOutNo:stockOutNo")
     private Long stockOutId;
 
+    @Schema(description = "关联出库单号")
+    private String stockOutNo;
     /**
      * 备注信息
      */

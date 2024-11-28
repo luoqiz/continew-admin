@@ -17,6 +17,7 @@
 package top.continew.admin.wms.model.resp;
 
 import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import top.continew.admin.wms.constant.WmsConstants;
@@ -66,7 +67,15 @@ public class WhseStockInResp extends BaseResp {
      * 关联移库单号
      */
     @Schema(description = "关联移库单号")
+    @ConditionOnPropertyNotNull
+    @Assemble(container = WmsConstants.whseStockMoveIdContainer, prop = "stockMoveNo:stockMoveNo")
     private Long stockMoveId;
+
+    /**
+     * 关联移库单号
+     */
+    @Schema(description = "关联移库单号")
+    private String stockMoveNo;
 
     /**
      * 入库时间

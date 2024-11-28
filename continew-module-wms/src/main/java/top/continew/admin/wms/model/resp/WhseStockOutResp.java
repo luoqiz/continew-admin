@@ -16,18 +16,16 @@
 
 package top.continew.admin.wms.model.resp;
 
-import java.io.Serial;
-import java.time.*;
-
 import cn.crane4j.annotation.Assemble;
 import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
 import com.alibaba.excel.annotation.ExcelProperty;
-import lombok.Data;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import lombok.Data;
 import top.continew.admin.wms.constant.WmsConstants;
 import top.continew.starter.extension.crud.model.resp.BaseResp;
+
+import java.io.Serial;
+import java.time.LocalDate;
 
 /**
  * 仓库出库信息
@@ -81,7 +79,16 @@ public class WhseStockOutResp extends BaseResp {
      * 关联移库单号
      */
     @Schema(description = "关联移库单号")
+    @ConditionOnPropertyNotNull
+    @Assemble(container = WmsConstants.whseStockMoveIdContainer, prop = "stockMoveNo:stockMoveNo")
     private Long stockMoveId;
+
+    /**
+     * 关联移库单号
+     */
+    @Schema(description = "关联移库单号")
+    private String stockMoveNo;
+
 
     /**
      * 出库时间

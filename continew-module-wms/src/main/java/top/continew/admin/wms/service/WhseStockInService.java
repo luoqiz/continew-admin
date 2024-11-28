@@ -17,6 +17,7 @@
 package top.continew.admin.wms.service;
 
 import jakarta.servlet.http.HttpServletResponse;
+import top.continew.admin.wms.model.entity.WhseStockInDO;
 import top.continew.admin.wms.model.query.WhseStockInQuery;
 import top.continew.admin.wms.model.req.WhseStockInDetailReq;
 import top.continew.admin.wms.model.req.WhseStockInReq;
@@ -24,6 +25,7 @@ import top.continew.admin.wms.model.resp.WhseStockInInfoResp;
 import top.continew.admin.wms.model.resp.WhseStockInResp;
 import top.continew.starter.extension.crud.service.BaseService;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -59,4 +61,6 @@ public interface WhseStockInService extends BaseService<WhseStockInResp, WhseSto
     Long add(WhseStockInReq stockInReq, List<WhseStockInDetailReq> stockInDetailReqList);
 
     void export(Long id, HttpServletResponse response);
+
+    List<WhseStockInDO> getByIds(Collection<Long> ids);
 }
