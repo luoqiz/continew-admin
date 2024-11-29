@@ -16,9 +16,13 @@
 
 package top.continew.admin.wms.model.resp;
 
+import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.Mapping;
+import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import top.continew.admin.wms.constant.WmsConstants;
 import top.continew.starter.extension.crud.model.resp.BaseResp;
 
 import java.io.Serial;
@@ -58,9 +62,17 @@ public class WhseStockMoveDetialResp extends BaseResp {
     /**
      * 商品sku
      */
+    @ConditionOnPropertyNotNull
     @Schema(description = "商品sku")
+    @Assemble(container = WmsConstants.goodsSkuContainer, props = {@Mapping(src = "name", ref = "goodsName"),
+            @Mapping(src = "unit", ref = "goodsUnit"), @Mapping(src = "packUnit", ref = "goodsPackUnit")})
     private String goodsSku;
 
+    @Schema(description = "物料单位")
+    private String goodsUnit;
+
+    @Schema(description = "物料拆箱单位")
+    private String goodsPackUnit;
     /**
      * 商品名称
      */
