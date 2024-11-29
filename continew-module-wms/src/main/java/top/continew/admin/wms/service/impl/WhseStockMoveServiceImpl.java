@@ -37,6 +37,7 @@ import top.continew.admin.wms.model.resp.WhseStockMoveDetailResp;
 import top.continew.admin.wms.model.resp.WhseStockMoveDetialResp;
 import top.continew.admin.wms.model.resp.WhseStockMoveResp;
 import top.continew.admin.wms.service.*;
+import top.continew.starter.core.exception.BusinessException;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
@@ -72,7 +73,7 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
         WhseStockMoveDetialQuery query = new WhseStockMoveDetialQuery();
         query.setStockMoveId(id);
         SortQuery sortQuery = new SortQuery();
-        sortQuery.setSort(new String[] {"createTime", "asc"});
+        sortQuery.setSort(new String[]{"createTime", "asc"});
         List<WhseStockMoveDetialResp> deailList = detailService.list(query, sortQuery);
         resp.setGoodsList(deailList);
         return resp;
@@ -87,6 +88,12 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
         entity.setStatus(status);
         // 审核完成则进入派发单，添加上出库单和入库单
         if (status == 2) {
+            WhseStockMoveDetialQuery detailQuery = new WhseStockMoveDetialQuery();
+            detailQuery.setStockMoveId(id);
+            List<WhseStockMoveDetialResp> detailList = detailService.list(detailQuery, new SortQuery());
+            if (detailList.isEmpty()) {
+                throw new BusinessException("尚未添加物料，无法审核！");
+            }
             //创建出库单
             WhseStockOutReq stockOutReq = new WhseStockOutReq();
             stockOutReq.setName("MOVE-" + entity.getName());
@@ -105,9 +112,7 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
             stockInReq.setStockMoveId(entity.getId());
             List<WhseStockInDetailReq> stockInDetailReqList = new ArrayList<>();
 
-            WhseStockMoveDetialQuery detailQuery = new WhseStockMoveDetialQuery();
-            detailQuery.setStockMoveId(id);
-            List<WhseStockMoveDetialResp> detailList = detailService.list(detailQuery, new SortQuery());
+
             for (WhseStockMoveDetialResp whseStockMoveDetialResp : detailList) {
                 WhseStockOutDetailReq stockOutDetailReq = new WhseStockOutDetailReq();
                 stockOutDetailReq.setGoodsStockId(whseStockMoveDetialResp.getGoodsStockId());
@@ -146,17 +151,17 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
         WhseStockMoveDetailResp info = detail(id);
         String fileName = info.getName() + ".xlsx";
         String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
-            .format(new Date(), "yyyyMMddHHmmss")));
+                .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         ClassPathResource resource = new ClassPathResource("static/stock_move.xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
-                .withTemplate(resource.getInputStream())
-                .autoCloseStream(false)
-                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
-                .registerConverter(new ExcelBigNumberConverter())
-                .build();
+                    .withTemplate(resource.getInputStream())
+                    .autoCloseStream(false)
+                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                    .registerConverter(new ExcelBigNumberConverter())
+                    .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
             // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
             excelWriter.fill(new FillWrapper("goodsList", info.getGoodsList()), writeSheet);

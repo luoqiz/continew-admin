@@ -121,6 +121,15 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
             throw new BusinessException("数据不存在，请检查！");
         }
 
+        // 入库单详情
+        WhseStockInDetailQuery query = new WhseStockInDetailQuery();
+        query.setStockInId(id);
+        List<WhseStockInDetailResp> stockInDetail = detailService.list(query, new SortQuery());
+
+        if (status == 2 && stockInDetail.isEmpty()) {
+            throw new BusinessException("尚未添加物料，无法审核！");
+        }
+
         // 如果是完成入库，则补充上入库时间
         if (status == 3) {
             entity.setInTime(LocalDateTime.now());
@@ -128,11 +137,6 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
             if (whseInfo.getStatus() != 1) {
                 throw new BusinessException("当前仓库状态不可用");
             }
-
-            // 入库单详情
-            WhseStockInDetailQuery query = new WhseStockInDetailQuery();
-            query.setStockInId(id);
-            List<WhseStockInDetailResp> stockInDetail = detailService.list(query, new SortQuery());
 
             // 如果是地区入库转为小件存储
             boolean isArea = false;

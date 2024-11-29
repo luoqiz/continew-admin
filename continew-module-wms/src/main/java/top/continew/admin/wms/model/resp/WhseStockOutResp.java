@@ -89,7 +89,6 @@ public class WhseStockOutResp extends BaseResp {
     @Schema(description = "关联移库单号")
     private String stockMoveNo;
 
-
     /**
      * 出库时间
      */

@@ -148,17 +148,17 @@ public class GoodsInventoryCountServiceImpl extends BaseServiceImpl<GoodsInvento
 
         String fileName = info.getName() + ".xlsx";
         String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
-                .format(new Date(), "yyyyMMddHHmmss")));
+            .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         ClassPathResource resource = new ClassPathResource("static/inventory_count.xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
-                    .withTemplate(resource.getInputStream())
-                    .autoCloseStream(false)
-                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
-                    .registerConverter(new ExcelBigNumberConverter())
-                    .build();
+                .withTemplate(resource.getInputStream())
+                .autoCloseStream(false)
+                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                .registerConverter(new ExcelBigNumberConverter())
+                .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
             // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
             excelWriter.fill(new FillWrapper("goodsList", items), writeSheet);

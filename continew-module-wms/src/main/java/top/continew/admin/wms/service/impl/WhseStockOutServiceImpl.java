@@ -96,12 +96,17 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
         if (entity == null) {
             throw new RuntimeException("数据不存在，请检查！");
         }
+        WhseStockOutDetailQuery query = new WhseStockOutDetailQuery();
+        query.setStockOutId(id);
+        List<WhseStockOutDetailMainResp> detailList = detailService.list(query, new SortQuery());
+
+        if (status == 2 && detailList.isEmpty()) {
+            throw new BusinessException("尚未添加物料，无法审核！");
+        }
+
         if (status == 3) {
             entity.setOutTime(LocalDate.now());
-
-            WhseStockOutDetailQuery query = new WhseStockOutDetailQuery();
-            query.setStockOutId(id);
-            List<WhseStockOutDetailMainResp> detailList = detailService.list(query, new SortQuery());
+            
             for (WhseStockOutDetailMainResp whseStockOutDetailMainResp : detailList) {
                 if (whseStockOutDetailMainResp.getStatus() != 2) {
                     throw new RuntimeException("有物料尚未核验，请重新检查！");
