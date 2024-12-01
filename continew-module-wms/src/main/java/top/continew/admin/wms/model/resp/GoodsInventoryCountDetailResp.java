@@ -17,6 +17,8 @@
 package top.continew.admin.wms.model.resp;
 
 import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.Mapping;
+import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,9 +53,13 @@ public class GoodsInventoryCountDetailResp extends BaseDetailResp {
     /**
      * 仓库id
      */
+    @ConditionOnPropertyNotNull
     @Schema(description = "仓库id")
     @ExcelProperty(value = "仓库id")
-    @Assemble(container = WmsConstants.addrContainer, prop = "name:whseName")
+    @Assemble(container = WmsConstants.addrContainer, props = {
+            @Mapping(src = "name", ref = "whseName"),
+            @Mapping(src = "whseType", ref = "whseType"),
+    })
     private Long whseId;
 
     /**
@@ -61,6 +67,12 @@ public class GoodsInventoryCountDetailResp extends BaseDetailResp {
      */
     @Schema(description = "仓库名称")
     private String whseName;
+
+    /**
+     * 仓库类型
+     */
+    @Schema(description = "仓库类型")
+    private Integer whseType;
 
     /**
      * 仓库区域id编号

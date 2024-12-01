@@ -17,6 +17,7 @@
 package top.continew.admin.wms.model.resp;
 
 import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.Mapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import top.continew.admin.wms.constant.WmsConstants;
@@ -61,6 +62,11 @@ public class GoodsInventoryCountItemResp extends BaseResp {
      */
     @Schema(description = "物料sku条码")
     @Assemble(container = WmsConstants.goodsSkuContainer, prop = "name:goodsName")
+    @Assemble(container = WmsConstants.goodsSkuContainer, props = {
+            @Mapping(src = "name", ref = "goodsName"),
+            @Mapping(src = "unit", ref = "goodsUnit"),
+            @Mapping(src = "packUnit", ref = "goodsPackUnit"),
+            @Mapping(src = "unpacking", ref = "goodsUnpacking")})
     private String goodsSku;
 
     /**
@@ -68,6 +74,15 @@ public class GoodsInventoryCountItemResp extends BaseResp {
      */
     @Schema(description = "物料名称")
     private String goodsName;
+
+    @Schema(description = "是否需要拆箱")
+    private Boolean goodsUnpacking;
+
+    @Schema(description = "物料单位")
+    private String goodsUnit;
+
+    @Schema(description = "物料拆箱单位")
+    private String goodsPackUnit;
 
     /**
      * 初始库存

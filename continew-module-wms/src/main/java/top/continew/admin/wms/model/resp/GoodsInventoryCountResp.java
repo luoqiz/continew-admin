@@ -17,6 +17,8 @@
 package top.continew.admin.wms.model.resp;
 
 import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.Mapping;
+import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import top.continew.admin.wms.constant.WmsConstants;
@@ -47,8 +49,12 @@ public class GoodsInventoryCountResp extends BaseResp {
     /**
      * 仓库id
      */
+    @ConditionOnPropertyNotNull
     @Schema(description = "仓库id")
-    @Assemble(container = WmsConstants.addrContainer, prop = "name:whseName")
+    @Assemble(container = WmsConstants.addrContainer, props = {
+            @Mapping(src = "name", ref = "whseName"),
+            @Mapping(src = "whseType", ref = "whseType"),
+    })
     private Long whseId;
 
     /**
@@ -56,6 +62,13 @@ public class GoodsInventoryCountResp extends BaseResp {
      */
     @Schema(description = "仓库名称")
     private String whseName;
+
+    /**
+     * 仓库类型
+     */
+    @Schema(description = "仓库类型")
+    private Integer whseType;
+
     /**
      * 状态 1待盘点 2盘点中 3已结束
      */
