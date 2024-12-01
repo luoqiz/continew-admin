@@ -230,6 +230,19 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
                 //                    .registerConverter(new ExcelBigNumberConverter())
                 .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
+            for (WhseStockInDetailResp whseStockInDetailResp : info.goodsList) {
+                if(lang.equals("zh")){
+                    if(whseStockInDetailResp.getStatus().equals(1)){
+                        whseStockInDetailResp.setStatusString("审核中");
+                    }
+                    if(whseStockInDetailResp.getStatus().equals(2)){
+                        whseStockInDetailResp.setStatusString("待入库");
+                    }
+                    if(whseStockInDetailResp.getStatus().equals(2)){
+                        whseStockInDetailResp.setStatusString("已完成");
+                    }
+                }
+            }
             // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
             excelWriter.fill(new FillWrapper("goodsList", info.goodsList), writeSheet);
             excelWriter.fill(info, writeSheet);

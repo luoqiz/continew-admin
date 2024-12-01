@@ -109,4 +109,10 @@ public class WhseStockInDetailResp extends BaseResp {
      */
     @Schema(description = "核检状态")
     private Integer status;
+
+    /**
+     * 状态 (1待核检 2核检通过)
+     */
+    @Schema(description = "核检状态")
+    private String statusString;
 }

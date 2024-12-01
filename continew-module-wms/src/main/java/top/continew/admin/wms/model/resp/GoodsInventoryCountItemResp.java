@@ -63,8 +63,8 @@ public class GoodsInventoryCountItemResp extends BaseResp {
     @Schema(description = "物料sku条码")
     @Assemble(container = WmsConstants.goodsSkuContainer, prop = "name:goodsName")
     @Assemble(container = WmsConstants.goodsSkuContainer, props = {@Mapping(src = "name", ref = "goodsName"),
-        @Mapping(src = "unit", ref = "goodsUnit"), @Mapping(src = "packUnit", ref = "goodsPackUnit"),
-        @Mapping(src = "unpacking", ref = "goodsUnpacking")})
+            @Mapping(src = "unit", ref = "goodsUnit"), @Mapping(src = "packUnit", ref = "goodsPackUnit"),
+            @Mapping(src = "unpacking", ref = "goodsUnpacking")})
     private String goodsSku;
 
     /**
@@ -99,6 +99,8 @@ public class GoodsInventoryCountItemResp extends BaseResp {
      */
     @Schema(description = "状态 1待盘点 2盘点中 3已结束")
     private Integer status;
+
+    private String statusString;
 
     /**
      * 生产日期

@@ -110,4 +110,6 @@ public class WhseStockOutDetailMainResp extends BaseResp {
      */
     @Schema(description = "状态 (1待核检 2核检通过)")
     private Integer status;
+
+    private String statusString;
 }
