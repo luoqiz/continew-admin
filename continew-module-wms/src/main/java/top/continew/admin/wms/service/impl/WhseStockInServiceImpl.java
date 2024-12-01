@@ -231,14 +231,14 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
                 .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
             for (WhseStockInDetailResp whseStockInDetailResp : info.goodsList) {
-                if(lang.equals("zh")){
-                    if(whseStockInDetailResp.getStatus().equals(1)){
+                if (lang.equals("zh")) {
+                    if (whseStockInDetailResp.getStatus().equals(1)) {
                         whseStockInDetailResp.setStatusString("审核中");
                     }
-                    if(whseStockInDetailResp.getStatus().equals(2)){
+                    if (whseStockInDetailResp.getStatus().equals(2)) {
                         whseStockInDetailResp.setStatusString("待入库");
                     }
-                    if(whseStockInDetailResp.getStatus().equals(2)){
+                    if (whseStockInDetailResp.getStatus().equals(2)) {
                         whseStockInDetailResp.setStatusString("已完成");
                     }
                 }

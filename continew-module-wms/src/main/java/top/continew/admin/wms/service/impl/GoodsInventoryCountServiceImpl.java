@@ -149,30 +149,30 @@ public class GoodsInventoryCountServiceImpl extends BaseServiceImpl<GoodsInvento
         List<GoodsInventoryCountItemResp> items = itemService.list(query, new SortQuery());
         for (GoodsInventoryCountItemResp item : items) {
             if (lang.equals("zh")) {
-                if(item.getStatus().equals(1)){
+                if (item.getStatus().equals(1)) {
                     item.setStatusString("待盘点");
                 }
-                if(item.getStatus().equals(2)){
+                if (item.getStatus().equals(2)) {
                     item.setStatusString("盘点中");
                 }
-                if(item.getStatus().equals(3)){
+                if (item.getStatus().equals(3)) {
                     item.setStatusString("已结束");
                 }
             }
         }
         String fileName = info.getName() + ".xlsx";
         String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
-                .format(new Date(), "yyyyMMddHHmmss")));
+            .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         ClassPathResource resource = new ClassPathResource("static/inventory_count_" + lang + ".xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
-                    .withTemplate(resource.getInputStream())
-                    .autoCloseStream(false)
-                    //                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
-                    .registerConverter(new ExcelBigNumberConverter())
-                    .build();
+                .withTemplate(resource.getInputStream())
+                .autoCloseStream(false)
+                //                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                .registerConverter(new ExcelBigNumberConverter())
+                .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
             // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
             excelWriter.fill(new FillWrapper("goodsList", items), writeSheet);
