@@ -28,6 +28,7 @@ import top.continew.starter.extension.crud.model.resp.BaseDetailResp;
 
 import java.io.Serial;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -112,7 +113,7 @@ public class WhseStockOutInfoResp extends BaseDetailResp {
      */
     @Schema(description = "出库时间")
     @ExcelProperty(value = "出库时间")
-    private LocalDate outTime;
+    private LocalDateTime outTime;
 
     /**
      * 状态 (1审核中 2操作中 3已完成)

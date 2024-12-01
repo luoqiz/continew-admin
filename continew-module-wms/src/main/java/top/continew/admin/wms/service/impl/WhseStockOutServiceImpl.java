@@ -23,10 +23,10 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillWrapper;
-import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +40,7 @@ import top.continew.admin.wms.model.req.WhseStockOutReq;
 import top.continew.admin.wms.model.resp.WhseStockOutDetailMainResp;
 import top.continew.admin.wms.model.resp.WhseStockOutInfoResp;
 import top.continew.admin.wms.model.resp.WhseStockOutResp;
+import top.continew.admin.wms.service.WhseStockMoveService;
 import top.continew.admin.wms.service.WhseStockOutDetailService;
 import top.continew.admin.wms.service.WhseStockOutService;
 import top.continew.starter.core.exception.BusinessException;
@@ -47,7 +48,7 @@ import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -66,6 +67,10 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
     @Resource
     private WhseStockOutDetailService detailService;
 
+    @Resource
+    @Lazy
+    private WhseStockMoveService stockMoveService;
+
     @Override
     public WhseStockOutInfoResp detailById(Long id) {
         WhseStockOutInfoResp info = get(id);
@@ -75,6 +80,13 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
         WhseStockOutDetailQuery query = new WhseStockOutDetailQuery();
         query.setStockOutId(id);
         List<WhseStockOutDetailMainResp> list = detailService.list(query, new SortQuery());
+        for (WhseStockOutDetailMainResp whseStockOutDetailMainResp : list) {
+            if (whseStockOutDetailMainResp.getGoodsUnpacking()) {
+                if (info.getWhseType() != 1) {
+                    whseStockOutDetailMainResp.setGoodsUnit(whseStockOutDetailMainResp.getGoodsPackUnit());
+                }
+            }
+        }
         info.setGoodsList(list);
         return info;
     }
@@ -105,14 +117,17 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
         }
 
         if (status == 3) {
-            entity.setOutTime(LocalDate.now());
-            
+            entity.setOutTime(LocalDateTime .now());
+
             for (WhseStockOutDetailMainResp whseStockOutDetailMainResp : detailList) {
                 if (whseStockOutDetailMainResp.getStatus() != 2) {
                     throw new RuntimeException("有物料尚未核验，请重新检查！");
                 }
             }
 
+            if (entity.getStockMoveId() != null) {
+                stockMoveService.updateStatus(entity.getStockMoveId(), 3);
+            }
         }
         entity.setStatus(status);
         baseMapper.updateById(entity);
@@ -153,7 +168,7 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
                     .withTemplate(resource.getInputStream())
                     .autoCloseStream(false)
-                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+//                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
                     .registerConverter(new ExcelBigNumberConverter())
                     .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();

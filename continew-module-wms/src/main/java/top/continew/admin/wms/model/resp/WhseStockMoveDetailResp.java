@@ -17,6 +17,7 @@
 package top.continew.admin.wms.model.resp;
 
 import cn.crane4j.annotation.Assemble;
+import cn.crane4j.annotation.Mapping;
 import cn.crane4j.annotation.condition.ConditionOnPropertyNotNull;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -92,7 +93,10 @@ public class WhseStockMoveDetailResp extends BaseDetailResp {
      * 出仓id编号
      */
     @ConditionOnPropertyNotNull
-    @Assemble(container = WmsConstants.addrContainer, prop = "name:stockOutWhseName")
+    @Assemble(container = WmsConstants.addrContainer, props = {
+            @Mapping(src = "name", ref = "stockOutWhseName"),
+            @Mapping(src = "whseType", ref = "stockOutWhseType")
+    })
     @Schema(description = "出仓id编号")
     @ExcelProperty(value = "出仓id编号")
     private Long stockOutWhseId;
@@ -100,6 +104,10 @@ public class WhseStockMoveDetailResp extends BaseDetailResp {
     @Schema(description = "出仓名称")
     @ExcelProperty(value = "出仓名称")
     private String stockOutWhseName;
+
+    @Schema(description = "出仓仓库类型")
+    @ExcelProperty(value = "出仓仓库类型")
+    private int stockOutWhseType;
 
     /**
      * 出库区域id编号

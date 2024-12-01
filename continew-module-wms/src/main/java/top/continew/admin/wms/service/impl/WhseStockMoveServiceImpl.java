@@ -22,7 +22,6 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillWrapper;
-import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +41,7 @@ import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
 import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,6 +75,13 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
         SortQuery sortQuery = new SortQuery();
         sortQuery.setSort(new String[]{"createTime", "asc"});
         List<WhseStockMoveDetialResp> deailList = detailService.list(query, sortQuery);
+        for (WhseStockMoveDetialResp whseStockMoveDetialResp : deailList) {
+            if (whseStockMoveDetialResp.getGoodsUnpacking()) {
+                if (resp.getStockOutWhseType() != 1) {
+                    whseStockMoveDetialResp.setGoodsUnit(whseStockMoveDetialResp.getGoodsPackUnit());
+                }
+            }
+        }
         resp.setGoodsList(deailList);
         return resp;
     }
@@ -142,7 +149,9 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
             entity.setStockInId(stockInId);
             entity.setStockOutId(stockOutId);
         }
-
+        if (status == 4) {
+            entity.setMoveTime(LocalDateTime.now());
+        }
         baseMapper.updateById(entity);
     }
 
@@ -159,7 +168,7 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
                     .withTemplate(resource.getInputStream())
                     .autoCloseStream(false)
-                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+//                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
                     .registerConverter(new ExcelBigNumberConverter())
                     .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();

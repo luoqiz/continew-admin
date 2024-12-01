@@ -71,7 +71,7 @@ public class WhseStockOutDO extends BaseDO {
     /**
      * 出库时间
      */
-    private LocalDate outTime;
+    private LocalDateTime outTime;
 
     /**
      * 状态 (1审核中 2操作中 3已完成)

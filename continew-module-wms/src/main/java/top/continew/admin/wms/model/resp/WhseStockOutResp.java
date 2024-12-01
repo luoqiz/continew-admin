@@ -26,6 +26,7 @@ import top.continew.starter.extension.crud.model.resp.BaseResp;
 
 import java.io.Serial;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 仓库出库信息
@@ -93,7 +94,7 @@ public class WhseStockOutResp extends BaseResp {
      * 出库时间
      */
     @Schema(description = "出库时间")
-    private LocalDate outTime;
+    private LocalDateTime outTime;
 
     /**
      * 状态 (1审核中 2操作中 3已完成)

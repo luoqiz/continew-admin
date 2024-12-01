@@ -23,7 +23,6 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillWrapper;
-import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -108,6 +107,13 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
         query.setStockInId(id);
         sortquery.setSort(null);
         List<WhseStockInDetailResp> list = detailService.list(query, sortquery);
+        for (WhseStockInDetailResp whseStockInDetailResp : list) {
+            if (whseStockInDetailResp.getGoodsUnpacking()) {
+                if (stockInInfo.getWhseType() != 1) {
+                    whseStockInDetailResp.setGoodsUnit(whseStockInDetailResp.getGoodsPackUnit());
+                }
+            }
+        }
         stockInInfo.setGoodsList(list);
         return stockInInfo;
     }
@@ -188,11 +194,10 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
             goodsStockService.batchAdd(datas);
             // 更新移库单完成
             if (entity.getStockMoveId() != null) {
-                moveService.updateStatus(entity.getStockMoveId(), 3);
+                moveService.updateStatus(entity.getStockMoveId(), 4);
             }
         }
         entity.setStatus(status);
-
         baseMapper.updateById(entity);
     }
 
@@ -220,8 +225,7 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
                     .withTemplate(resource.getInputStream())
                     .autoCloseStream(false)
-                    .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
-                    .registerConverter(new ExcelBigNumberConverter())
+//                    .registerConverter(new ExcelBigNumberConverter())
                     .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
             // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
