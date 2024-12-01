@@ -41,7 +41,7 @@ import top.continew.starter.extension.crud.enums.Api;
 @Tag(name = "物料盘点管理 API")
 @RestController
 @CrudRequestMapping(value = "/wms/goodsInventoryCount", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE,
-        Api.EXPORT})
+    Api.EXPORT})
 public class GoodsInventoryCountController extends BaseController<GoodsInventoryCountService, GoodsInventoryCountResp, GoodsInventoryCountDetailResp, GoodsInventoryCountQuery, GoodsInventoryCountReq> {
 
     @Operation(summary = "修改盘点状态", description = "修改盘点状态")
@@ -56,7 +56,9 @@ public class GoodsInventoryCountController extends BaseController<GoodsInventory
     @ExcludeFromGracefulResponse
     @Operation(summary = "导出数据", description = "导出数据")
     @GetMapping({"/export/{id}"})
-    public void export(@RequestHeader("accept-language") String lang, @PathVariable("id") Long id, HttpServletResponse response) {
+    public void export(@RequestHeader("accept-language") String lang,
+                       @PathVariable("id") Long id,
+                       HttpServletResponse response) {
         this.checkPermission(Api.EXPORT);
         this.baseService.export(id, response, lang);
     }

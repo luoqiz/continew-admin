@@ -51,10 +51,8 @@ public class GoodsInventoryCountResp extends BaseResp {
      */
     @ConditionOnPropertyNotNull
     @Schema(description = "仓库id")
-    @Assemble(container = WmsConstants.addrContainer, props = {
-            @Mapping(src = "name", ref = "whseName"),
-            @Mapping(src = "whseType", ref = "whseType"),
-    })
+    @Assemble(container = WmsConstants.addrContainer, props = {@Mapping(src = "name", ref = "whseName"),
+        @Mapping(src = "whseType", ref = "whseType"),})
     private Long whseId;
 
     /**

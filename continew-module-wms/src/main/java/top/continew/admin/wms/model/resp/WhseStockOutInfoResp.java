@@ -27,7 +27,6 @@ import top.continew.admin.wms.constant.WmsConstants;
 import top.continew.starter.extension.crud.model.resp.BaseDetailResp;
 
 import java.io.Serial;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -70,10 +69,8 @@ public class WhseStockOutInfoResp extends BaseDetailResp {
      * 仓库id编号
      */
     @ConditionOnPropertyNotNull
-    @Assemble(container = WmsConstants.addrContainer, props = {
-            @Mapping(src = "name", ref = "whseName"),
-            @Mapping(src = "whseType", ref = "whseType")
-    })
+    @Assemble(container = WmsConstants.addrContainer, props = {@Mapping(src = "name", ref = "whseName"),
+        @Mapping(src = "whseType", ref = "whseType")})
     @Schema(description = "仓库id编号")
     @ExcelProperty(value = "仓库id编号")
     private Long whseId;

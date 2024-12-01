@@ -93,10 +93,8 @@ public class WhseStockMoveDetailResp extends BaseDetailResp {
      * 出仓id编号
      */
     @ConditionOnPropertyNotNull
-    @Assemble(container = WmsConstants.addrContainer, props = {
-            @Mapping(src = "name", ref = "stockOutWhseName"),
-            @Mapping(src = "whseType", ref = "stockOutWhseType")
-    })
+    @Assemble(container = WmsConstants.addrContainer, props = {@Mapping(src = "name", ref = "stockOutWhseName"),
+        @Mapping(src = "whseType", ref = "stockOutWhseType")})
     @Schema(description = "出仓id编号")
     @ExcelProperty(value = "出仓id编号")
     private Long stockOutWhseId;

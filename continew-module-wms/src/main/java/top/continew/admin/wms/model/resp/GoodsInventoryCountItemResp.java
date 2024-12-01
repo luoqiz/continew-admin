@@ -62,11 +62,9 @@ public class GoodsInventoryCountItemResp extends BaseResp {
      */
     @Schema(description = "物料sku条码")
     @Assemble(container = WmsConstants.goodsSkuContainer, prop = "name:goodsName")
-    @Assemble(container = WmsConstants.goodsSkuContainer, props = {
-            @Mapping(src = "name", ref = "goodsName"),
-            @Mapping(src = "unit", ref = "goodsUnit"),
-            @Mapping(src = "packUnit", ref = "goodsPackUnit"),
-            @Mapping(src = "unpacking", ref = "goodsUnpacking")})
+    @Assemble(container = WmsConstants.goodsSkuContainer, props = {@Mapping(src = "name", ref = "goodsName"),
+        @Mapping(src = "unit", ref = "goodsUnit"), @Mapping(src = "packUnit", ref = "goodsPackUnit"),
+        @Mapping(src = "unpacking", ref = "goodsUnpacking")})
     private String goodsSku;
 
     /**

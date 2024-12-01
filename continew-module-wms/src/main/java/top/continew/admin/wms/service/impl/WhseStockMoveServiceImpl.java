@@ -73,7 +73,7 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
         WhseStockMoveDetialQuery query = new WhseStockMoveDetialQuery();
         query.setStockMoveId(id);
         SortQuery sortQuery = new SortQuery();
-        sortQuery.setSort(new String[]{"createTime", "asc"});
+        sortQuery.setSort(new String[] {"createTime", "asc"});
         List<WhseStockMoveDetialResp> deailList = detailService.list(query, sortQuery);
         for (WhseStockMoveDetialResp whseStockMoveDetialResp : deailList) {
             if (whseStockMoveDetialResp.getGoodsUnpacking()) {
@@ -119,7 +119,6 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
             stockInReq.setStockMoveId(entity.getId());
             List<WhseStockInDetailReq> stockInDetailReqList = new ArrayList<>();
 
-
             for (WhseStockMoveDetialResp whseStockMoveDetialResp : detailList) {
                 WhseStockOutDetailReq stockOutDetailReq = new WhseStockOutDetailReq();
                 stockOutDetailReq.setGoodsStockId(whseStockMoveDetialResp.getGoodsStockId());
@@ -163,17 +162,17 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
         WhseStockMoveDetailResp info = detail(id);
         String fileName = info.getName() + ".xlsx";
         String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
-                .format(new Date(), "yyyyMMddHHmmss")));
+            .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         ClassPathResource resource = new ClassPathResource("static/stock_move" + "_" + lang + ".xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
-                    .withTemplate(resource.getInputStream())
-                    .autoCloseStream(false)
-//                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
-                    .registerConverter(new ExcelBigNumberConverter())
-                    .build();
+                .withTemplate(resource.getInputStream())
+                .autoCloseStream(false)
+                //                .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
+                .registerConverter(new ExcelBigNumberConverter())
+                .build();
             WriteSheet writeSheet = EasyExcel.writerSheet().build();
             // 如果有多个list 模板上必须有{前缀.} 这里的前缀就是 data1，然后多个list必须用 FillWrapper包裹
             excelWriter.fill(new FillWrapper("goodsList", info.getGoodsList()), writeSheet);

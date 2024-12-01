@@ -64,12 +64,9 @@ public class WhseStockMoveDetialResp extends BaseResp {
      */
     @ConditionOnPropertyNotNull
     @Schema(description = "商品sku")
-    @Assemble(container = WmsConstants.goodsSkuContainer, props = {
-            @Mapping(src = "name", ref = "goodsName"),
-            @Mapping(src = "unit", ref = "goodsUnit"),
-            @Mapping(src = "packUnit", ref = "goodsPackUnit"),
-            @Mapping(src = "unpacking", ref = "goodsUnpacking"),
-    })
+    @Assemble(container = WmsConstants.goodsSkuContainer, props = {@Mapping(src = "name", ref = "goodsName"),
+        @Mapping(src = "unit", ref = "goodsUnit"), @Mapping(src = "packUnit", ref = "goodsPackUnit"),
+        @Mapping(src = "unpacking", ref = "goodsUnpacking"),})
     private String goodsSku;
 
     @Schema(description = "是否需要拆箱")
