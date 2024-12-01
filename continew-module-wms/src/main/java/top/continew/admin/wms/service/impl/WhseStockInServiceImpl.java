@@ -50,7 +50,6 @@ import top.continew.admin.wms.service.*;
 import top.continew.starter.core.exception.BusinessException;
 import top.continew.starter.extension.crud.model.query.SortQuery;
 import top.continew.starter.extension.crud.service.impl.BaseServiceImpl;
-import top.continew.starter.file.excel.converter.ExcelBigNumberConverter;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -213,14 +212,17 @@ public class WhseStockInServiceImpl extends BaseServiceImpl<WhseStockInMapper, W
     }
 
     @Override
-    public void export(Long id, HttpServletResponse response) {
+    public void export(Long id, HttpServletResponse response, String lang) {
         WhseStockInInfoResp info = detailById(id);
+        if (lang == null) {
+            lang = "zh";
+        }
         String fileName = info.getName() + ".xlsx";
         String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
                 .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-        ClassPathResource resource = new ClassPathResource("static/stock_in.xlsx");
+        ClassPathResource resource = new ClassPathResource("static/stock_in" + "_" + lang + ".xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
                     .withTemplate(resource.getInputStream())

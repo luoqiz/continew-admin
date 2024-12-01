@@ -137,8 +137,11 @@ public class GoodsInventoryCountServiceImpl extends BaseServiceImpl<GoodsInvento
     }
 
     @Override
-    public void export(Long id, HttpServletResponse response) {
+    public void export(Long id, HttpServletResponse response, String lang) {
         GoodsInventoryCountDetailResp info = get(id);
+        if (lang == null) {
+            lang = "zh";
+        }
         // 将盘点后的数据更新回库存表中
 
         GoodsInventoryCountItemQuery query = new GoodsInventoryCountItemQuery();
@@ -150,7 +153,7 @@ public class GoodsInventoryCountServiceImpl extends BaseServiceImpl<GoodsInvento
                 .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-        ClassPathResource resource = new ClassPathResource("static/inventory_count.xlsx");
+        ClassPathResource resource = new ClassPathResource("static/inventory_count_" + lang + ".xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
                     .withTemplate(resource.getInputStream())

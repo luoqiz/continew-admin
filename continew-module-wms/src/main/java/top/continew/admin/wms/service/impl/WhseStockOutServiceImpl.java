@@ -117,7 +117,7 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
         }
 
         if (status == 3) {
-            entity.setOutTime(LocalDateTime .now());
+            entity.setOutTime(LocalDateTime.now());
 
             for (WhseStockOutDetailMainResp whseStockOutDetailMainResp : detailList) {
                 if (whseStockOutDetailMainResp.getStatus() != 2) {
@@ -154,7 +154,10 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
     }
 
     @Override
-    public void export(Long id, HttpServletResponse response) {
+    public void export(Long id, HttpServletResponse response, String lang) {
+        if (lang == null) {
+            lang = "zh";
+        }
         WhseStockOutInfoResp info = detailById(id);
         String fileName = info.getName() + ".xlsx";
         String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
@@ -162,7 +165,7 @@ public class WhseStockOutServiceImpl extends BaseServiceImpl<WhseStockOutMapper,
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
         // 模板文件保存在springboot项目的resources/static下
-        ClassPathResource resource = new ClassPathResource("static/stock_out.xlsx");
+        ClassPathResource resource = new ClassPathResource("static/stock_out_" + lang + ".xlsx");
         // 方案1
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())

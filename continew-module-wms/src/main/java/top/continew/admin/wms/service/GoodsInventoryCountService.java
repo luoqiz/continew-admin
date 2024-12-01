@@ -32,5 +32,5 @@ import top.continew.starter.extension.crud.service.BaseService;
 public interface GoodsInventoryCountService extends BaseService<GoodsInventoryCountResp, GoodsInventoryCountDetailResp, GoodsInventoryCountQuery, GoodsInventoryCountReq> {
     boolean updateStatus(Long id, int status);
 
-    void export(Long id, HttpServletResponse response);
+    void export(Long id, HttpServletResponse response, String lang);
 }

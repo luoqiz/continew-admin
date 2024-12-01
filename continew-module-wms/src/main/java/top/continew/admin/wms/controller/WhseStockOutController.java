@@ -44,7 +44,7 @@ import java.util.Map;
 @Tag(name = "仓库出库管理 API")
 @RestController
 @CrudRequestMapping(value = "/wms/whseStockOut", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE,
-    Api.EXPORT})
+        Api.EXPORT})
 public class WhseStockOutController extends BaseController<WhseStockOutService, WhseStockOutResp, WhseStockOutInfoResp, WhseStockOutQuery, WhseStockOutReq> {
 
     @Operation(summary = "查询详情", description = "查询详情")
@@ -76,8 +76,8 @@ public class WhseStockOutController extends BaseController<WhseStockOutService, 
     @ExcludeFromGracefulResponse
     @Operation(summary = "导出数据", description = "导出数据")
     @GetMapping({"/export/{id}"})
-    public void export(@PathVariable("id") Long id, HttpServletResponse response) {
+    public void export(@RequestHeader("accept-language") String lang, @PathVariable("id") Long id, HttpServletResponse response) {
         this.checkPermission(Api.EXPORT);
-        this.baseService.export(id, response);
+        this.baseService.export(id, response, lang);
     }
 }

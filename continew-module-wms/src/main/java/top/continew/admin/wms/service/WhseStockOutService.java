@@ -48,5 +48,5 @@ public interface WhseStockOutService extends BaseService<WhseStockOutResp, WhseS
      */
     List<Map<String, Integer>> staticsToday(Long whseId);
 
-    void export(Long id, HttpServletResponse response);
+    void export(Long id, HttpServletResponse response, String lang);
 }

@@ -35,5 +35,5 @@ public interface WhseStockMoveService extends BaseService<WhseStockMoveResp, Whs
 
     void updateStatus(Long id, int status);
 
-    void export(Long id, HttpServletResponse response);
+    void export(Long id, HttpServletResponse response, String lang);
 }

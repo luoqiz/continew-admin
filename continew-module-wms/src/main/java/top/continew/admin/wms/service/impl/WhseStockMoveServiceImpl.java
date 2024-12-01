@@ -156,14 +156,17 @@ public class WhseStockMoveServiceImpl extends BaseServiceImpl<WhseStockMoveMappe
     }
 
     @Override
-    public void export(Long id, HttpServletResponse response) {
+    public void export(Long id, HttpServletResponse response, String lang) {
+        if (lang == null) {
+            lang = "zh";
+        }
         WhseStockMoveDetailResp info = detail(id);
         String fileName = info.getName() + ".xlsx";
         String exportFileName = URLUtil.encode("%s_%s.xlsx".formatted(fileName, DateUtil
                 .format(new Date(), "yyyyMMddHHmmss")));
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-        ClassPathResource resource = new ClassPathResource("static/stock_move.xlsx");
+        ClassPathResource resource = new ClassPathResource("static/stock_move" + "_" + lang + ".xlsx");
         try {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream())
                     .withTemplate(resource.getInputStream())

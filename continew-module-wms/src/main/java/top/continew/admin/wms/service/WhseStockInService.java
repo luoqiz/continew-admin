@@ -60,7 +60,7 @@ public interface WhseStockInService extends BaseService<WhseStockInResp, WhseSto
      */
     Long add(WhseStockInReq stockInReq, List<WhseStockInDetailReq> stockInDetailReqList);
 
-    void export(Long id, HttpServletResponse response);
+    void export(Long id, HttpServletResponse response, String lang);
 
     List<WhseStockInDO> getByIds(Collection<Long> ids);
 }
