@@ -19,6 +19,7 @@ package top.continew.admin.generator.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -26,10 +27,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.ZipUtil;
 import cn.hutool.db.meta.Column;
 import cn.hutool.db.meta.Table;
+import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
 import cn.hutool.extra.template.engine.freemarker.FreemarkerEngine;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.system.SystemUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import freemarker.template.Configuration;
@@ -41,6 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.continew.admin.common.util.MapUtils;
 import top.continew.admin.generator.config.properties.GeneratorProperties;
 import top.continew.admin.generator.enums.FormTypeEnum;
 import top.continew.admin.generator.enums.QueryTypeEnum;
@@ -58,15 +63,16 @@ import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.enums.BaseEnum;
 import top.continew.starter.core.exception.BusinessException;
 import top.continew.starter.core.util.CollUtils;
+import top.continew.starter.core.util.FileUploadUtils;
 import top.continew.starter.core.util.validation.CheckUtils;
 import top.continew.starter.data.enums.DatabaseType;
 import top.continew.starter.data.util.MetaUtils;
 import top.continew.starter.extension.crud.model.query.PageQuery;
 import top.continew.starter.extension.crud.model.resp.PageResp;
-import top.continew.starter.core.util.FileUploadUtils;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
@@ -264,12 +270,24 @@ public class GeneratorServiceImpl implements GeneratorService {
                 List<GeneratePreviewResp> generatePreviewList = this.preview(tableName);
                 // 生成代码
                 for (GeneratePreviewResp generatePreview : generatePreviewList) {
-                    // 后端：continew-admin/continew-system/src/main/java/top/continew/admin/system/service/impl/XxxServiceImpl.java
-                    // 前端：continew-admin/continew-admin-ui/src/views/system/user/index.vue
-                    File file = new File(projectPath + generatePreview.getPath()
-                        .replace("continew-admin\\continew-admin", ""), generatePreview.getFileName());
-                    // 如果已经存在，且不允许覆盖，则跳过
-                    if (!file.exists() || Boolean.TRUE.equals(genConfigMapper.selectById(tableName).getIsOverride())) {
+                    File file;
+                    // 未设置前端路径：continew-admin/continew-admin-ui/src/views/system/user/index.vue
+                    // 设置前端路径：d:/continew-admin-vben/src/views/system/user/index.vue
+                    if (generatePreview.getPath().substring(0, 3).matches("^(/|[a-zA-Z]:).*")) {
+                        file = new File(generatePreview.getPath(), generatePreview.getFileName());
+                    } else {
+                        // 前端没有设置路径的时候默认和后端一致
+                        // 后端：continew-admin/continew-system/src/main/java/top/continew/admin/system/service/impl/XxxServiceImpl.java
+                        file = new File(projectPath + generatePreview.getPath()
+                                .replace("continew-admin\\continew-admin", ""), generatePreview.getFileName());
+                    }
+                    if (file.exists() && StrUtil.endWithIgnoreCase(file.getName(), ".json")) {
+                        JSON json = JSONUtil.readJSON(file, StandardCharsets.UTF_8);
+                        Map<String, Object> newMap = MapUtils.mergeMap(json.toBean(Map.class), JSONUtil.parseObj(generatePreview.getContent()));
+                        JSON mergeJson = JSONUtil.parse(newMap);
+                        FileUtil.writeUtf8String(mergeJson.toJSONString(2), file);
+                    } else if (!file.exists() || Boolean.TRUE.equals(genConfigMapper.selectById(tableName).getIsOverride())) {
+                        // 如果已经存在，且不允许覆盖，则跳过
                         FileUtil.writeUtf8String(generatePreview.getContent(), file);
                     }
                 }
@@ -314,6 +332,17 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
         for (Map.Entry<String, GeneratorProperties.TemplateConfig> templateConfigEntry : templateConfigMap.entrySet()) {
             GeneratorProperties.TemplateConfig templateConfig = templateConfigEntry.getValue();
+            Template template;
+            try {
+                template = engine.getTemplate(templateConfig.getTemplatePath());
+            } catch (Exception e) {
+                if (e instanceof IORuntimeException) {
+                    log.error("模板文件不存在:{}", templateConfig.getTemplatePath());
+                } else {
+                    log.error("模板文件解析异常:{}", templateConfig.getTemplatePath(), e);
+                }
+                continue;
+            }
             // 移除需要忽略的字段
             innerGenConfig.setFieldConfigs(fieldConfigRecords.stream()
                 .filter(fieldConfig -> !StrUtil.equalsAny(fieldConfig.getFieldName(), templateConfig
@@ -333,14 +362,23 @@ public class GeneratorServiceImpl implements GeneratorService {
             generatePreviewList.add(generatePreview);
             String fileName = className + extension;
             if (!isBackend) {
-                fileName = ".vue".equals(extension) && "index".equals(classNameSuffix)
-                    ? "index.vue"
-                    : this.getFrontendFileName(classNamePrefix, classNameSuffix, extension);
+                if (".vue".equals(extension) && "index".equals(classNameSuffix)) {
+                    fileName = "index.vue";
+                } else if (".json".equals(extension)) {
+                    // json 默认为多语言配置文件
+                    fileName = innerGenConfig.getApiModuleName() + ".json";
+                } else {
+                    if (templateConfig.getPackageName().contains("api")) {
+                        // api 走原来的处理逻辑
+                        fileName = this.getFrontendFileName(classNamePrefix, classNameSuffix, extension);
+                    } else {
+                        fileName = className + extension;
+                    }
+                }
             }
             generatePreview.setFileName(fileName);
-            generatePreview.setContent(engine.getTemplate(templateConfig.getTemplatePath())
-                .render(BeanUtil.beanToMap(innerGenConfig)));
-            this.setPreviewPath(generatePreview, innerGenConfig, templateConfig);
+            generatePreview.setContent(template.render(BeanUtil.beanToMap(innerGenConfig)));
+            this.setPreviewPath(generatePreview, innerGenConfig, templateConfigEntry);
         }
         return generatePreviewList;
     }
@@ -361,8 +399,8 @@ public class GeneratorServiceImpl implements GeneratorService {
         }
         Set<Class<?>> classSet = ClassUtil.scanPackageBySuper(applicationProperties.getBasePackage(), BaseEnum.class);
         Optional<Class<?>> clazzOptional = classSet.stream()
-            .filter(s -> StrUtil.toUnderlineCase(s.getSimpleName()).toLowerCase().equals(dictCode))
-            .findFirst();
+                .filter(s -> StrUtil.toUnderlineCase(s.getSimpleName()).toLowerCase().equals(dictCode))
+                .findFirst();
         if (clazzOptional.isEmpty()) {
             return fieldConfig;
         }
@@ -375,30 +413,44 @@ public class GeneratorServiceImpl implements GeneratorService {
     /**
      * 设置预览路径
      *
-     * @param generatePreview 预览信息
-     * @param genConfig       生成配置
-     * @param templateConfig  模板配置
+     * @param generatePreview     预览信息
+     * @param genConfig           生成配置
+     * @param templateConfigEntry 模板配置
      */
     private void setPreviewPath(GeneratePreviewResp generatePreview,
                                 InnerGenConfigDO genConfig,
-                                GeneratorProperties.TemplateConfig templateConfig) {
+                                Map.Entry<String, GeneratorProperties.TemplateConfig> templateConfigEntry) {
+        GeneratorProperties.TemplateConfig templateConfig = templateConfigEntry.getValue();
         // 获取前后端基础路径
         String backendBasicPackagePath = this.buildBackendBasicPackagePath(genConfig, templateConfig);
-        String frontendBasicPackagePath = String.join(File.separator, applicationProperties
-            .getId(), applicationProperties.getId() + "-ui");
+        // 如果配置了前端路径，则以前端配置的为准
+        String frontendBasicPackagePath;
+        if (StrUtil.isNotBlank(genConfig.getFrontPath())) {
+            String frontTempPath = genConfig.getFrontPath()
+                    .replace(StringConstants.SLASH, File.separator);
+            frontendBasicPackagePath =
+                    frontTempPath.endsWith(File.separator) ? frontTempPath.substring(0, frontTempPath.length() - 2) : frontTempPath;
+        } else {
+            frontendBasicPackagePath = String.join(File.separator, applicationProperties
+                    .getId(), applicationProperties.getId() + "-ui") + File.separator;
+        }
         String packagePath;
         if (generatePreview.isBackend()) {
             // 例如：continew-admin/continew-system/src/main/java/top/continew/admin/system/service/impl
             packagePath = String.join(File.separator, backendBasicPackagePath, templateConfig.getPackageName()
-                .replace(StringConstants.DOT, File.separator));
+                    .replace(StringConstants.DOT, File.separator));
         } else {
             // 例如：continew-admin/continew-admin-ui/src/views/system
             packagePath = String.join(File.separator, frontendBasicPackagePath, templateConfig.getPackageName()
-                .replace(StringConstants.SLASH, File.separator), genConfig.getApiModuleName());
+                    .replace(StringConstants.SLASH, File.separator));
             // 例如：continew-admin/continew-admin-ui/src/views/system/user
-            packagePath = ".vue".equals(templateConfig.getExtension())
-                ? packagePath + File.separator + StrUtil.lowerFirst(genConfig.getClassNamePrefix())
-                : packagePath;
+            if (".json".equals(templateConfig.getExtension())) {
+                packagePath = String.join(File.separator, packagePath);
+            } else if (".vue".equals(templateConfig.getExtension())) {
+                packagePath = String.join(File.separator, packagePath, genConfig.getApiModuleName());
+            } else {
+                packagePath = String.join(File.separator, packagePath, genConfig.getApiModuleName());
+            }
         }
         generatePreview.setPath(packagePath);
     }
@@ -414,7 +466,7 @@ public class GeneratorServiceImpl implements GeneratorService {
             // 后端：continew-admin/continew-system/src/main/java/top/continew/admin/system/service/impl/XxxServiceImpl.java
             // 前端：continew-admin/continew-admin-ui/src/views/system/user/index.vue
             File file = new File(SystemUtil.getUserInfo().getTempDir() + generatePreview.getPath(), generatePreview
-                .getFileName());
+                    .getFileName());
             // 如果已经存在，且不允许覆盖，则跳过
             if (!file.exists() || Boolean.TRUE.equals(genConfig.getIsOverride())) {
                 FileUtil.writeUtf8String(generatePreview.getContent(), file);
@@ -434,11 +486,11 @@ public class GeneratorServiceImpl implements GeneratorService {
         String extension = templateConfig.getExtension();
         // 例如：continew-admin/continew-system/src/main/java/top/continew/admin/system
         return String.join(File.separator, applicationProperties.getId(), applicationProperties.getId(), genConfig
-            .getModuleName(), "src", "main", FileNameUtil.EXT_JAVA.equals(extension)
+                .getModuleName(), "src", "main", FileNameUtil.EXT_JAVA.equals(extension)
                 ? "java"
                 : "resources") + (FileNameUtil.EXT_JAVA.equals(extension)
-                    ? File.separator + genConfig.getPackageName().replace(StringConstants.DOT, File.separator)
-                    : StringConstants.EMPTY);
+                ? File.separator + genConfig.getPackageName().replace(StringConstants.DOT, File.separator)
+                : StringConstants.EMPTY);
     }
 
     /**

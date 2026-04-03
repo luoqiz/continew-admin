@@ -49,7 +49,7 @@ import top.continew.starter.extension.tenant.util.TenantUtils;
 @Tag(name = "租户管理 API")
 @RestController
 @RequiredArgsConstructor
-@CrudRequestMapping(value = "/tenant/management", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE})
+@CrudRequestMapping(value = "/tenant/management", api = {Api.PAGE, Api.GET, Api.CREATE, Api.UPDATE, Api.DELETE, Api.EXPORT})
 public class TenantController extends BaseController<TenantService, TenantResp, TenantDetailResp, TenantQuery, TenantReq> {
 
     private final UserApi userApi;

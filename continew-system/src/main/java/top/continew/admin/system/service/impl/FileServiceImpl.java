@@ -224,7 +224,7 @@ public class FileServiceImpl extends BaseServiceImpl<FileMapper, FileDO, FileRes
      */
     private FileInfo upload(Object file, String parentPath, String storageCode, String extName) {
         List<String> allExtensions = FileTypeEnum.getAllExtensions();
-        CheckUtils.throwIf(!allExtensions.contains(extName), "不支持的文件类型，仅支持 {} 格式的文件", String
+        CheckUtils.throwIf(!allExtensions.contains(extName.toLowerCase()), "不支持的文件类型，仅支持 {} 格式的文件", String
             .join(StringConstants.COMMA, allExtensions));
         // 构建上传预处理对象
         StorageDO storage = storageService.getByCode(storageCode);

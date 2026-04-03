@@ -123,12 +123,61 @@ public class GenConfigDO implements Serializable {
     @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
 
+    /**
+     * 列表类型
+     */
+    @Schema(description = "列表类型", example = "1")
+    private Integer listType;
+
+    /**
+     * 实体名称
+     */
+    @Schema(description = "'实体名称'", example = "SysUser")
+    private String entityName;
+
+
+    /**
+     * 弹窗类型
+     */
+    @Schema(description = "弹窗类型", example = "1")
+    private Integer dialogType;
+
+    /**
+     * 父级菜单id
+     */
+    @Schema(description = "父级菜单id", example = "1")
+    private Long parentMenuId;
+
+    /**
+     * 树编码
+     */
+    @Schema(description = "'树编码'", example = "id")
+    private String treeId;
+    /**
+     * 树父编码
+     */
+    @Schema(description = "树父编码", example = "id")
+    private String treePid;
+    /**
+     * 树名称
+     */
+    @Schema(description = "树名称", example = "id")
+    private String treeLabel;
+
+    /**
+     * 前端项目路径
+     */
+    @Schema(description = "前端项目路径", example = "d:/continew-admin-ui")
+    private String frontPath;
+
+
     public GenConfigDO(String tableName) {
         this.setTableName(tableName);
     }
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+        this.entityName = StrUtil.toCamelCase(tableName);
         // 默认表前缀（sys_user -> sys_）
         int underLineIndex = StrUtil.indexOf(tableName, CharConstants.UNDERLINE);
         if (-1 != underLineIndex) {
@@ -142,7 +191,7 @@ public class GenConfigDO implements Serializable {
     @Schema(description = "类名前缀", example = "User")
     public String getClassNamePrefix() {
         String rawClassName = StrUtils.blankToDefault(this.getTablePrefix(), this.getTableName(), prefix -> StrUtil
-            .removePrefix(this.getTableName(), prefix));
+                .removePrefix(this.getTableName(), prefix));
         return StrUtil.upperFirst(StrUtil.toCamelCase(rawClassName));
     }
 }

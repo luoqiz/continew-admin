@@ -65,7 +65,7 @@ generator:
   templateConfigs:
     DO:
       # 模板路径
-      templatePath: backend/Entity.ftl
+      templatePath: vben/backend/Entity.ftl
       # 包名称
       packageName: model.entity
       # 排除字段
@@ -76,20 +76,20 @@ generator:
         - updateUser
         - updateTime
     Query:
-      templatePath: backend/Query.ftl
+      templatePath: vben/backend/Query.ftl
       packageName: model.query
     Req:
-      templatePath: backend/Req.ftl
+      templatePath: vben/backend/Req.ftl
       packageName: model.req
     Resp:
-      templatePath: backend/Resp.ftl
+      templatePath: vben/backend/Resp.ftl
       packageName: model.resp
       excludeFields:
         - id
         - createUser
         - createTime
     DetailResp:
-      templatePath: backend/DetailResp.ftl
+      templatePath: vben/backend/DetailResp.ftl
       packageName: model.resp
       excludeFields:
         - id
@@ -98,44 +98,69 @@ generator:
         - updateUser
         - updateTime
     Mapper:
-      templatePath: backend/Mapper.ftl
+      templatePath: vben/backend/Mapper.ftl
       packageName: mapper
     MapperXml:
-      templatePath: backend/MapperXml.ftl
+      templatePath: vben/backend/MapperXml.ftl
       packageName: mapper
       extension: .xml
       suffix: Mapper
     Service:
-      templatePath: backend/Service.ftl
+      templatePath: vben/backend/Service.ftl
       packageName: service
     ServiceImpl:
-      templatePath: backend/ServiceImpl.ftl
+      templatePath: vben/backend/ServiceImpl.ftl
       packageName: service.impl
     Controller:
-      templatePath: backend/Controller.ftl
+      templatePath: vben/backend/Controller.ftl
       packageName: controller
     api:
-      templatePath: frontend/api.ftl
-      packageName: src/apis
+      templatePath: vben/frontend/api.ftl
+      packageName: src/api # 此处arco 路径是src/apis
       extension: .ts
       backend: false
     index:
-      templatePath: frontend/index.ftl
+      templatePath: vben/frontend/index.ftl
       packageName: src/views
       extension: .vue
       backend: false
     AddModal:
-      templatePath: frontend/AddModal.ftl
+      templatePath: vben/frontend/AddModal.ftl
       packageName: src/views
       extension: .vue
       backend: false
     DetailDrawer:
-      templatePath: frontend/DetailDrawer.ftl
+      templatePath: vben/frontend/DetailDrawer.ftl
       packageName: src/views
       extension: .vue
       backend: false
     Menu:
-      template-path: backend/Menu.ftl
+      template-path: vben/backend/Menu.ftl
       packageName: sql
       extension: .sql
       backend: true
+    Data:
+      templatePath: vben/frontend/data.ftl
+      packageName: src/views
+      extension: .ts
+      backend: false
+    zh-CN:
+      template-path: vben/frontend/zh-CN.ftl
+      packageName: src/locales/langs/zh-CN
+      extension: .json
+      backend: false
+    en-US:
+      template-path: vben/frontend/en-US.ftl
+      packageName: src/locales/langs/en-US
+      extension: .json
+      backend: false
+    EditDrawer:
+      templatePath: vben/frontend/EditDrawer.ftl
+      packageName: src/views
+      extension: .vue
+      backend: false
+    EditModal:
+      templatePath: vben/frontend/EditModal.ftl
+      packageName: src/views
+      extension: .vue
+      backend: false
