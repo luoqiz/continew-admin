@@ -4,26 +4,43 @@
 -- comment 初始化代码生成插件数据表
 -- 初始化表结构
 CREATE TABLE IF NOT EXISTS "gen_config" (
-    "table_name"    varchar(64)  NOT NULL,
-    "module_name"   varchar(60)  NOT NULL,
-    "package_name"  varchar(60)  NOT NULL,
-    "business_name" varchar(50)  NOT NULL,
-    "author"        varchar(100) NOT NULL,
-    "table_prefix"  varchar(20)  DEFAULT NULL,
-    "is_override"   bool         NOT NULL DEFAULT false,
-    "create_time"   timestamp    NOT NULL,
-    "update_time"   timestamp    DEFAULT NULL,
+    "table_name"     varchar(64)    NOT NULL,
+    "module_name"    varchar(60)    NOT NULL,
+    "package_name"   varchar(60)    NOT NULL,
+    "entity_name"    varchar(60)    NOT NULL,
+    "list_type"      int4           NOT NULL,
+    "tree_id"        varchar(60)    NULL,
+    "tree_pid"       varchar(60)    NULL,
+    "tree_label"     varchar(60)    NULL,
+    "business_name"  varchar(50)    NOT NULL,
+    "author"         varchar(100)   NOT NULL,
+    "table_prefix"   varchar(20)    DEFAULT NULL,
+    "is_override"    bool           NOT NULL DEFAULT false,,
+    "dialog_type"    int4           NULL,
+    "parent_menu_id" int8           NULL,
+    "front_path"     varchar(255)   NULL,
+    "create_time"    timestamp(6)   NOT NULL,
+    "update_time"    timestamp(6)   DEFAULT NULL,
     PRIMARY KEY ("table_name")
 );
-COMMENT ON COLUMN "gen_config"."table_name"    IS '表名称';
-COMMENT ON COLUMN "gen_config"."module_name"   IS '模块名称';
-COMMENT ON COLUMN "gen_config"."package_name"  IS '包名称';
-COMMENT ON COLUMN "gen_config"."business_name" IS '业务名称';
-COMMENT ON COLUMN "gen_config"."author"        IS '作者';
-COMMENT ON COLUMN "gen_config"."table_prefix"  IS '表前缀';
-COMMENT ON COLUMN "gen_config"."is_override"   IS '是否覆盖';
-COMMENT ON COLUMN "gen_config"."create_time"   IS '创建时间';
-COMMENT ON COLUMN "gen_config"."update_time"   IS '修改时间';
+
+COMMENT ON COLUMN "gen_config"."table_name"     IS '表名称';
+COMMENT ON COLUMN "gen_config"."module_name"    IS '模块名称';
+COMMENT ON COLUMN "gen_config"."package_name"   IS '包名称';
+COMMENT ON COLUMN "gen_config"."entity_name"    IS '实体名称';
+COMMENT ON COLUMN "gen_config"."list_type"      IS '列表类型（1 表格列表 2树状列表）';
+COMMENT ON COLUMN "gen_config"."tree_id"        IS '树编码';
+COMMENT ON COLUMN "gen_config"."tree_pid"       IS '树父编码';
+COMMENT ON COLUMN "gen_config"."tree_label"     IS '树名称';
+COMMENT ON COLUMN "gen_config"."business_name"  IS '业务名称';
+COMMENT ON COLUMN "gen_config"."author"         IS '作者';
+COMMENT ON COLUMN "gen_config"."table_prefix"   IS '表前缀';
+COMMENT ON COLUMN "gen_config"."is_override"    IS '是否覆盖';
+COMMENT ON COLUMN "gen_config"."dialog_type"    IS '弹窗类型（1 modal弹窗 2 drawer抽屉）';
+COMMENT ON COLUMN "gen_config"."parent_menu_id" IS '父级菜单id';
+COMMENT ON COLUMN "gen_config"."front_path"     IS '前端项目路径';
+COMMENT ON COLUMN "gen_config"."create_time"    IS '创建时间';
+COMMENT ON COLUMN "gen_config"."update_time"    IS '修改时间';
 COMMENT ON TABLE  "gen_config"                 IS '生成配置表';
 
 CREATE TABLE IF NOT EXISTS "gen_field_config" (
