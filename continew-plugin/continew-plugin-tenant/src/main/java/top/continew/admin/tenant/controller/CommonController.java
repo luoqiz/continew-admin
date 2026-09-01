@@ -25,8 +25,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletRequest;
+import top.continew.admin.tenant.config.TenantAuthContext;
+import top.continew.admin.tenant.model.resp.TenantAuthContextResp;
 import top.continew.admin.tenant.service.TenantService;
 import top.continew.starter.extension.tenant.annotation.TenantIgnore;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
 import top.continew.starter.log.annotation.Log;
 
 /**
@@ -51,5 +55,16 @@ public class CommonController {
     @GetMapping("/id")
     public Long getTenantIdByDomain(@RequestParam String domain) {
         return tenantService.getIdByDomain(domain);
+    }
+
+    @SaIgnore
+    @TenantIgnore
+    @Operation(summary = "查询当前租户认证入口", description = "查询当前请求应使用的租户认证入口")
+    @GetMapping("/context")
+    public TenantAuthContextResp getAuthContext(HttpServletRequest request) {
+        // 前端只读取入口模式来决定是否展示租户编码输入框，不直接参与租户归属判定。
+        TenantAuthContext context = TenantAuthContext.get(request);
+        return new TenantAuthContextResp(context.mode().name(),
+            TenantContextHolder.isTenantEnabled());
     }
 }

@@ -37,6 +37,7 @@ import top.continew.admin.common.enums.RoleCodeEnum;
 import top.continew.admin.common.model.dto.TenantDTO;
 import top.continew.admin.tenant.constant.TenantCacheConstants;
 import top.continew.admin.tenant.constant.TenantConstants;
+import top.continew.admin.tenant.config.TenantAuthProperties;
 import top.continew.admin.tenant.mapper.TenantMapper;
 import top.continew.admin.tenant.model.entity.TenantDO;
 import top.continew.admin.tenant.model.query.TenantQuery;
@@ -45,6 +46,7 @@ import top.continew.admin.tenant.model.resp.TenantDetailResp;
 import top.continew.admin.tenant.model.resp.TenantResp;
 import top.continew.admin.tenant.service.PackageService;
 import top.continew.admin.tenant.service.TenantService;
+import top.continew.admin.tenant.util.TenantDomainUtils;
 import top.continew.starter.cache.redisson.util.RedisUtils;
 import top.continew.starter.core.constant.StringConstants;
 import top.continew.starter.core.util.validation.CheckUtils;
@@ -54,6 +56,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * 租户业务实现
@@ -71,6 +74,7 @@ public class TenantServiceImpl extends
     private final Map<String, TenantDataApi> tenantDataApiMap =
         SpringUtil.getBeansOfType(TenantDataApi.class);
     private final TenantExtensionProperties tenantExtensionProperties;
+    private final TenantAuthProperties tenantAuthProperties;
     private final PackageService packageService;
     private final IdGeneratorProvider idGeneratorProvider;
     private final RoleMenuApi roleMenuApi;
@@ -79,6 +83,8 @@ public class TenantServiceImpl extends
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long create(TenantReq req) {
+        // 域名是租户访问入口，先统一格式再校验和落库，保证大小写、端口等差异不会绕过唯一性校验。
+        req.setDomain(TenantDomainUtils.normalize(req.getDomain()));
         this.checkNameRepeat(req.getName(), null);
         this.checkDomainRepeat(req.getDomain(), null);
         // 检查套餐
@@ -95,7 +101,16 @@ public class TenantServiceImpl extends
     }
 
     @Override
+    public void afterCreate(TenantReq req, TenantDO entity) {
+        // 域名新增后清理域名解析缓存，确保新入口立即生效。
+        RedisUtils
+            .deleteByPattern(TenantCacheConstants.TENANT_KEY_PREFIX + StringConstants.ASTERISK);
+    }
+
+    @Override
     public void beforeUpdate(TenantReq req, Long id) {
+        // 修改域名时使用与新增相同的规范化和保留域名校验规则。
+        req.setDomain(TenantDomainUtils.normalize(req.getDomain()));
         this.checkNameRepeat(req.getName(), id);
         this.checkDomainRepeat(req.getDomain(), id);
         TenantDO tenant = super.getById(id);
@@ -107,6 +122,7 @@ public class TenantServiceImpl extends
 
     @Override
     public void afterUpdate(TenantReq req, TenantDO entity) {
+        // 域名或租户状态变化后统一清理解析缓存，避免继续命中旧租户信息。
         RedisUtils
             .deleteByPattern(TenantCacheConstants.TENANT_KEY_PREFIX + StringConstants.ASTERISK);
     }
@@ -121,6 +137,7 @@ public class TenantServiceImpl extends
 
     @Override
     public void afterDelete(List<Long> ids) {
+        // 删除租户后清理域名缓存，避免已释放域名仍被解析到已删除租户。
         RedisUtils
             .deleteByPattern(TenantCacheConstants.TENANT_KEY_PREFIX + StringConstants.ASTERISK);
     }
@@ -128,6 +145,11 @@ public class TenantServiceImpl extends
     @Override
     @Cached(name = TenantCacheConstants.TENANT_KEY_PREFIX, key = "#domain")
     public Long getIdByDomain(String domain) {
+        // 请求 Host 可能带大小写或尾部点号，查询前必须使用统一的域名格式。
+        domain = TenantDomainUtils.normalize(domain);
+        if (domain == null) {
+            return null;
+        }
         return baseMapper.lambdaQuery()
             .select(TenantDO::getId)
             .eq(TenantDO::getDomain, domain)
@@ -212,10 +234,31 @@ public class TenantServiceImpl extends
      * @param id     ID
      */
     private void checkDomainRepeat(String domain, Long id) {
+        // 空域名表示租户走兼容请求头模式，不参与域名唯一性和保留域名校验。
+        String normalizedDomain = TenantDomainUtils.normalize(domain);
+        if (normalizedDomain == null) {
+            return;
+        }
+        CheckUtils.throwIf(this.isReservedDomain(normalizedDomain),
+            "域名 [{}] 为系统保留域名，不能分配给租户", normalizedDomain);
         CheckUtils.throwIf(baseMapper.lambdaQuery()
-            .eq(TenantDO::getDomain, domain)
+            .eq(TenantDO::getDomain, normalizedDomain)
             .ne(id != null, TenantDO::getId, id)
-            .exists(), "域名为 [{}] 的租户已存在", domain);
+            .exists(), "域名为 [{}] 的租户已存在", normalizedDomain);
+    }
+
+    /**
+     * 检查是否为系统入口保留域名
+     *
+     * @param domain 规范化域名
+     * @return 是否为保留域名
+     */
+    private boolean isReservedDomain(String domain) {
+        // 平台入口和兼容入口由运维配置管理，不能被普通租户占用。
+        return Stream.concat(tenantAuthProperties.getPlatformDomains().stream(),
+            tenantAuthProperties.getLegacyDomains().stream())
+            .map(TenantDomainUtils::normalize)
+            .anyMatch(domain::equals);
     }
 
     /**

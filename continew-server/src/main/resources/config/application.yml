@@ -242,6 +242,19 @@ continew-starter.tenant:
     - 8000 # 任务调度
     - 9000 # 开发工具
 
+--- ### 租户认证入口配置
+tenant-auth:
+  # 生产环境开启；开发环境默认关闭，保留本地原有访问方式
+  enabled: false
+  # 平台超级管理员入口域名
+  platform-domains: []
+  # 兼容 X-Tenant-Id / X-Tenant-Code 的入口域名
+  legacy-domains: []
+  # 是否拒绝未配置的 Host
+  reject-unknown-host: true
+  # 兼容入口是否强制携带租户请求头
+  legacy-require-header: true
+
 --- ### 限流器配置
 continew-starter.rate-limiter:
   enabled: true

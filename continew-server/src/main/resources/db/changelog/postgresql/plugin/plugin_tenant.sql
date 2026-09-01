@@ -199,3 +199,7 @@ ALTER TABLE "sys_role_dept"
 DROP INDEX IF EXISTS "uk_user_id_role_id";
 CREATE UNIQUE INDEX "uk_user_id_role_id" ON "sys_user_role" ("tenant_id", "user_id", "role_id");
 
+-- changeset luoqiz:3
+-- comment 为租户域名增加唯一约束
+CREATE UNIQUE INDEX "uk_domain" ON "tenant" ("domain", "deleted");
+

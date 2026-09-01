@@ -38,6 +38,7 @@ import top.continew.admin.auth.AbstractLoginHandler;
 import top.continew.admin.auth.enums.AuthTypeEnum;
 import top.continew.admin.auth.model.req.SocialLoginReq;
 import top.continew.admin.auth.model.resp.LoginResp;
+import top.continew.admin.auth.service.TenantAuthStateService;
 import top.continew.admin.common.constant.RegexConstants;
 import top.continew.admin.common.enums.DisEnableStatusEnum;
 import top.continew.admin.common.enums.GenderEnum;
@@ -56,6 +57,8 @@ import top.continew.admin.system.service.UserSocialService;
 import top.continew.starter.auth.justauth.AuthRequestFactory;
 import top.continew.starter.core.autoconfigure.application.ApplicationProperties;
 import top.continew.starter.core.util.validation.ValidationUtils;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
+import top.continew.starter.extension.tenant.util.TenantUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -77,6 +80,7 @@ public class SocialLoginHandler extends AbstractLoginHandler<SocialLoginReq> {
     private final MessageService messageService;
     private final ApplicationProperties applicationProperties;
     private final DeptService deptService;
+    private final TenantAuthStateService tenantAuthStateService;
 
     @Override
     @Transactional
@@ -89,6 +93,19 @@ public class SocialLoginHandler extends AbstractLoginHandler<SocialLoginReq> {
         AuthResponse<AuthUser> response = authRequest.login(callback);
         ValidationUtils.throwIf(!response.ok(), response.getMsg());
         AuthUser authUser = response.getData();
+        // state 是服务端签名的租户上下文；回调请求可能暂时落在平台租户，需要切换到原租户执行认证。
+        Long tenantId = tenantAuthStateService.resolveTenantId(req.getState());
+        Long currentTenantId = TenantContextHolder.getTenantId();
+        if (tenantId != null && !tenantId.equals(currentTenantId)) {
+            LoginResp[] loginResp = new LoginResp[1];
+            // TenantUtils 会在指定租户上下文中完成用户、角色和社交绑定数据的读写。
+            TenantUtils.execute(tenantId, () -> loginResp[0] = this.authenticate(authUser, client));
+            return loginResp[0];
+        }
+        return this.authenticate(authUser, client);
+    }
+
+    private LoginResp authenticate(AuthUser authUser, ClientResp client) {
         // 如未绑定则自动注册新用户，保存或更新关联信息
         String source = authUser.getSource();
         String openId = authUser.getUuid();

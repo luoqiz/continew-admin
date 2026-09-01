@@ -34,19 +34,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.continew.admin.auth.model.req.LoginReq;
 import top.continew.admin.auth.model.resp.LoginResp;
 import top.continew.admin.auth.model.resp.RouteResp;
 import top.continew.admin.auth.model.resp.SocialAuthAuthorizeResp;
+import top.continew.admin.auth.model.resp.SocialAuthTargetResp;
 import top.continew.admin.auth.model.resp.UserInfoResp;
 import top.continew.admin.auth.service.AuthService;
+import top.continew.admin.auth.service.TenantAuthStateService;
+import top.continew.admin.common.config.TenantExtensionProperties;
 import top.continew.admin.common.context.UserContext;
 import top.continew.admin.common.context.UserContextHolder;
 import top.continew.admin.system.enums.SocialSourceEnum;
 import top.continew.admin.system.model.resp.user.UserDetailResp;
 import top.continew.admin.system.service.UserService;
 import top.continew.starter.auth.justauth.AuthRequestFactory;
+import top.continew.starter.extension.tenant.context.TenantContextHolder;
 import top.continew.starter.log.annotation.Log;
 import top.continew.starter.validation.constraints.EnumValue;
 
@@ -69,6 +74,8 @@ public class AuthController {
     private final AuthService authService;
     private final UserService userService;
     private final AuthRequestFactory authRequestFactory;
+    private final TenantExtensionProperties tenantExtensionProperties;
+    private final TenantAuthStateService tenantAuthStateService;
 
     /**
      * 用户登录
@@ -110,11 +117,35 @@ public class AuthController {
     @Parameter(name = "source", description = "来源", example = "gitee", in = ParameterIn.PATH)
     @GetMapping("/{source}")
     public SocialAuthAuthorizeResp authorize(@PathVariable @EnumValue(
-        value = SocialSourceEnum.class, message = "第三方平台无效") String source) {
+        value = SocialSourceEnum.class, message = "第三方平台无效") String source,
+        HttpServletRequest request) {
         AuthRequest authRequest = authRequestFactory.getAuthRequest(source);
+        String state = AuthStateUtils.createState();
+        // 租户 ID 来自后端已解析的上下文，不信任前端传入的租户参数。
+        Long tenantId = TenantContextHolder.getTenantId();
+        // 回调地址通常只有平台域名，state 中保存原访问 Host，回调后再安全跳回原租户入口。
+        state = tenantAuthStateService.createState(state, tenantId,
+            tenantExtensionProperties.getDefaultTenantId(), request.getServerName());
         return SocialAuthAuthorizeResp.builder()
-            .authorizeUrl(authRequest.authorize(AuthStateUtils.createState()))
+            .authorizeUrl(authRequest.authorize(state))
             .build();
+    }
+
+    /**
+     * 查询社交登录回调目标
+     *
+     * <p>第三方平台回调地址通常只能配置平台域名。该接口只返回经过 HMAC 校验的目标主机，
+     * 前端据此在提交登录凭据前回到原租户入口，避免租户令牌落在平台域名下。</p>
+     *
+     * @param state state
+     * @return 回调目标
+     */
+    @SaIgnore
+    @Operation(summary = "查询社交登录回调目标", description = "查询社交登录回调目标")
+    @GetMapping("/social/target")
+    public SocialAuthTargetResp getSocialAuthTarget(@RequestParam String state) {
+        // 目标 Host 只有在 HMAC 校验通过后才返回给前端，避免开放重定向和租户上下文伪造。
+        return new SocialAuthTargetResp(tenantAuthStateService.resolveState(state).targetHost());
     }
 
     /**

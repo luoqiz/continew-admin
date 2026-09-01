@@ -14,31 +14,27 @@
  * limitations under the License.
  */
 
-package top.continew.admin.auth.constant;
+package top.continew.admin.tenant.config;
 
 /**
- * 认证相关常量
+ * 租户认证模式
  *
- * @author Charles7c
- * @since 2025/7/26 12:05
+ * @author Codex
  */
-public class AuthConstants {
+public enum TenantAuthMode {
 
     /**
-     * 登录 URI
+     * 平台管理域名模式，固定使用默认租户
      */
-    public static final String LOGIN_URI = "/auth/login";
+    PLATFORM,
 
     /**
-     * 登出 URI
+     * 普通租户域名模式，根据数据库中的域名解析租户
      */
-    public static final String LOGOUT_URI = "/auth/logout";
+    DOMAIN,
 
     /**
-     * 社交登录 state 中租户 ID 的分隔符
+     * 兼容模式，根据请求头解析租户
      */
-    public static final String SOCIAL_TENANT_SEPARATOR = ".";
-
-    private AuthConstants() {
-    }
+    LEGACY
 }

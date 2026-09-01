@@ -5,6 +5,18 @@ application:
   # 是否为生产环境
   production: true
 
+--- ### 租户认证入口配置
+tenant-auth:
+  enabled: true
+  platform-domains:
+    - ${TENANT_PLATFORM_DOMAIN:admin.continew.top}
+  legacy-domains:
+    - ${TENANT_LEGACY_DOMAIN:api.continew.top}
+  reject-unknown-host: true
+  legacy-require-header: true
+  # 社交登录跨域回调时用于签名租户上下文，生产环境必须设置高强度随机值
+  social-state-secret: ${TENANT_SOCIAL_STATE_SECRET}
+
 --- ### 服务器配置
 server:
   # HTTP 端口（默认 8080）
@@ -220,9 +232,9 @@ sms:
 continew-starter.messaging.websocket:
   enabled: true
   path: /websocket
-  # 配置允许跨域的域名
+  # 普通租户域名来自数据库，无法在启动配置中枚举；反向代理应仅向受控域名转发
   allowed-origins:
-    - ${application.url}
+    - ${TENANT_ALLOWED_ORIGIN:*}
 
 --- ### Just Auth 配置
 continew-starter.justauth:

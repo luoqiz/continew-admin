@@ -44,12 +44,12 @@ public class DefaultTenantProvider implements TenantProvider {
         TenantContext context = new TenantContext();
         Long defaultTenantId = tenantExtensionProperties.getDefaultTenantId();
         context.setTenantId(defaultTenantId);
-        // 默认租户
+        // 平台入口注入默认租户 ID，直接返回，确保客户端无法通过请求头切换平台租户。
         if (defaultTenantId.toString().equals(tenantIdAsString)) {
             return context;
         }
         Long tenantId;
-        // 未指定租户
+        // 域名入口已经由过滤器注入租户 ID；只有兼容登录请求才可能需要从租户编码解析。
         if (StrUtil.isBlank(tenantIdAsString)) {
             // 检查是否指定了租户编码（登录相关接口）
             HttpServletRequest request = ServletUtils.getRequest();
@@ -61,10 +61,10 @@ public class DefaultTenantProvider implements TenantProvider {
             CheckUtils.throwIfNull(id, "编码为 [%s] 的租户不存在".formatted(tenantCode));
             tenantId = id;
         } else {
-            // 指定租户
+            // 兼容入口已提供租户 ID，继续使用 Starter 原有的 ID 解析逻辑。
             tenantId = Long.parseLong(tenantIdAsString);
         }
-        // 检查租户状态
+        // 登录和业务请求均需校验租户状态，防止禁用或过期租户继续获得上下文。
         if (verify) {
             tenantService.checkStatus(tenantId);
         }

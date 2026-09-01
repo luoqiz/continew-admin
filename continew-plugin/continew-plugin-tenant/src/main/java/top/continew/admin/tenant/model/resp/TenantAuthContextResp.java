@@ -14,31 +14,29 @@
  * limitations under the License.
  */
 
-package top.continew.admin.auth.constant;
+package top.continew.admin.tenant.model.resp;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * 认证相关常量
+ * 当前请求租户认证入口响应
  *
- * @author Charles7c
- * @since 2025/7/26 12:05
+ * @author Codex
  */
-public class AuthConstants {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TenantAuthContextResp {
 
     /**
-     * 登录 URI
+     * 认证入口模式
      */
-    public static final String LOGIN_URI = "/auth/login";
+    private String mode;
 
     /**
-     * 登出 URI
+     * 是否启用租户
      */
-    public static final String LOGOUT_URI = "/auth/logout";
-
-    /**
-     * 社交登录 state 中租户 ID 的分隔符
-     */
-    public static final String SOCIAL_TENANT_SEPARATOR = ".";
-
-    private AuthConstants() {
-    }
+    private Boolean tenantEnabled;
 }

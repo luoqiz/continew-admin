@@ -14,31 +14,33 @@
  * limitations under the License.
  */
 
-package top.continew.admin.auth.constant;
+package top.continew.admin.auth.model.resp;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
- * 认证相关常量
+ * 社交登录回调目标响应参数
  *
- * @author Charles7c
- * @since 2025/7/26 12:05
+ * @author Codex
  */
-public class AuthConstants {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(description = "社交登录回调目标响应参数")
+public class SocialAuthTargetResp implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 登录 URI
+     * 回调目标主机
      */
-    public static final String LOGIN_URI = "/auth/login";
-
-    /**
-     * 登出 URI
-     */
-    public static final String LOGOUT_URI = "/auth/logout";
-
-    /**
-     * 社交登录 state 中租户 ID 的分隔符
-     */
-    public static final String SOCIAL_TENANT_SEPARATOR = ".";
-
-    private AuthConstants() {
-    }
+    @Schema(description = "回调目标主机", example = "tenant-a.continew.top")
+    private String targetHost;
 }

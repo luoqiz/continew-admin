@@ -157,3 +157,8 @@ ALTER TABLE `sys_role_dept`
     DROP INDEX `idx_tenant_id`,
     DROP PRIMARY KEY,
     ADD PRIMARY KEY (`tenant_id`, `role_id`, `dept_id`);
+
+-- changeset luoqiz:3
+-- comment 为租户域名增加唯一约束
+ALTER TABLE `tenant`
+    ADD UNIQUE INDEX `uk_domain` (`domain`, `deleted`);
