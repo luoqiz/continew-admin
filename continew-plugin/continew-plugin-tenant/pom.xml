@@ -14,4 +14,12 @@
 
     <name>${project.artifactId}</name>
     <description>租户插件</description>
+
+    <dependencies>
+        <!-- 认证会话模块：租户和套餐变更需要参与会话策略锁与失效 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>continew-auth-refresh</artifactId>
+        </dependency>
+    </dependencies>
 </project>
